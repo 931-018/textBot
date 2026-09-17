@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
+  <meta name="color-scheme" content="dark">
+  <title>TEXT by Petro — Telegram вхід</title>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.min.js"></script>
+  <style>
+    :root{--bg:#06110d;--card:#0d1c16;--line:rgba(255,255,255,.10);--text:#f6f5ef;--muted:#a9b8b1;--gold:#d6b56d;--danger:#ff9a9a}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:radial-gradient(circle at 50% -20%,#1c4b39 0,#0a1913 38%,var(--bg) 75%);color:var(--text)}
+    body{min-height:100vh;display:grid;place-items:center;padding:22px}.card{width:min(440px,100%);background:linear-gradient(180deg,rgba(255,255,255,.065),rgba(255,255,255,.025));border:1px solid var(--line);border-radius:28px;padding:26px;box-shadow:0 28px 80px rgba(0,0,0,.38);backdrop-filter:blur(20px)}
+    .mark{width:54px;height:54px;border-radius:18px;display:grid;place-items:center;margin-bottom:18px;background:linear-gradient(145deg,#244f3d,#0f2e23);border:1px solid rgba(214,181,109,.35);font-weight:800;color:var(--gold);letter-spacing:.04em}.eyebrow{font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700}.title{font-size:27px;line-height:1.12;margin:8px 0 9px;font-weight:760}.sub{color:var(--muted);font-size:14px;line-height:1.55;margin:0 0 22px}
+    .status{display:flex;align-items:center;gap:10px;padding:14px 15px;border-radius:16px;background:rgba(255,255,255,.045);border:1px solid var(--line);font-size:14px;color:#dce5e0}.spinner{width:17px;height:17px;border:2px solid rgba(255,255,255,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
+    form{display:none;margin-top:2px}.field{margin-top:14px}.field label{display:block;font-size:12px;color:var(--muted);margin:0 0 7px}.field input{width:100%;border:1px solid var(--line);outline:none;border-radius:15px;background:rgba(0,0,0,.18);color:var(--text);padding:14px 15px;font-size:16px}.field input:focus{border-color:rgba(214,181,109,.55);box-shadow:0 0 0 3px rgba(214,181,109,.08)}
+    button{width:100%;border:0;border-radius:15px;margin-top:17px;padding:14px 16px;background:linear-gradient(135deg,#d7bb79,#b99142);color:#132019;font-size:15px;font-weight:800;cursor:pointer}button:disabled{opacity:.55;cursor:wait}.hint{margin-top:13px;color:var(--muted);font-size:12px;line-height:1.5}.error{display:none;margin-top:13px;color:var(--danger);font-size:13px;line-height:1.45}.browser{display:none;margin-top:16px;text-align:center}.browser a{color:var(--gold);text-decoration:none;font-size:14px}
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="mark">TP</div>
+    <div class="eyebrow">TEXT by Petro</div>
+    <h1 class="title">Вхід через Telegram</h1>
+    <p class="sub" id="subtitle">Безпечний вхід у ваш існуючий особистий кабінет.</p>
+
+    <div class="status" id="status"><span class="spinner"></span><span id="statusText">Перевіряю Telegram…</span></div>
+
+    <form id="linkForm" autocomplete="on">
+      <div class="field"><label for="login">Ваш логін TEXT by Petro</label><input id="login" name="username" autocomplete="username" required maxlength="32"></div>
+      <div class="field"><label for="password">Пароль</label><input id="password" name="password" type="password" autocomplete="current-password" required maxlength="200"></div>
+      <button id="submitBtn" type="submit">Прив’язати Telegram і увійти</button>
+      <div class="error" id="error"></div>
+      <div class="hint">Це потрібно лише один раз. Пароль використовується тільки для перевірки вашого чинного акаунта й не зберігається Telegram-ботом.</div>
+    </form>
+
+    <div class="browser" id="browser"><a href="client.html">Відкрити звичайний вхід →</a></div>
+  </main>
+
+<script>
+(() => {
+  'use strict';
+
+  const SUPABASE_URL = 'https://yailbtjdtqdahzwdpkrn.supabase.co';
+  const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlhaWxidGpkdHFkYWh6d2Rwa3JuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkzMDMyNDAsImV4cCI6MjEwNDg3OTI0MH0.1kz4LPgIp-HxnMNXuCudGa6OEI39PHwuiKQdvE-fvMI';
+  const EDGE_URL = SUPABASE_URL + '/functions/v1/telegram-bot';
+  const CLIENT_URL = new URL('client.html', location.href).href.split('#')[0].split('?')[0];
+
+  const statusBox = document.getElementById('status');
+  const statusText = document.getElementById('statusText');
+  const form = document.getElementById('linkForm');
+  const submitBtn = document.getElementById('submitBtn');
+  const errorBox = document.getElementById('error');
+  const browser = document.getElementById('browser');
+  let loginToken = new URLSearchParams(location.search).get('t') || '';
+
+  const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+  if (tg) { try { tg.ready(); tg.expand(); } catch (_) {} }
+
+  function setStatus(text, loading = true) {
+    statusBox.style.display = 'flex';
+    statusText.textContent = text;
+    const sp = statusBox.querySelector('.spinner');
+    if (sp) sp.style.display = loading ? 'block' : 'none';
+  }
+
+  function showError(message) {
+    errorBox.textContent = message;
+    errorBox.style.display = 'block';
+  }
+
+  function friendly(code, attemptsLeft) {
+    const map = {
+      INVALID_CREDENTIALS: 'Невірний логін або пароль.',
+      TELEGRAM_TOKEN_EXPIRED: 'Посилання для входу вже застаріло. Поверніться в бот і натисніть /login ще раз.',
+      TELEGRAM_TOKEN_USED: 'Це посилання вже використано. Поверніться в бот і відкрийте нове.',
+      TELEGRAM_TOKEN_NOT_FOUND: 'Посилання входу недійсне. Відкрийте кабінет повторно через Telegram-бота.',
+      TOO_MANY_ATTEMPTS: 'Забагато невдалих спроб. Створіть нове посилання через /login у боті.',
+      ACCOUNT_BLOCKED: 'Цей акаунт заблокований.',
+      ACCOUNT_ALREADY_LINKED_TO_TELEGRAM: 'Цей акаунт уже прив’язаний до іншого Telegram.',
+      TELEGRAM_ALREADY_LINKED_TO_ACCOUNT: 'Цей Telegram уже прив’язаний до іншого акаунта.',
+      TELEGRAM_DATA_INVALID: 'Не вдалося підтвердити Telegram-сесію. Відкрийте сервіс повторно з бота.'
+    };
+    let text = map[code] || 'Не вдалося виконати вхід. Спробуйте відкрити сервіс з Telegram ще раз.';
+    if (code === 'INVALID_CREDENTIALS' && Number.isFinite(attemptsLeft)) text += ` Залишилось спроб: ${attemptsLeft}.`;
+    return text;
+  }
+
+  async function api(payload) {
+    const res = await fetch(EDGE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+      cache: 'no-store'
+    });
+    let data = {};
+    try { data = await res.json(); } catch (_) {}
+    if (!res.ok) {
+      const err = new Error(data.error || 'REQUEST_FAILED');
+      err.code = data.error || 'REQUEST_FAILED';
+      err.data = data;
+      throw err;
+    }
+    return data;
+  }
+
+  async function discoverClientStorageKeys() {
+    const keys = new Set([
+      'sb-yailbtjdtqdahzwdpkrn-auth-token',
+      'text-by-petro-client-auth-v1',
+      'text-by-petro-auth-v1'
+    ]);
+
+    try {
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key && /auth/i.test(key) && !/admin/i.test(key)) keys.add(key);
+      }
+    } catch (_) {}
+
+    try {
+      const src = await fetch('client.html', { cache: 'no-store' }).then(r => r.ok ? r.text() : '');
+      const re = /storageKey\s*:\s*['"]([^'"]+)['"]/g;
+      let m;
+      while ((m = re.exec(src))) {
+        if (m[1] && !/admin/i.test(m[1])) keys.add(m[1]);
+      }
+    } catch (_) {}
+
+    return [...keys];
+  }
+
+  async function persistAndOpen(session) {
+    if (!session || !session.access_token || !session.refresh_token || !window.supabase?.createClient) {
+      throw new Error('SESSION_MISSING');
+    }
+
+    setStatus('Вхід підтверджено. Відкриваю кабінет…');
+    const keys = await discoverClientStorageKeys();
+    let saved = false;
+
+    for (const storageKey of keys) {
+      try {
+        const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+          auth: { persistSession: true, autoRefreshToken: true, detectSessionInUrl: false, storageKey }
+        });
+        const { error } = await sb.auth.setSession({
+          access_token: session.access_token,
+          refresh_token: session.refresh_token
+        });
+        if (!error) saved = true;
+      } catch (_) {}
+    }
+
+    if (!saved) {
+      const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+      const { error } = await sb.auth.setSession({ access_token: session.access_token, refresh_token: session.refresh_token });
+      if (error) throw error;
+    }
+
+    history.replaceState({}, document.title, location.pathname);
+    location.replace(CLIENT_URL);
+  }
+
+  function showLinkForm() {
+    setStatus('Telegram підтверджено. Прив’яжіть ваш чинний акаунт.', false);
+    document.getElementById('subtitle').textContent = 'Перший вхід: введіть логін і пароль, які вже використовуєте в TEXT by Petro.';
+    form.style.display = 'block';
+    browser.style.display = 'block';
+    setTimeout(() => document.getElementById('login').focus(), 50);
+  }
+
+  async function exchange(token, login, password) {
+    return api({ action: 'telegram_exchange', token, ...(login ? { login } : {}), ...(password ? { password } : {}) });
+  }
+
+  async function bootstrap() {
+    try {
+      if (loginToken) {
+        const data = await exchange(loginToken);
+        if (data.session) return persistAndOpen(data.session);
+        if (data.needs_link) return showLinkForm();
+      }
+
+      const initData = tg?.initData || '';
+      if (initData) {
+        const data = await api({ action: 'telegram_init', init_data: initData });
+        if (data.session) return persistAndOpen(data.session);
+        if (data.needs_link && data.token) {
+          loginToken = data.token;
+          return showLinkForm();
+        }
+      }
+
+      setStatus('Відкрийте цю сторінку через Telegram-бота TEXT by Petro.', false);
+      document.getElementById('subtitle').textContent = 'Для Telegram-входу потрібне одноразове посилання з бота.';
+      browser.style.display = 'block';
+    } catch (e) {
+      setStatus('Вхід не виконано.', false);
+      showError(friendly(e.code, e.data?.attempts_left));
+      browser.style.display = 'block';
+    }
+  }
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    errorBox.style.display = 'none';
+    const login = document.getElementById('login').value.trim();
+    const password = document.getElementById('password').value;
+    if (!loginToken) return showError('Відсутній одноразовий Telegram-токен. Відкрийте сервіс повторно з бота.');
+
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Перевіряю…';
+    try {
+      const data = await exchange(loginToken, login, password);
+      if (!data.session) throw Object.assign(new Error('SESSION_MISSING'), { code: 'SESSION_MISSING' });
+      await persistAndOpen(data.session);
+    } catch (e) {
+      showError(friendly(e.code, e.data?.attempts_left));
+      submitBtn.disabled = false;
+      submitBtn.textContent = 'Прив’язати Telegram і увійти';
+    }
+  });
+
+  bootstrap();
+})();
+</script>
+</body>
+</html>
