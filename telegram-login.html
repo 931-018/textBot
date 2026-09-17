@@ -2,27 +2,188 @@
 <html lang="uk">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="referrer" content="no-referrer">
   <meta name="robots" content="noindex,nofollow">
   <title>TEXT by Petro</title>
-  <style>html,body{margin:0;background:#061d16;color:#eef6f1;font-family:system-ui,sans-serif}body{display:none}</style>
+  <style>
+    :root{color-scheme:dark}*{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:#061d16;color:#eef6f1;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    body{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:24px}
+    .card{width:min(420px,100%);padding:30px 24px;border:1px solid rgba(126,177,149,.22);border-radius:24px;background:linear-gradient(160deg,rgba(13,49,37,.96),rgba(5,29,22,.98));box-shadow:0 24px 70px rgba(0,0,0,.34);text-align:center}
+    .logo{width:62px;height:62px;margin:0 auto 18px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(145deg,#d4b26b,#8f6d31);color:#10271e;font-size:26px;font-weight:900}
+    .eyebrow{font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:#97b6a5;font-weight:800}
+    h1{margin:8px 0;font-size:22px;line-height:1.15}
+    p{margin:0;color:#a9c4b5;font-size:13px;line-height:1.55}
+    .status{margin-top:20px;padding:13px 14px;border-radius:14px;border:1px solid rgba(93,187,139,.28);background:rgba(16,70,50,.42);display:flex;align-items:center;justify-content:center;gap:9px;font-size:12px;font-weight:800;color:#dff8ea}
+    .dot{width:9px;height:9px;border-radius:50%;background:#72d9a5;box-shadow:0 0 0 5px rgba(114,217,165,.09);animation:pulse 1.5s ease-in-out infinite}
+    .status.ok .dot{animation:none}
+    .status.err{border-color:rgba(229,106,106,.32);background:rgba(91,27,27,.32);color:#ffdede}
+    .status.err .dot{background:#e87070;box-shadow:none;animation:none}
+    .fallback{display:none;margin-top:17px;color:#d9bd7a;text-decoration:none;font-size:12px;font-weight:800}
+    .fallback.show{display:inline-block}
+    @keyframes pulse{50%{opacity:.42;transform:scale(.82)}}
+  </style>
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 </head>
 <body>
+  <main class="card" aria-live="polite">
+    <div class="logo">P</div>
+    <div class="eyebrow">TEXT · BY PETRO</div>
+    <h1 id="title">Авторизація через Telegram</h1>
+    <p id="copy">Перевіряємо ваш Telegram та відкриваємо особистий кабінет.</p>
+    <div class="status" id="status"><span class="dot"></span><span id="statusText">Перевіряємо Telegram…</span></div>
+    <a class="fallback" id="fallback" href="client.html?auth=login#cabinet">Відкрити сайт</a>
+  </main>
+
 <script>
-(() => {
+(async () => {
   'use strict';
-  const source = new URL(location.href);
-  const target = new URL('client.html', location.href);
 
-  source.searchParams.forEach((value, key) => target.searchParams.set(key, value));
-  if (!target.searchParams.has('auth')) target.searchParams.set('auth', 'login');
-  target.hash = 'cabinet';
+  const SUPABASE_URL = 'https://yailbtjdtqdahzwdpkrn.supabase.co';
+  const EDGE_URL = SUPABASE_URL + '/functions/v1/telegram-bot';
+  const CLIENT_URL = new URL('./client.html', location.href);
 
-  location.replace(target.href);
+  const status = document.getElementById('status');
+  const statusText = document.getElementById('statusText');
+  const title = document.getElementById('title');
+  const copy = document.getElementById('copy');
+  const fallback = document.getElementById('fallback');
+
+  const setStatus = (text, type = '') => {
+    statusText.textContent = text;
+    status.className = ('status ' + type).trim();
+  };
+
+  const sleep = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+
+  const goClient = (params = {}) => {
+    const target = new URL(CLIENT_URL.href);
+    Object.entries(params).forEach(([key, value]) => {
+      if (value !== undefined && value !== null && value !== '') {
+        target.searchParams.set(key, String(value));
+      }
+    });
+    target.hash = 'cabinet';
+    location.replace(target.href);
+  };
+
+  async function getAnonKey() {
+    const html = await fetch(CLIENT_URL.href, { cache: 'no-store' }).then(response => {
+      if (!response.ok) throw new Error('CLIENT_CONFIG_UNAVAILABLE');
+      return response.text();
+    });
+    const match = html.match(/const\s+SUPABASE_KEY\s*=\s*['"]([^'"]+)['"]/);
+    if (!match?.[1]) throw new Error('CLIENT_CONFIG_UNAVAILABLE');
+    return match[1];
+  }
+
+  const friendlyError = (code) => ({
+    TELEGRAM_DATA_INVALID: 'Не вдалося підтвердити Telegram. Закрийте застосунок і відкрийте його знову.',
+    ACCOUNT_BLOCKED: 'Цей профіль тимчасово недоступний.',
+    SESSION_CREATE_FAILED: 'Не вдалося створити сесію профілю. Спробуйте ще раз.',
+    CLIENT_CONFIG_UNAVAILABLE: 'Не вдалося завантажити конфігурацію сайту.'
+  }[code] || 'Не вдалося виконати авторизацію через Telegram.');
+
+  try {
+    const webApp = window.Telegram?.WebApp;
+    try {
+      webApp?.ready();
+      webApp?.expand();
+    } catch (_) {}
+
+    const source = new URL(location.href);
+    const token = source.searchParams.get('t');
+
+    // /start and /login already provide a protected one-time token.
+    if (token) {
+      title.textContent = 'Telegram авторизовано';
+      copy.textContent = 'Відкриваємо ваш кабінет.';
+      setStatus('Telegram підтверджено', 'ok');
+      await sleep(200);
+      return goClient({
+        t: token,
+        auth: source.searchParams.get('auth') || 'login'
+      });
+    }
+
+    // Direct Mini App launch: Telegram itself supplies signed initData.
+    const initData = webApp?.initData || '';
+    if (!initData) {
+      // Normal browser must use ordinary website authentication.
+      return goClient({ auth: 'login' });
+    }
+
+    setStatus('Telegram підтверджує особу…');
+
+    const response = await fetch(EDGE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        action: 'telegram_init',
+        init_data: initData,
+        mode: 'login'
+      })
+    });
+
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || data.error) {
+      throw new Error(data.error || ('HTTP_' + response.status));
+    }
+
+    // Telegram is already linked to a TEXT by Petro account.
+    if (data.session?.access_token && data.session?.refresh_token) {
+      if (!window.supabase?.createClient) throw new Error('CLIENT_CONFIG_UNAVAILABLE');
+
+      // Reuse the public anon key already contained in client.html instead of duplicating config.
+      const anonKey = await getAnonKey();
+      const sb = window.supabase.createClient(SUPABASE_URL, anonKey, {
+        auth: {
+          persistSession: true,
+          autoRefreshToken: true,
+          detectSessionInUrl: false,
+          storageKey: 'text-by-petro-auth-v1'
+        }
+      });
+
+      const { error } = await sb.auth.setSession({
+        access_token: data.session.access_token,
+        refresh_token: data.session.refresh_token
+      });
+      if (error) throw error;
+
+      title.textContent = 'Telegram авторизовано';
+      copy.textContent = 'Профіль знайдено. Відкриваємо особистий кабінет.';
+      setStatus('Авторизовано', 'ok');
+      await sleep(350);
+      return goClient({ telegram_auth: '1' });
+    }
+
+    // First Telegram launch: Telegram is verified; only profile link/create is needed once.
+    if (data.needs_link && data.token) {
+      title.textContent = 'Telegram авторизовано';
+      copy.textContent = 'Telegram підтверджено. Один раз прив’яжіть існуючий профіль або створіть новий — надалі вхід буде автоматичним.';
+      setStatus('Telegram підтверджено', 'ok');
+      await sleep(450);
+      return goClient({
+        t: data.token,
+        auth: 'login',
+        telegram_auth: 'verified'
+      });
+    }
+
+    throw new Error('TELEGRAM_AUTH_INCOMPLETE');
+  } catch (error) {
+    console.error('[TEXT BY PETRO] Telegram auth failed:', error?.message || error);
+    title.textContent = 'Не вдалося авторизуватися';
+    copy.textContent = friendlyError(error?.message || '');
+    setStatus('Помилка авторизації', 'err');
+    fallback.classList.add('show');
+  }
 })();
 </script>
-<noscript>
-  <a href="client.html#cabinet">Відкрити TEXT by Petro</a>
-</noscript>
+
+<noscript><a href="client.html?auth=login#cabinet">Відкрити TEXT by Petro</a></noscript>
 </body>
 </html>
