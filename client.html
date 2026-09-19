@@ -588,38 +588,10 @@
       if (initData) {
         data = await telegramRequest({ action: 'telegram_init', init_data: initData, mode: authMode });
       } else {
-        let telegramWindow = null;
-        try { telegramWindow = window.open('', '_blank'); } catch (_) {}
-
-        const started = await telegramRequest({ action: 'browser_login_start', mode: authMode });
-        if (!started?.token || !started?.telegram_url) {
-          try { telegramWindow?.close(); } catch (_) {}
-          throw new Error('Не вдалося відкрити Telegram-вхід.');
-        }
-
-        if (telegramWindow) {
-          try {
-            telegramWindow.location.href = started.telegram_url;
-            telegramWindow.focus();
-          } catch (_) {
-            location.href = started.telegram_url;
-            return { external: true, botUrl: started.telegram_url };
-          }
-        } else {
-          location.href = started.telegram_url;
-          return { external: true, botUrl: started.telegram_url };
-        }
-
-        const expiresAt = new Date(started.expires_at || Date.now() + 5 * 60 * 1000).getTime();
-        while (Date.now() < expiresAt) {
-          await new Promise(resolve => setTimeout(resolve, 1200));
-          const state = await telegramRequest({ action: 'browser_login_status', token: started.token });
-          if (state?.pending) continue;
-          data = state;
-          break;
-        }
-
-        if (!data) throw new Error('Час підтвердження Telegram минув. Спробуйте ще раз.');
+        // Звичайний браузер: без зайвих вкладок, проміжних сторінок і polling.
+        // Користувач переходить просто в бота, а прив’язку / вхід завершує у Mini App.
+        // Перехід робить існуючий onClick-обробник, щоб не виконувати його двічі.
+        return { external: true, botUrl: TELEGRAM_BOT_URL };
       }
     }
 
