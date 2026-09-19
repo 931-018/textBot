@@ -20,8 +20,21 @@
     .status.ok .dot{animation:none}
     .status.err{border-color:rgba(229,106,106,.32);background:rgba(91,27,27,.32);color:#ffdede}
     .status.err .dot{background:#e87070;box-shadow:none;animation:none}
-    .fallback{display:none;margin-top:17px;color:#d9bd7a;text-decoration:none;font-size:12px;font-weight:800}
-    .fallback.show{display:inline-block}
+    .actions{display:none;margin-top:18px;gap:10px;flex-direction:column}
+    .actions.show{display:flex}
+    .btn{min-height:46px;border-radius:14px;display:flex;align-items:center;justify-content:center;padding:11px 16px;text-decoration:none;font-size:13px;font-weight:850;transition:.18s ease}
+    .btn:active{transform:scale(.985)}
+    .primary{background:linear-gradient(145deg,#d5b36c,#a17c39);color:#10271e;box-shadow:0 10px 28px rgba(161,124,57,.20)}
+    .secondary{border:1px solid rgba(126,177,149,.22);background:rgba(255,255,255,.035);color:#dcebe3}
+    .hint{display:none;margin-top:13px;font-size:11px;line-height:1.5;color:#789b88}
+    .hint.show{display:block}
+    .link-form{margin-top:18px;display:grid;gap:10px}
+    .link-form[hidden]{display:none}
+    .field{width:100%;min-height:46px;border-radius:14px;border:1px solid rgba(126,177,149,.22);background:rgba(255,255,255,.045);color:#eef6f1;padding:0 14px;font:inherit;outline:none}
+    .field:focus{border-color:rgba(213,179,108,.65);box-shadow:0 0 0 3px rgba(213,179,108,.08)}
+    .field::placeholder{color:#799787}
+    .submit-btn{border:0;width:100%;cursor:pointer;font-family:inherit}
+    .form-error{min-height:16px;color:#f0a0a0;font-size:11px;line-height:1.35}
     @keyframes pulse{50%{opacity:.42;transform:scale(.82)}}
   </style>
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -32,9 +45,20 @@
     <div class="logo">P</div>
     <div class="eyebrow">TEXT · BY PETRO</div>
     <h1 id="title">Авторизація через Telegram</h1>
-    <p id="copy">Перевіряємо ваш Telegram та відкриваємо особистий кабінет.</p>
+    <p id="copy">Перевіряємо Telegram та готуємо безпечний вхід.</p>
     <div class="status" id="status"><span class="dot"></span><span id="statusText">Перевіряємо Telegram…</span></div>
-    <a class="fallback" id="fallback" href="client.html?auth=login#cabinet">Відкрити сайт</a>
+    <div class="actions" id="actions">
+      <a class="btn primary" id="telegramButton" href="#" target="_blank" rel="noopener">Продовжити через Telegram</a>
+      <a class="btn secondary" id="siteButton" href="client.html">Повернутися на сайт</a>
+    </div>
+    <form class="link-form" id="linkForm" hidden>
+      <input id="loginInput" class="field" autocomplete="username" placeholder="Логін">
+      <input id="passwordInput" class="field" type="password" autocomplete="current-password" placeholder="Пароль">
+      <button class="btn primary submit-btn" id="linkSubmit" type="submit">Прив’язати профіль</button>
+      <button class="btn secondary submit-btn" id="linkCancel" type="button">Назад</button>
+      <div class="form-error" id="formError"></div>
+    </form>
+    <div class="hint" id="hint">Після підтвердження поверніться у браузер. Сторінка завершить вхід автоматично.</div>
   </main>
 
 <script>
@@ -49,7 +73,16 @@
   const statusText = document.getElementById('statusText');
   const title = document.getElementById('title');
   const copy = document.getElementById('copy');
-  const fallback = document.getElementById('fallback');
+  const actions = document.getElementById('actions');
+  const telegramButton = document.getElementById('telegramButton');
+  const siteButton = document.getElementById('siteButton');
+  const hint = document.getElementById('hint');
+  const linkForm = document.getElementById('linkForm');
+  const loginInput = document.getElementById('loginInput');
+  const passwordInput = document.getElementById('passwordInput');
+  const linkSubmit = document.getElementById('linkSubmit');
+  const linkCancel = document.getElementById('linkCancel');
+  const formError = document.getElementById('formError');
 
   const setStatus = (text, type = '') => {
     statusText.textContent = text;
@@ -65,7 +98,6 @@
         target.searchParams.set(key, String(value));
       }
     });
-    target.hash = 'cabinet';
     location.replace(target.href);
   };
 
@@ -79,15 +111,145 @@
     return match[1];
   }
 
+  async function persistSession(session) {
+    if (!session?.access_token || !session?.refresh_token) {
+      throw new Error('SESSION_CREATE_FAILED');
+    }
+    if (!window.supabase?.createClient) throw new Error('CLIENT_CONFIG_UNAVAILABLE');
+
+    const anonKey = await getAnonKey();
+    const sb = window.supabase.createClient(SUPABASE_URL, anonKey, {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: false,
+        storageKey: 'text-by-petro-auth-v1'
+      }
+    });
+
+    const { error } = await sb.auth.setSession({
+      access_token: session.access_token,
+      refresh_token: session.refresh_token
+    });
+    if (error) throw error;
+  }
+
+  async function edge(body) {
+    const response = await fetch(EDGE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok || data.error) {
+      const error = new Error(data.error || ('HTTP_' + response.status));
+      error.payload = data;
+      throw error;
+    }
+    return data;
+  }
+
   const friendlyError = (code) => ({
     TELEGRAM_DATA_INVALID: 'Не вдалося підтвердити Telegram. Закрийте застосунок і відкрийте його знову.',
     ACCOUNT_BLOCKED: 'Цей профіль тимчасово недоступний.',
     SESSION_CREATE_FAILED: 'Не вдалося створити сесію профілю. Спробуйте ще раз.',
-    CLIENT_CONFIG_UNAVAILABLE: 'Не вдалося завантажити конфігурацію сайту.'
+    CLIENT_CONFIG_UNAVAILABLE: 'Не вдалося завантажити конфігурацію сайту.',
+    BROWSER_LOGIN_EXPIRED: 'Час підтвердження минув. Оновіть сторінку і спробуйте ще раз.',
+    BROWSER_LOGIN_USED: 'Це посилання вже використано. Оновіть сторінку для нового входу.'
   }[code] || 'Не вдалося виконати авторизацію через Telegram.');
 
-  try {
-    const webApp = window.Telegram?.WebApp;
+  async function handleToken(token) {
+    setStatus('Telegram підтверджує профіль…');
+
+    const data = await edge({
+      action: 'telegram_exchange',
+      token
+    });
+
+    if (data.session?.access_token && data.session?.refresh_token) {
+      await persistSession(data.session);
+      title.textContent = 'Telegram авторизовано';
+      copy.textContent = 'Готово. Відкриваємо TEXT by Petro.';
+      setStatus('Авторизовано', 'ok');
+      await sleep(250);
+      return goClient({ telegram_auth: '1' });
+    }
+
+    if (data.needs_link || data.linked === false) {
+      title.textContent = 'Telegram підтверджено';
+      copy.textContent = 'Можете одразу відкрити сайт або один раз прив’язати свій профіль для автоматичних входів надалі.';
+      setStatus('Telegram підтверджено', 'ok');
+
+      telegramButton.textContent = 'Відкрити TEXT by Petro';
+      telegramButton.href = CLIENT_URL.href;
+      telegramButton.removeAttribute('target');
+      siteButton.textContent = 'Прив’язати профіль';
+      siteButton.href = '#';
+      actions.classList.add('show');
+      hint.classList.remove('show');
+
+      siteButton.onclick = (event) => {
+        event.preventDefault();
+        actions.classList.remove('show');
+        linkForm.hidden = false;
+        loginInput.focus();
+      };
+
+      linkCancel.onclick = () => {
+        linkForm.hidden = true;
+        actions.classList.add('show');
+        formError.textContent = '';
+      };
+
+      linkForm.onsubmit = async (event) => {
+        event.preventDefault();
+        const login = loginInput.value.trim();
+        const password = passwordInput.value;
+        if (!login || !password) {
+          formError.textContent = 'Введіть логін і пароль.';
+          return;
+        }
+
+        linkSubmit.disabled = true;
+        formError.textContent = '';
+        setStatus('Прив’язуємо профіль…');
+
+        try {
+          const linked = await edge({
+            action: 'telegram_exchange',
+            token,
+            login,
+            password
+          });
+          if (!linked.session?.access_token || !linked.session?.refresh_token) {
+            throw new Error('SESSION_CREATE_FAILED');
+          }
+
+          await persistSession(linked.session);
+          title.textContent = 'Профіль прив’язано';
+          copy.textContent = 'Готово. Наступні входи через Telegram будуть автоматичними.';
+          setStatus('Авторизовано', 'ok');
+          linkForm.hidden = true;
+          await sleep(350);
+          goClient({ telegram_auth: '1' });
+        } catch (linkError) {
+          const code = linkError?.message || '';
+          formError.textContent =
+            code === 'INVALID_CREDENTIALS'
+              ? 'Невірний логін або пароль.'
+              : friendlyError(code);
+          setStatus('Не вдалося прив’язати профіль', 'err');
+          linkSubmit.disabled = false;
+        }
+      };
+
+      return;
+    }
+
+    throw new Error('TELEGRAM_AUTH_INCOMPLETE');
+  }
+
+  async function handleMiniApp(webApp) {
     try {
       webApp?.ready();
       webApp?.expand();
@@ -95,95 +257,114 @@
 
     const source = new URL(location.href);
     const token = source.searchParams.get('t');
+    if (token) return handleToken(token);
 
-    // /start and /login already provide a protected one-time token.
-    if (token) {
-      title.textContent = 'Telegram авторизовано';
-      copy.textContent = 'Відкриваємо ваш кабінет.';
-      setStatus('Telegram підтверджено', 'ok');
-      await sleep(200);
-      return goClient({
-        t: token,
-        auth: source.searchParams.get('auth') || 'login'
-      });
-    }
-
-    // Direct Mini App launch: Telegram itself supplies signed initData.
     const initData = webApp?.initData || '';
-    if (!initData) {
-      // Normal browser must use ordinary website authentication.
-      return goClient({ auth: 'login' });
-    }
+    if (!initData) return false;
 
     setStatus('Telegram підтверджує особу…');
-
-    const response = await fetch(EDGE_URL, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        action: 'telegram_init',
-        init_data: initData,
-        mode: 'login'
-      })
+    const data = await edge({
+      action: 'telegram_init',
+      init_data: initData,
+      mode: 'login'
     });
 
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok || data.error) {
-      throw new Error(data.error || ('HTTP_' + response.status));
-    }
-
-    // Telegram is already linked to a TEXT by Petro account.
     if (data.session?.access_token && data.session?.refresh_token) {
-      if (!window.supabase?.createClient) throw new Error('CLIENT_CONFIG_UNAVAILABLE');
-
-      // Reuse the public anon key already contained in client.html instead of duplicating config.
-      const anonKey = await getAnonKey();
-      const sb = window.supabase.createClient(SUPABASE_URL, anonKey, {
-        auth: {
-          persistSession: true,
-          autoRefreshToken: true,
-          detectSessionInUrl: false,
-          storageKey: 'text-by-petro-auth-v1'
-        }
-      });
-
-      const { error } = await sb.auth.setSession({
-        access_token: data.session.access_token,
-        refresh_token: data.session.refresh_token
-      });
-      if (error) throw error;
-
+      await persistSession(data.session);
       title.textContent = 'Telegram авторизовано';
-      copy.textContent = 'Профіль знайдено. Відкриваємо особистий кабінет.';
+      copy.textContent = 'Профіль знайдено. Відкриваємо TEXT by Petro.';
       setStatus('Авторизовано', 'ok');
-      await sleep(350);
-      return goClient({ telegram_auth: '1' });
+      await sleep(250);
+      goClient({ telegram_auth: '1' });
+      return true;
     }
 
-    // First Telegram launch: Telegram is verified; only profile link/create is needed once.
     if (data.needs_link && data.token) {
-      title.textContent = 'Telegram авторизовано';
-      copy.textContent = 'Telegram підтверджено. Один раз прив’яжіть існуючий профіль або створіть новий — надалі вхід буде автоматичним.';
+      title.textContent = 'Telegram підтверджено';
+      copy.textContent = 'Відкриваємо TEXT by Petro. Профіль можна прив’язати пізніше, коли захочете увійти в кабінет.';
       setStatus('Telegram підтверджено', 'ok');
-      await sleep(450);
-      return goClient({
-        t: data.token,
-        auth: 'login',
-        telegram_auth: 'verified'
-      });
+      await sleep(250);
+      goClient({ telegram_verified: '1' });
+      return true;
     }
 
     throw new Error('TELEGRAM_AUTH_INCOMPLETE');
+  }
+
+  async function handleBrowser() {
+    title.textContent = 'Вхід через Telegram';
+    copy.textContent = 'Підтвердьте особу в Telegram. Пароль передавати Telegram не потрібно.';
+    setStatus('Створюємо безпечний запит…');
+
+    const started = await edge({ action: 'browser_login_start' });
+    if (!started.token || !started.telegram_url) throw new Error('BROWSER_LOGIN_CREATE_FAILED');
+
+    telegramButton.href = started.telegram_url;
+    actions.classList.add('show');
+    hint.classList.add('show');
+    setStatus('Очікуємо підтвердження в Telegram');
+
+    const expiresAt = new Date(started.expires_at || 0).getTime();
+    let finished = false;
+
+    while (!finished && (!expiresAt || Date.now() < expiresAt)) {
+      await sleep(1500);
+      try {
+        const result = await edge({
+          action: 'browser_login_status',
+          token: started.token
+        });
+
+        if (result.pending) continue;
+        if (result.session?.access_token && result.session?.refresh_token) {
+          finished = true;
+          await persistSession(result.session);
+          title.textContent = 'Вхід підтверджено';
+          copy.textContent = 'Telegram успішно підключено. Повертаємо вас у TEXT by Petro.';
+          setStatus('Авторизовано', 'ok');
+          actions.classList.remove('show');
+          hint.classList.remove('show');
+          await sleep(300);
+          return goClient({ telegram_auth: '1' });
+        }
+      } catch (pollError) {
+        const code = pollError?.message || '';
+        if (code === 'BROWSER_LOGIN_EXPIRED' || code === 'BROWSER_LOGIN_USED') throw pollError;
+        console.warn('[TEXT BY PETRO] browser login poll:', code);
+      }
+    }
+
+    throw new Error('BROWSER_LOGIN_EXPIRED');
+  }
+
+  try {
+    const webApp = window.Telegram?.WebApp;
+    const source = new URL(location.href);
+    const hasToken = !!source.searchParams.get('t');
+    const isMiniApp = !!webApp?.initData;
+
+    if (hasToken || isMiniApp) {
+      const handled = await handleMiniApp(webApp);
+      if (handled === false) return handleBrowser();
+      return;
+    }
+
+    await handleBrowser();
   } catch (error) {
     console.error('[TEXT BY PETRO] Telegram auth failed:', error?.message || error);
     title.textContent = 'Не вдалося авторизуватися';
     copy.textContent = friendlyError(error?.message || '');
     setStatus('Помилка авторизації', 'err');
-    fallback.classList.add('show');
+    actions.classList.add('show');
+    telegramButton.textContent = 'Спробувати ще раз';
+    telegramButton.removeAttribute('target');
+    telegramButton.href = location.href;
+    siteButton.href = CLIENT_URL.href;
+    hint.classList.remove('show');
   }
 })();
 </script>
 
-<noscript><a href="client.html?auth=login#cabinet">Відкрити TEXT by Petro</a></noscript>
+<noscript><a href="client.html">Відкрити TEXT by Petro</a></noscript>
 </body>
 </html>
