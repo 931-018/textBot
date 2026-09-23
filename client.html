@@ -502,7 +502,7 @@
   });
 
   const FRIENDLY = {
-    AUTH_REQUIRED: 'Увійдіть у свій профіль.',
+    AUTH_REQUIRED: 'Сесію входу втрачено. Відкрийте сервіс через бота або увійдіть у профіль ще раз.',
     INVALID_LOGIN: 'Логін: 3–32 латинські символи, цифри або знаки без пробілів.',
     LOGIN_TAKEN: 'Цей логін уже зайнятий. Оберіть інший.',
     INVALID_FULL_NAME: 'ПІБ може містити лише літери та пробіли. Кількість слів — довільна.',
@@ -552,7 +552,50 @@
   }
 
   async function requireUser(accountId) {
-    const { data, error } = await sb.auth.getUser();
+    // First use the persisted Supabase session. Telegram WebView may occasionally
+    // lose/expire the browser auth state while the React account is still open.
+    let { data, error } = await sb.auth.getUser();
+
+    if ((error || !data?.user) && !isManualLogout()) {
+      // getSession() refreshes an expired stored session when possible.
+      try {
+        const { data: sessionData } = await sb.auth.getSession();
+        if (sessionData?.session) {
+          const retry = await sb.auth.getUser();
+          data = retry.data;
+          error = retry.error;
+        }
+      } catch (_) {}
+    }
+
+    if ((error || !data?.user) && !isManualLogout()) {
+      // In a real Telegram Mini App we can safely recover a linked account from
+      // signed initData. The Edge Function verifies that signature server-side.
+      const initData = window.Telegram?.WebApp?.initData || '';
+      if (initData) {
+        try {
+          const recovered = await telegramRequest({
+            action: 'telegram_init',
+            init_data: initData,
+            mode: 'login'
+          });
+          if (recovered?.session?.access_token && recovered?.session?.refresh_token) {
+            const setResult = await sb.auth.setSession({
+              access_token: recovered.session.access_token,
+              refresh_token: recovered.session.refresh_token
+            });
+            if (!setResult.error) {
+              const retry = await sb.auth.getUser();
+              data = retry.data;
+              error = retry.error;
+            }
+          }
+        } catch (recoverError) {
+          console.warn('[TEXT BY PETRO] Telegram session recovery failed:', recoverError);
+        }
+      }
+    }
+
     if (error || !data?.user) throw new Error('AUTH_REQUIRED');
     if (accountId && data.user.id !== accountId) throw new Error('AUTH_REQUIRED');
     return data.user;
