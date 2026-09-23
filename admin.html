@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#124634" />
 <title>TEXT · BY PETRO — Admin UI V4</title>
+<!-- TEXT BY PETRO · Stage 2: client order reliability -->
 <style>
 :root{
   --bg:#0f3f30;--bg2:#15513d;--bg3:#0c3529;
@@ -127,7 +128,7 @@ button,input,select,textarea{font:inherit}.app{position:relative;z-index:1;displ
       <button class="navbtn" data-view="statistics"><svg viewBox="0 0 24 24" fill="none"><path d="M4 19V9m5 10V5m5 14v-7m5 7V3" stroke-width="1.7" stroke-linecap="round"/></svg>Статистика</button>
       <button class="navbtn" data-view="settings"><svg viewBox="0 0 24 24" fill="none"><path d="M12 15.5A3.5 3.5 0 1 0 12 8a3.5 3.5 0 0 0 0 7.5Zm7.4-3.5 1.6 1.2-2 3.5-1.9-.7a7.8 7.8 0 0 1-2 1.2L14.8 19h-4l-.3-1.8a7.8 7.8 0 0 1-2-1.2l-1.9.7-2-3.5L6.2 12A7.8 7.8 0 0 1 6 10l-1.6-1.2 2-3.5 1.9.7a7.8 7.8 0 0 1 2-1.2L10.8 3h4l.3 1.8a7.8 7.8 0 0 1 2 1.2l1.9-.7 2 3.5L19.4 10c.1.7.1 1.3 0 2Z" stroke-width="1.5"/></svg>Налаштування</button>
     </nav>
-    <div class="sidebar-foot"><div class="demo-row"><span class="mode-dot"></span> OWNER PANEL</div><p>Керування замовленнями, клієнтами та фінансами TEXT BY PETRO.</p></div>
+    <div class="sidebar-foot"><div class="demo-row"><span class="mode-dot"></span> OWNER PANEL</div><p>Керування замовленнями, клієнтами та фінансами TEXT BY PETRO.</p><button class="btn secondary" id="telegramConfigureBtn" type="button" style="margin-top:12px;width:100%;font-size:11px">Підключити меню Telegram</button><div id="telegramConfigureStatus" style="color:var(--muted);font-size:10px;margin-top:7px;line-height:1.5" aria-live="polite"></div></div>
   </aside>
 
   <main class="main">
@@ -1038,12 +1039,12 @@ renderStatistics();renderFinanceExtras();
       const {error:signError}=await sb.auth.signInWithPassword({email,password:document.getElementById('adminPassword').value});
       if(signError)throw signError;
       const {data:isAdmin,error:adminError}=await sb.rpc('is_admin');
-      if(adminError||!isAdmin){await sb.auth.signOut();throw new Error('ADMIN_REQUIRED')}
+      if(adminError||!isAdmin){await sb.auth.signOut({scope:'local'});throw new Error('ADMIN_REQUIRED')}
       document.getElementById('adminPassword').value='';hideGate();await loadSnapshot();subscribeRealtime();showToast('Адмін-панель підключена');
     }catch(err){error.textContent=friendly(err,'Не вдалося увійти.')}finally{btn.disabled=false;btn.textContent='Увійти'}
   }
   async function logoutAdmin(){
-    if(realtimeChannel){await sb.removeChannel(realtimeChannel);realtimeChannel=null}await sb.auth.signOut();currentSnapshot=null;showGate('Ви вийшли з адмін-панелі.');setSync('Не авторизовано','error');
+    if(realtimeChannel){await sb.removeChannel(realtimeChannel);realtimeChannel=null}await sb.auth.signOut({scope:'local'});currentSnapshot=null;showGate('Ви вийшли з адмін-панелі.');setSync('Не авторизовано','error');
   }
   async function rpc(name,args={}){const {data,error}=await sb.rpc(name,args);if(error)throw new Error(friendly(error));return data}
   async function control(action,payload={}){
@@ -1135,12 +1136,33 @@ renderStatistics();renderFinanceExtras();
     ensureAuthGate();if(!window.supabase?.createClient){showGate('Не вдалося завантажити модуль бази. Перевірте інтернет.');return}
     sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storageKey:'text-by-petro-admin-auth-v1'},realtime:{params:{eventsPerSecond:5}}});
     window.PETRO_ADMIN_SUPABASE=sb;const {data}=await sb.auth.getSession();if(!data?.session)return showGate();
-    try{const {data:isAdmin,error}=await sb.rpc('is_admin');if(error||!isAdmin){await sb.auth.signOut();return showGate('Збережена сесія не має прав адміністратора.')}hideGate();await loadSnapshot();subscribeRealtime()}catch(err){showGate(friendly(err))}
+    try{const {data:isAdmin,error}=await sb.rpc('is_admin');if(error||!isAdmin){await sb.auth.signOut({scope:'local'});return showGate('Збережена сесія не має прав адміністратора.')}hideGate();await loadSnapshot();subscribeRealtime()}catch(err){showGate(friendly(err))}
     sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||!session){showGate();setSync('Не авторизовано','error')}});
   }
   start();
 })();
 </script>
 
+
+<script id="petro-telegram-menu-setup">
+(()=>{
+ 'use strict';
+ async function configure(){
+  const btn=document.getElementById('telegramConfigureBtn');
+  const info=document.getElementById('telegramConfigureStatus');
+  if(!btn||!info)return;
+  const sb=window.PETRO_ADMIN_SUPABASE;
+  if(!sb){info.textContent='Спершу увійдіть в адмінку.';return;}
+  btn.disabled=true;info.textContent='Налаштовуємо…';
+  try{
+   const {data,error}=await sb.functions.invoke('telegram-bot',{body:{action:'configure_admin'}});
+   if(error||!data?.ok)throw new Error(data?.error||error?.message||'Telegram не відповів');
+   info.textContent='✅ Меню бота відкриває client.html';
+  }catch(err){info.textContent='Помилка: '+String(err?.message||err);}
+  finally{btn.disabled=false;}
+ }
+ document.getElementById('telegramConfigureBtn')?.addEventListener('click',configure);
+})();
+</script>
 </body>
 </html>
