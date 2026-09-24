@@ -813,12 +813,18 @@
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(accessToken ? { Authorization: `Bearer ${accessToken}` } : {})
+          // Use the same public API credentials as the working Supabase SDK calls.
+          // The guest endpoint never receives the service-role key.
+          apikey: SUPABASE_KEY,
+          Authorization: `Bearer ${accessToken || SUPABASE_KEY}`
         },
         cache: 'no-store',
         body: JSON.stringify(body)
       });
-    } catch (_) { throw new Error('Немає зв’язку. Перевірте інтернет і спробуйте ще раз.'); }
+    } catch (networkError) {
+      console.error('[TEXT BY PETRO] guest-order request failed:', networkError);
+      throw new Error('Не вдалося зв’язатися із сервером замовлень. Це не обов’язково проблема вашого інтернету. Перевірте, чи заявка не з’явилася в кабінеті, перед повторним надсиланням.');
+    }
     const data = await response.json().catch(() => ({}));
     if (!response.ok || !data?.ok) {
       const messages = {
@@ -1163,29 +1169,6 @@
       </section>
 
 
-      <section class="services-card" aria-labelledby="servicesHeading">
-        <div class="services-head">
-          <small>АСОРТИМЕНТ ПОСЛУГ</small>
-          <h2 id="servicesHeading">Послуги</h2>
-        </div>
-        <div class="services-grid">
-          <article class="service-item"><span>01</span><div><b>Повне виконання</b><small>Курсова, дипломна, реферат, презентація та інші типи робіт.</small></div></article>
-          <article class="service-item"><span>02</span><div><b>Часткова допомога</b><small>Окремий розділ, план, джерела, розрахунки або інша частина.</small></div></article>
-          <article class="service-item"><span>03</span><div><b>Консультація</b><small>Допомога зі структурою, вимогами та подальшими діями.</small></div></article>
-          <article class="service-item"><span>04</span><div><b>Доопрацювання файлу</b><small>Правки за коментарями викладача або вашими побажаннями.</small></div></article>
-          <article class="service-item"><span>05</span><div><b>Редагування тексту</b><small>Логіка, грамотність, стиль і цілісність матеріалу.</small></div></article>
-          <article class="service-item"><span>06</span><div><b>Оформлення роботи</b><small>Акуратне оформлення за вимогами навчального закладу.</small></div></article>
-        </div>
-      </section>
-
-      <section class="map-card">
-        <div class="map"></div>
-        <div class="map-title">
-          <small>UKRAINE · ONLINE</small>
-          <h2>Для різних навчальних закладів України</h2>
-        </div>
-      </section>
-
       <section class="cabinet-section" aria-labelledby="cabinetHeading">
         <div class="cabinet-head">
           <small>ОСОБИСТИЙ КАБІНЕТ</small>
@@ -1216,6 +1199,31 @@
           </button>
         </div>
       </section>
+
+      <section class="services-card" aria-labelledby="servicesHeading">
+        <div class="services-head">
+          <small>АСОРТИМЕНТ ПОСЛУГ</small>
+          <h2 id="servicesHeading">Послуги</h2>
+        </div>
+        <div class="services-grid">
+          <article class="service-item"><span>01</span><div><b>Повне виконання</b><small>Курсова, дипломна, реферат, презентація та інші типи робіт.</small></div></article>
+          <article class="service-item"><span>02</span><div><b>Часткова допомога</b><small>Окремий розділ, план, джерела, розрахунки або інша частина.</small></div></article>
+          <article class="service-item"><span>03</span><div><b>Консультація</b><small>Допомога зі структурою, вимогами та подальшими діями.</small></div></article>
+          <article class="service-item"><span>04</span><div><b>Доопрацювання файлу</b><small>Правки за коментарями викладача або вашими побажаннями.</small></div></article>
+          <article class="service-item"><span>05</span><div><b>Редагування тексту</b><small>Логіка, грамотність, стиль і цілісність матеріалу.</small></div></article>
+          <article class="service-item"><span>06</span><div><b>Оформлення роботи</b><small>Акуратне оформлення за вимогами навчального закладу.</small></div></article>
+        </div>
+      </section>
+
+      <section class="map-card">
+        <div class="map"></div>
+        <div class="map-title">
+          <small>UKRAINE · ONLINE</small>
+          <h2>Для різних навчальних закладів України</h2>
+        </div>
+      </section>
+
+      
 
       <section class="contact">
         <a href="https://t.me/petia_official" target="_blank" rel="noopener">
@@ -3547,5 +3555,58 @@ body:has(.workspace-body[data-petro-order-active="true"]) #main-help-fab{display
 .order-price.petro-order-paid .petro-price-paid dt{font:900 clamp(17px,3.8vw,21px)/1.25 Manrope,system-ui,sans-serif!important;color:#8bf0b8!important;letter-spacing:.025em}
 .order-price.petro-order-paid .petro-price-paid dd{font:700 clamp(11px,2.6vw,13px)/1.35 Manrope,system-ui,sans-serif!important;color:#b7d1c1!important;white-space:nowrap;margin-left:auto!important}
 @media(max-width:390px){.order-row-end .petro-paid-list strong{font-size:11px}.order-row-end .petro-paid-list small{font-size:10px}}
+</style>
+<style id="petro-home-order-prepay-centering-20260925">
+/* Homepage only. The business logic, forms and Supabase scripts are unchanged. */
+.cabinet-section .cabinet-cta{
+  display:flex!important;
+  width:100%!important;
+  justify-content:center!important;
+  align-items:center!important;
+  margin-inline:auto!important;
+  text-align:center!important;
+}
+.cabinet-section .cabinet-cta .hbtn{
+  display:inline-flex!important;
+  justify-content:center!important;
+  align-items:center!important;
+  gap:10px;
+  width:min(100%,340px)!important;
+  min-width:0!important;
+  margin-inline:auto!important;
+  text-align:center!important;
+}
+@media screen and (max-width:700px){
+  /* Fit both parts of the payment promise on narrow iPhone screens. */
+  .photo-card .prepay{
+    box-sizing:border-box!important;
+    max-width:calc(100% - 12px)!important;
+    min-width:0!important;
+    padding:7px 10px!important;
+    column-gap:5px!important;
+    row-gap:2px!important;
+    font-size:clamp(10.5px,2.85vw,12px)!important;
+    line-height:1.45!important;
+    justify-content:center!important;
+    text-align:center!important;
+    flex-wrap:wrap!important;
+  }
+  .photo-card .prepay b,
+  .photo-card .prepay span{min-width:0!important;white-space:normal!important;overflow-wrap:normal!important}
+  .photo-card .prepay b{font-size:1em!important;letter-spacing:-.012em!important}
+  .photo-card .prepay span{font-size:1em!important;letter-spacing:-.016em!important}
+  .photo-card .prepay i{display:none!important}
+  .cabinet-section .cabinet-cta .hbtn{width:min(100%,310px)!important}
+}
+@media screen and (max-width:390px){
+  .photo-card .prepay{
+    padding:7px 8px!important;
+    column-gap:4px!important;
+    font-size:clamp(10px,2.75vw,11px)!important;
+  }
+}
+@media screen and (max-width:340px){
+  .photo-card .prepay{font-size:10px!important;padding:7px 6px!important;max-width:calc(100% - 8px)!important}
+}
 </style>
 </body></html>
