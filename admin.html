@@ -279,6 +279,12 @@ button,.btn,.navbtn,.iconbtn,.profilebtn,[data-go]{touch-action:manipulation;-we
 #confirmModal{z-index:240!important}
 #confirmModal .modal{position:relative;z-index:241}
 </style>
+
+<style id="tbp-pseudo-finance-mobile-v1">
+.tbp-fx-hero-row{display:flex;flex-wrap:wrap;gap:8px;margin:13px 0 3px}.tbp-fx-hero{min-width:126px;flex:0 1 auto;padding:10px 13px;border:1px solid rgba(240,209,140,.28);border-radius:13px;background:linear-gradient(135deg,rgba(255,224,155,.095),rgba(5,39,29,.18))}.tbp-fx-hero span{display:block;color:#bcd0c6;font-size:10px;font-weight:850;letter-spacing:.12em}.tbp-fx-hero strong{display:block;margin-top:4px;color:#fff0c3;font-size:21px;line-height:1.1}.tbp-pseudo-card{border-style:dashed!important;background:radial-gradient(circle at 82% 15%,rgba(121,192,161,.14),transparent 38%),linear-gradient(150deg,#164735,#0a3025 75%,#0c2921)!important}.tbp-pseudo-tier{color:#c8f3df!important;border-color:rgba(91,214,159,.42)!important;background:rgba(52,153,111,.12)!important}
+.tbp-pseudo-overlay{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(2,18,13,.58)}.tbp-pseudo-overlay.open{display:flex}.tbp-pseudo-modal{width:min(760px,96vw);max-height:92vh;overflow:auto;border:1px solid rgba(240,209,140,.34);border-radius:22px;background:linear-gradient(180deg,#154d3a,#092f24);box-shadow:0 28px 75px rgba(0,0,0,.36)}.tbp-pseudo-head{display:flex;gap:12px;align-items:center;padding:18px;border-bottom:1px solid rgba(255,255,255,.08)}.tbp-pseudo-head>div{flex:1;min-width:0}.tbp-pseudo-head h3{margin:0;color:#ffe0a0;font-size:19px}.tbp-pseudo-head p{margin:4px 0 0;color:#b9cdc3;font-size:12px}.tbp-pseudo-body{padding:18px}.tbp-pseudo-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.tbp-pseudo-summary>div{padding:12px;border:1px solid rgba(255,255,255,.08);border-radius:13px;background:rgba(3,33,25,.45)}.tbp-pseudo-summary span{display:block;color:#a9c1b5;font-size:10px}.tbp-pseudo-summary strong{display:block;margin-top:4px;font-size:14px;overflow-wrap:anywhere}.tbp-pseudo-orders{margin:14px 0;display:grid;gap:7px}.tbp-pseudo-order{display:flex;gap:9px;align-items:center;padding:10px 12px;border:1px solid rgba(255,255,255,.07);border-radius:11px;background:rgba(255,255,255,.025)}.tbp-pseudo-order>div{flex:1;min-width:0}.tbp-pseudo-order strong{font-size:12px}.tbp-pseudo-order small{display:block;color:#a9c0b5;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tbp-convert-box{margin-top:15px;padding:15px;border:1px solid rgba(240,209,140,.29);border-radius:16px;background:rgba(218,179,100,.055)}.tbp-convert-box h4{margin:0 0 5px;color:#ffe0a0}.tbp-convert-box>p{margin:0 0 13px;color:#b9cdc3;font-size:12px;line-height:1.5}.tbp-convert-fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}.tbp-convert-fields label{display:grid;gap:5px;color:#b8cbbf;font-size:10px}.tbp-convert-fields input{width:100%;min-height:42px;padding:9px 10px;border:1px solid rgba(240,209,140,.22);border-radius:10px;background:#082c21;color:#fff}.tbp-convert-fields .full{grid-column:1/-1}.tbp-convert-action{display:flex;justify-content:flex-end;margin-top:12px}.tbp-pseudo-order-banner{margin:13px 0;padding:13px 14px;border:1px solid rgba(85,223,164,.3);border-radius:14px;background:rgba(45,164,109,.08)}.tbp-pseudo-order-banner strong{display:block;color:#c9ffe3;font-size:13px}.tbp-pseudo-order-banner p{margin:4px 0 10px;color:#b9cfc4;font-size:11px;line-height:1.5}
+@media(max-width:720px){.tbp-fx-hero-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.tbp-fx-hero{min-width:0}.tbp-fx-hero strong{font-size:18px}.tbp-pseudo-overlay{padding:8px}.tbp-pseudo-modal{width:100%;max-height:96vh;border-radius:18px}.tbp-pseudo-head{padding:14px}.tbp-pseudo-body{padding:13px}.tbp-pseudo-summary{grid-template-columns:1fr 1fr}.tbp-convert-fields{grid-template-columns:1fr}.tbp-convert-fields .full{grid-column:auto}#orderDrawer .drawer-head h2,#workDrawer .drawer-head h2{font-size:17px!important}#orderDrawer .drawer-head p,#workDrawer .drawer-head p{font-size:10px!important}#orderDrawer .drawer-section,#workDrawer .drawer-section{padding:12px!important}#orderDrawer .drawer-section h4,#workDrawer .drawer-section h4{font-size:13px!important}#orderDrawer .info-box span,#workDrawer .info-box span{font-size:9px!important}#orderDrawer .info-box strong,#workDrawer .info-box strong{font-size:11.5px!important}#orderDrawer .field label,#workDrawer .field label{font-size:10px!important}#orderDrawer .field input,#orderDrawer .field textarea,#workDrawer .field input,#workDrawer .field select,#workDrawer .field textarea{font-size:12px!important}.tbp-pseudo-order-banner p{font-size:10.5px}}
+</style>
 </head>
 <body>
 <div class="app">
@@ -304,7 +310,7 @@ button,.btn,.navbtn,.iconbtn,.profilebtn,[data-go]{touch-action:manipulation;-we
   <main class="main">
     <header class="topbar">
       <button class="iconbtn mobile-menu" id="menuBtn"><svg viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 12h16M4 17h16" stroke-width="1.8" stroke-linecap="round"/></svg></button>
-      <div class="search"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke-width="1.7"/><path d="m20 20-4-4" stroke-width="1.7" stroke-linecap="round"/></svg><input id="globalSearch" placeholder="Пошук клієнта, логіну, № замовлення..."/><span class="kbd">⌘ K</span></div>
+      <div class="search"><svg viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="7" stroke-width="1.7"/><path d="m20 20-4-4" stroke-width="1.7" stroke-linecap="round"/></svg><input id="globalSearch" type="search" name="tbp-admin-global-search" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" data-1p-ignore="true" data-lpignore="true" data-form-type="other" readonly placeholder="Пошук клієнта, логіну, № замовлення..."/><span class="kbd">⌘ K</span></div>
       <div class="top-actions">
         <button class="iconbtn" id="notifyBtn" title="Сповіщення"><svg viewBox="0 0 24 24" fill="none"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9ZM10 21h4" stroke-width="1.7" stroke-linecap="round"/></svg><span class="badge" id="notifyBadge">2</span></button>
         <div class="notify-pop" id="notifyPop"><div class="notify-head"><strong>Сповіщення</strong><span class="muted" style="font-size:9px">поточні</span></div><div class="notify-list" id="notifyList"></div></div>
@@ -343,7 +349,7 @@ button,.btn,.navbtn,.iconbtn,.profilebtn,[data-go]{touch-action:manipulation;-we
 
       <section class="view" id="view-clients">
         <div class="page-head"><div><div class="eyebrow">Clients</div><h1>Клієнти</h1><p>Профіль, замовлення, реферали, доступ і технічна історія користувача.</p></div><div class="head-actions"><button class="btn primary" onclick="openAddClient()">+ Додати клієнта</button></div></div>
-        <div class="tbp-client-toolbar"><div class="tbp-client-heading"><strong id="tbpClientCount">Завантаження клієнтів…</strong><span id="tbpClientAdded">Період: усі дати</span></div><div class="filter-group tbp-client-filters" id="tbpClientFilters" role="group" aria-label="Фільтр клієнтів"><button class="chip active" data-tbp-filter="all" type="button">Всі</button><button class="chip" data-tbp-filter="new" type="button">Нові</button><button class="chip" data-tbp-filter="START" type="button">START</button><button class="chip" data-tbp-filter="PLUS" type="button">PLUS</button><button class="chip" data-tbp-filter="ADVANCED" type="button">ADVANCED</button><button class="chip" data-tbp-filter="ELITE" type="button">ELITE</button></div><div class="tbp-client-controls"><div class="field"><label for="tbpClientPeriod">Дата реєстрації</label><select id="tbpClientPeriod"><option value="all">За весь час</option><option value="today">Сьогодні</option><option value="7">Останні 7 днів</option><option value="30">Останні 30 днів</option><option value="month">Цей місяць</option><option value="custom">Свій період</option></select></div><div class="mini-search"><input id="clientSearch" placeholder="Пошук: імʼя, логін, код" aria-label="Пошук клієнтів" /></div></div><div class="tbp-client-dates" id="tbpClientDates" hidden><label>Від <input type="date" id="tbpClientFrom" /></label><label>До <input type="date" id="tbpClientTo" /></label></div></div>
+        <div class="tbp-client-toolbar"><div class="tbp-client-heading"><strong id="tbpClientCount">Завантаження клієнтів…</strong><span id="tbpClientAdded">Період: усі дати</span></div><div class="filter-group tbp-client-filters" id="tbpClientFilters" role="group" aria-label="Фільтр клієнтів"><button class="chip active" data-tbp-filter="all" type="button">Всі</button><button class="chip" data-tbp-filter="new" type="button">Нові</button><button class="chip" data-tbp-filter="account" type="button">Кабінети</button><button class="chip" data-tbp-filter="pseudo" type="button">Псевдоклієнти</button><button class="chip" data-tbp-filter="START" type="button">START</button><button class="chip" data-tbp-filter="PLUS" type="button">PLUS</button><button class="chip" data-tbp-filter="ADVANCED" type="button">ADVANCED</button><button class="chip" data-tbp-filter="ELITE" type="button">ELITE</button></div><div class="tbp-client-controls"><div class="field"><label for="tbpClientPeriod">Дата реєстрації</label><select id="tbpClientPeriod"><option value="all">За весь час</option><option value="today">Сьогодні</option><option value="7">Останні 7 днів</option><option value="30">Останні 30 днів</option><option value="month">Цей місяць</option><option value="custom">Свій період</option></select></div><div class="mini-search"><input id="clientSearch" placeholder="Пошук: імʼя, логін, код" aria-label="Пошук клієнтів" /></div></div><div class="tbp-client-dates" id="tbpClientDates" hidden><label>Від <input type="date" id="tbpClientFrom" /></label><label>До <input type="date" id="tbpClientTo" /></label></div></div>
         <div class="clients-grid" id="clientsGrid"></div>
       </section>
 
@@ -544,6 +550,7 @@ function groupedAmounts(list,selector=o=>Math.max((Number(o.price)||0)-(Number(o
   const g={UAH:0,USD:0,EUR:0,PLN:0}; list.forEach(o=>g[o.currency||'UAH']=(g[o.currency||'UAH']||0)+selector(o)); return g;
 }
 function currencyLines(g){return Object.keys(V3_CURRENCIES).map(c=>`<div class="currency-line ${Math.abs(g[c]||0)<.0001?'zero':''}"><span>${c}</span><strong>${fmtMoney(g[c]||0,c)}</strong></div>`).join('')}
+function currencyHero(g){return ['USD','EUR','PLN'].filter(c=>Math.abs(Number(g[c]||0))>.0001).map(c=>`<div class="tbp-fx-hero"><span>${c}</span><strong>${fmtMoney(g[c]||0,c)}</strong></div>`).join('')}
 function parseDeadline(s){if(!s||s==='—')return null;let m=s.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);if(m)return new Date(Number(m[3]),Number(m[2])-1,Number(m[1]),23,59,59);if(/^\d{4}-\d{2}-\d{2}$/.test(s)){const [y,mo,d]=s.split('-').map(Number);return new Date(y,mo-1,d,23,59,59)}return null}
 function deadlineMeta(s){const d=parseDeadline(s);if(!d)return {text:'Без дедлайну',cls:'ok',days:null};const now=new Date();now.setHours(0,0,0,0);const days=Math.ceil((d-now)/86400000);if(days<0)return{text:`прострочено ${Math.abs(days)} дн.`,cls:'urgent',days};if(days===0)return{text:'сьогодні',cls:'urgent',days};if(days===1)return{text:'1 день',cls:'urgent',days};if(days<=3)return{text:`${days} дні`,cls:'soon',days};return{text:`${days} днів`,cls:'ok',days}}
 function deadlineBadge(s){const x=deadlineMeta(s);return `<span class="deadline-left ${x.cls}">${x.text}</span>`}
@@ -621,8 +628,8 @@ renderFinance=function(){
  const paid=orders.filter(o=>o.payment==='paid');
  const dueG=groupedAmounts(due,o=>Math.max(0,Number(o.net??Math.max(o.price-o.discount-o.bonusUsed/(Number(o.rate)||1),0))-(o.payment==='partial'?Number(o.paidAmount)||0:0))),paidG=groupedAmounts(orders.filter(o=>o.payment==='paid'||o.payment==='partial'),o=>o.payment==='paid'?Number(o.net)||0:Number(o.paidAmount)||0);const bonusG={UAH:0,USD:0,EUR:0,PLN:0};active.forEach(o=>bonusG[o.currency||'UAH']+=(Number(o.bonusUsed)||0)/(Number(o.rate)||1));
  const cards=document.querySelectorAll('#view-finance .finance-card');
- if(cards[0])cards[0].innerHTML=`<div class="label">До оплати</div><div class="amount">${fmtMoney(dueG.UAH,'UAH')}</div><div class="sub">чиста сума, яку очікуєш</div><div class="sub gold" style="margin-top:6px">Використано бонусів: ${fmtMoney(bonusG.UAH,'UAH')}</div><div class="currency-stack">${currencyLines(dueG)}</div>`;
- if(cards[1])cards[1].innerHTML=`<div class="label">Оплачено</div><div class="amount">${fmtMoney(paidG.UAH,'UAH')}</div><div class="sub">за вибраний період</div><div class="currency-stack">${currencyLines(paidG)}</div>`;
+ if(cards[0])cards[0].innerHTML=`<div class="label">До оплати</div><div class="amount">${fmtMoney(dueG.UAH,'UAH')}</div><div class="sub">чиста сума, яку очікуєш</div><div class="sub gold" style="margin-top:6px">Використано бонусів: ${fmtMoney(bonusG.UAH,'UAH')}</div><div class="tbp-fx-hero-row">${currencyHero(dueG)}</div><div class="currency-stack">${currencyLines(dueG)}</div>`;
+ if(cards[1])cards[1].innerHTML=`<div class="label">Оплачено</div><div class="amount">${fmtMoney(paidG.UAH,'UAH')}</div><div class="sub">за вибраний період</div><div class="tbp-fx-hero-row">${currencyHero(paidG)}</div><div class="currency-stack">${currencyLines(paidG)}</div>`;
  document.getElementById('financeDue').innerHTML=due.map(o=>`<div class="security-item"><div class="grow"><strong>${o.number} · ${clientName(o)}</strong><p>${o.type} · ${o.deadline} · ${deadlineMeta(o.deadline).text}</p></div><span class="money gold">${fmtMoney(Math.max(0,Number(o.net??Math.max(o.price-o.discount-o.bonusUsed/(Number(o.rate)||1),0))-(o.payment==='partial'?Number(o.paidAmount)||0:0)),o.currency)}</span></div>`).join('')||`<div class="empty-mini">Немає актуальних сум до оплати</div>`;
  renderAccounts();
 };
@@ -1225,7 +1232,7 @@ renderStatistics();renderFinanceExtras();
     AUTH_REQUIRED:'Увійдіть в адмін-панель.', ADMIN_REQUIRED:'Цей акаунт не має прав адміністратора.',
     INVALID_LOGIN:'Перевірте логін.', LOGIN_TAKEN:'Такий логін уже існує.', INVALID_FULL_NAME:'ПІБ може містити лише літери та пробіли.',
     INVALID_PASSWORD:'Пароль має містити мінімум 6 символів.', INVALID_REFERRAL_CODE:'Реферальний код має неправильний формат.',
-    REFERRAL_CODE_TAKEN:'Такий реферальний код уже існує.', ORDER_NOT_FOUND:'Замовлення не знайдено.', PROFILE_NOT_FOUND:'Клієнта не знайдено.',
+    REFERRAL_CODE_TAKEN:'Такий реферальний код уже існує.', ORDER_NOT_FOUND:'Замовлення не знайдено.', PROFILE_NOT_FOUND:'Клієнта не знайдено.', PSEUDO_CLIENT_NOT_FOUND:'Псевдоклієнта не знайдено.', PSEUDO_CLIENT_ALREADY_CONVERTED:'Для цього клієнта кабінет уже створено.', PSEUDO_CONVERT_FAILED:'Не вдалося створити кабінет із псевдоклієнта.',
     INVALID_PRICE:'Перевірте ціну.', INVALID_DISCOUNT:'Знижка не може бути більшою за ціну.', INVALID_RATE:'Перевірте курс валюти.',
     INVALID_SETTINGS:'Перевірте значення налаштувань.', CANNOT_DELETE_ADMIN:'Адміністратора видалити не можна.', CANNOT_DELETE_SELF:'Власний акаунт видалити не можна.'
   };
@@ -1282,11 +1289,12 @@ renderStatistics();renderFinanceExtras();
   function levelOf(profile){const rate=asNumber(profile.cashbackRate,1),earned=rate>=5?3:rate>=3?2:rate>=2?1:0;return LEVELS[Math.max(earned,Math.max(0,Math.min(3,asNumber(profile.loyaltyBoosts))))]}
   function activityLabel(action){return ({profile_updated:'Профіль оновлено',order_submitted:'Заявку надіслано',order_cancelled:'Замовлення скасовано',order_draft_saved:'Чернетку збережено',signed_in:'Вхід у кабінет'}[action]||String(action||'Активність').replaceAll('_',' '))}
   function mapSnapshot(snapshot){
-    currentSnapshot=snapshot||{};const profiles=Array.isArray(snapshot?.profiles)?snapshot.profiles:[];const activities=Array.isArray(snapshot?.activity)?snapshot.activity:[];
+    currentSnapshot=snapshot||{};const profiles=Array.isArray(snapshot?.profiles)?snapshot.profiles:[];const pseudoProfiles=Array.isArray(snapshot?.pseudoClients)?snapshot.pseudoClients:[];const activities=Array.isArray(snapshot?.activity)?snapshot.activity:[];
     Object.keys(clients).forEach(key=>delete clients[key]);
     profiles.forEach(p=>{const id=String(p.id);clients[id]={id,name:htmlSafe(p.fullName||'Без імені'),rawName:String(p.fullName||''),login:htmlSafe(p.login||''),rawLogin:String(p.login||''),contact:htmlSafe(p.contact||''),rawContact:String(p.contact||''),ref:htmlSafe(p.referralCode||''),rawRef:String(p.referralCode||''),level:levelOf(p),balance:asNumber(p.balance),completed:asNumber(p.completed),joined:dateText(p.createdAt),createdAt:String(p.createdAt||''),activity:timeText(p.createdAt),referredBy:p.referredBy||null,blocked:!!p.blockedAt,referrals:[],events:activities.filter(a=>a.userId===p.id).map(a=>[activityLabel(a.action),htmlSafe(JSON.stringify(a.details||{})),timeText(a.createdAt)])}});
+    pseudoProfiles.forEach(p=>{const rawId=String(p.id),id='pseudo:'+rawId;clients[id]={id,pseudoId:rawId,isPseudo:true,name:htmlSafe(p.fullName||'Без імені'),rawName:String(p.fullName||''),login:'Без кабінету',rawLogin:'',contact:htmlSafe(p.contact||''),rawContact:String(p.contact||''),ref:'—',rawRef:'',level:'PSEUDO',balance:0,completed:0,joined:dateText(p.createdAt),createdAt:String(p.createdAt||''),activity:timeText(p.updatedAt||p.createdAt),referredBy:null,blocked:false,referrals:[],events:[],note:String(p.note||'')}});
     Object.values(clients).forEach(c=>{if(c.referredBy&&clients[c.referredBy])clients[c.referredBy].referrals.push(c.id)});
-    orders=(Array.isArray(snapshot?.orders)?snapshot.orders:[]).map(row=>{const f=row.form&&typeof row.form==='object'?row.form:{};const rawType=String(f.type||'Без типу'),rawTopic=String(f.topic||'Без теми'),rawDetails=String(f.notes||''),rawContact=String(f.contact||row.guestContact||'');return {id:String(row.id),number:htmlSafe(row.number||'—'),client:row.userId||'',guestName:htmlSafe(row.guestName||f.fullName||''),rawGuestName:String(row.guestName||f.fullName||''),guestContact:htmlSafe(row.guestContact||rawContact),rawGuestContact:String(row.guestContact||rawContact),type:htmlSafe(rawType),rawType,topic:htmlSafe(rawTopic),rawTopic,details:htmlSafe(rawDetails),rawDetails,contact:htmlSafe(rawContact),rawContact,status:String(row.status||'submitted'),progress:asNumber(row.progress),payment:String(row.paymentStatus||'unpaid'),price:row.price==null?0:asNumber(row.price),discount:asNumber(row.discount),currency:String(row.currency||'UAH'),rate:asNumber(row.rate,1),date:dateText(row.createdAt),createdAt:row.createdAt,updatedAt:row.updatedAt,deadline:String(row.deadline||f.deadline||'—'),workDeadline:String(row.workDeadline||''),paidAmount:asNumber(row.paidAmount),privateQuoteAmount:row.privateQuoteAmount==null?null:asNumber(row.privateQuoteAmount),privateQuoteCurrency:String(row.privateQuoteCurrency||'UAH'),privateQuoteRate:asNumber(row.privateQuoteRate,1),files:Array.isArray(row.files)?row.files.length:0,fileItems:Array.isArray(row.files)?row.files:[],bonusPercent:f.useBonuses?asNumber(f.bonusAmount):0,bonusUsed:asNumber(row.bonusUsed),message:String(row.clientMessage||''),note:String(row.adminNote||''),history:Array.isArray(row.history)?row.history:[],source:String(row.source||'client')}});
+    orders=(Array.isArray(snapshot?.orders)?snapshot.orders:[]).map(row=>{const f=row.form&&typeof row.form==='object'?row.form:{};const rawType=String(f.type||'Без типу'),rawTopic=String(f.topic||'Без теми'),rawDetails=String(f.notes||''),rawContact=String(f.contact||row.guestContact||'');return {id:String(row.id),number:htmlSafe(row.number||'—'),client:row.userId||(row.pseudoClientId?'pseudo:'+row.pseudoClientId:''),pseudoClientId:row.pseudoClientId||null,guestName:htmlSafe(row.guestName||f.fullName||''),rawGuestName:String(row.guestName||f.fullName||''),guestContact:htmlSafe(row.guestContact||rawContact),rawGuestContact:String(row.guestContact||rawContact),type:htmlSafe(rawType),rawType,topic:htmlSafe(rawTopic),rawTopic,details:htmlSafe(rawDetails),rawDetails,contact:htmlSafe(rawContact),rawContact,status:String(row.status||'submitted'),progress:asNumber(row.progress),payment:String(row.paymentStatus||'unpaid'),price:row.price==null?0:asNumber(row.price),discount:asNumber(row.discount),currency:String(row.currency||'UAH'),rate:asNumber(row.rate,1),date:dateText(row.createdAt),createdAt:row.createdAt,updatedAt:row.updatedAt,deadline:String(row.deadline||f.deadline||'—'),workDeadline:String(row.workDeadline||''),paidAmount:asNumber(row.paidAmount),privateQuoteAmount:row.privateQuoteAmount==null?null:asNumber(row.privateQuoteAmount),privateQuoteCurrency:String(row.privateQuoteCurrency||'UAH'),privateQuoteRate:asNumber(row.privateQuoteRate,1),files:Array.isArray(row.files)?row.files.length:0,fileItems:Array.isArray(row.files)?row.files:[],bonusPercent:f.useBonuses?asNumber(f.bonusAmount):0,bonusUsed:asNumber(row.bonusUsed),message:String(row.clientMessage||''),note:String(row.adminNote||''),history:Array.isArray(row.history)?row.history:[],source:String(row.source||'client')}});
     accounts=(Array.isArray(snapshot?.paymentAccounts)?snapshot.paymentAccounts:[]).map(a=>({id:String(a.id),label:htmlSafe(a.label||''),currency:String(a.currency||'UAH'),number:htmlSafe(a.details||''),rawNumber:String(a.details||''),note:htmlSafe(a.note||''),rawNote:String(a.note||''),active:a.is_active!==false}));
     payoutRows=Array.isArray(snapshot?.payouts)?snapshot.payouts:[];
     const settings=snapshot?.settings||{};if(settings.maxBonus!=null)LOYALTY.maxBonus=asNumber(settings.maxBonus,90);if(settings.minWithdraw!=null)LOYALTY.minWithdraw=asNumber(settings.minWithdraw,350);if(settings.welcome!=null)LOYALTY.welcome=asNumber(settings.welcome,100);if(settings.bonusRate!=null)LOYALTY.bonusRate=asNumber(settings.bonusRate,1);if(settings.referral!=null)LOYALTY.referral=asNumber(settings.referral,10);if(settings.maxFiles!=null)LOYALTY.maxFiles=asNumber(settings.maxFiles,8);if(settings.refDigits!=null)LOYALTY.refDigits=asNumber(settings.refDigits,5);if(settings.fx){FX_RATES.USD=asNumber(settings.fx.USD,FX_RATES.USD);FX_RATES.EUR=asNumber(settings.fx.EUR,FX_RATES.EUR);FX_RATES.PLN=asNumber(settings.fx.PLN,FX_RATES.PLN)}
@@ -1300,7 +1308,7 @@ renderStatistics();renderFinanceExtras();
   function subscribeRealtime(){
     if(realtimeChannel)sb.removeChannel(realtimeChannel);
     realtimeChannel=sb.channel('petro-admin-live-'+crypto.randomUUID());
-    ['orders','profiles','bonus_ledger','bonus_payouts','payment_accounts','client_activity','app_settings'].forEach(table=>realtimeChannel.on('postgres_changes',{event:'*',schema:'public',table},scheduleSnapshot));
+    ['orders','profiles','pseudo_clients','bonus_ledger','bonus_payouts','payment_accounts','client_activity','app_settings'].forEach(table=>realtimeChannel.on('postgres_changes',{event:'*',schema:'public',table},scheduleSnapshot));
     realtimeChannel.subscribe(status=>{if(status==='SUBSCRIBED')setSync('Синхронізовано');if(status==='CHANNEL_ERROR')setSync('Realtime недоступний','error')});
   }
   async function mutate(task,success,after){
@@ -1372,6 +1380,7 @@ renderStatistics();renderFinanceExtras();
   // All RPC operations still validate the authenticated admin on the server.
   window.PETRO_ADMIN_BRIDGE=Object.freeze({
     rpc:(name,args)=>rpc(name,args),
+    control:(action,payload)=>control(action,payload),
     loadSnapshot:(options)=>loadSnapshot(options),
     friendly:(error,fallback)=>friendly(error,fallback)
   });
@@ -1427,14 +1436,21 @@ renderStatistics();renderFinanceExtras();
   const grid=$('clientsGrid');if(!grid)return;
   const q=String(search??$('clientSearch')?.value??'').trim().toLowerCase();
   const all=Object.values(clients),periodRows=all.filter(c=>timeMatch(c,period)),base=clientTier==='new'?all.filter(c=>timeMatch(c,period==='all'?'30':period)):periodRows;
-  const rows=base.filter(c=>(clientTier==='all'||clientTier==='new'||String(c.level||'').toUpperCase()===clientTier)
-    &&[c.name,c.login,c.ref,c.contact].join(' ').toLowerCase().includes(q)).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
-  const total=$('tbpClientCount'),stats=$('tbpClientAdded');if(total)total.textContent=`Клієнти: ${rows.length} / ${all.length}`;
-  if(stats)stats.textContent=`Зареєструвалося за період: ${periodRows.length}${clientTier==='new'&&period==='all'?' · Нові = останні 30 днів':''}`;
-  // No playing-card suit icons. Keep the premium identity cards.
+  const typeMatch=c=>clientTier==='account'?!c.isPseudo:clientTier==='pseudo'?!!c.isPseudo:(clientTier==='all'||clientTier==='new'||String(c.level||'').toUpperCase()===clientTier);
+  const rows=base.filter(c=>typeMatch(c)&&[c.name,c.login,c.ref,c.contact].join(' ').toLowerCase().includes(q)).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+  const accountCount=all.filter(c=>!c.isPseudo).length,pseudoCount=all.filter(c=>c.isPseudo).length;
+  const total=$('tbpClientCount'),stats=$('tbpClientAdded');if(total)total.textContent=`Всього: ${all.length} · Кабінети: ${accountCount} · Псевдо: ${pseudoCount}`;
+  if(stats)stats.textContent=`За вибраний період: ${periodRows.length}${clientTier==='new'&&period==='all'?' · Нові = останні 30 днів':''}`;
   grid.innerHTML=rows.length?rows.map(c=>{
     const mine=orders.filter(o=>o.client===c.id),active=mine.filter(o=>['submitted','accepted','working','paused','ready'].includes(o.status)).length;
     const level=String(c.level||'START').toUpperCase(),stamp=joins(c);
+    if(c.isPseudo)return `<button type="button" class="tbp-client-card tbp-pseudo-card" onclick="openClient('${c.id}')" aria-label="Відкрити псевдоклієнта ${c.name}">
+      <div class="tbp-card-corners"><span>TEXT · BY PETRO</span><span class="tbp-card-tiny-seal">P</span></div>
+      <div class="tbp-card-identity"><span class="big-avatar">${initials(c.name)}</span><div><h4>${c.name}</h4><p>${c.contact||'Контакт не вказано'}</p></div></div>
+      <span class="tbp-card-tier tbp-pseudo-tier">ПСЕВДО · БЕЗ КАБІНЕТУ</span>
+      <div class="tbp-card-details"><div><small>Робіт</small><b>${mine.length}</b></div><div><small>Активні</small><b>${active}</b></div><div><small>Вхід</small><b>—</b></div></div>
+      <div class="tbp-card-bottom"><span>Додано: <strong>${stamp?c.joined:'—'}</strong></span><span class="tbp-open">КАРТКА ↗</span></div>
+    </button>`;
     return `<button type="button" class="tbp-client-card" onclick="openClient('${c.id}')" aria-label="Відкрити профіль ${c.name}">
       <div class="tbp-card-corners"><span>TEXT · BY PETRO</span><span class="tbp-card-tiny-seal">P</span></div>
       <div class="tbp-card-identity"><span class="big-avatar">${initials(c.name)}</span><div><h4>${c.name}</h4><p>${c.login}</p></div></div>
@@ -1667,6 +1683,48 @@ renderStatistics();renderFinanceExtras();
   save();
  };
  renderPremiumClients();
+})();
+</script>
+
+<script id="tbp-pseudo-client-behavior-v1">
+(()=>{
+ 'use strict';
+ const bridge=window.PETRO_ADMIN_BRIDGE||{};
+ const esc=v=>String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]));
+ const overlay=document.createElement('div');overlay.className='tbp-pseudo-overlay';overlay.id='tbpPseudoOverlay';document.body.appendChild(overlay);
+ function close(){overlay.classList.remove('open');overlay.innerHTML=''}
+ overlay.addEventListener('click',e=>{if(e.target===overlay)close()});
+ window.closePseudoClient=close;
+ function loginSuggestion(c){const raw=String(c?.rawContact||'').trim();if(raw.startsWith('@')){const v=raw.slice(1).toLowerCase();return /^[!-~]{3,32}$/.test(v)&&!v.includes(' ')?v:''}return ''}
+ window.openPseudoClient=function(id){
+   const c=clients[id];if(!c?.isPseudo)return;
+   const mine=orders.filter(o=>o.client===id).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
+   overlay.innerHTML=`<div class="tbp-pseudo-modal" role="dialog" aria-modal="true" aria-label="Псевдоклієнт">
+    <div class="tbp-pseudo-head"><div><h3>${c.name}</h3><p>Псевдоклієнт · внутрішня картка без входу</p></div><button type="button" class="iconbtn" onclick="closePseudoClient()">×</button></div>
+    <div class="tbp-pseudo-body">
+      <div class="tbp-pseudo-summary"><div><span>Контакт</span><strong>${c.contact||'—'}</strong></div><div><span>Замовлень</span><strong>${mine.length}</strong></div><div><span>Додано</span><strong>${c.joined||'—'}</strong></div></div>
+      <div class="tbp-pseudo-orders">${mine.length?mine.map(o=>`<div class="tbp-pseudo-order"><div><strong>${o.number} · ${o.type}</strong><small>${o.topic}</small></div><span class="status ${o.status}">${statusMap[o.status]||o.status}</span></div>`).join(''):'<div class="empty-mini">Замовлень поки немає</div>'}</div>
+      <div class="tbp-convert-box"><h4>Створити повноцінний кабінет</h4><p>Поточні замовлення цього псевдоклієнта будуть привʼязані до нового профілю. Майбутні замовлення після входу клієнта також автоматично зберігатимуться там.</p>
+       <div class="tbp-convert-fields"><label>ПІБ<input id="tbpPseudoName" value="${esc(c.rawName)}" /></label><label>Контакт<input id="tbpPseudoContact" value="${esc(c.rawContact)}" /></label><label>Логін<input id="tbpPseudoLogin" autocomplete="off" value="${esc(loginSuggestion(c))}" placeholder="наприклад petro.ua" /></label><label>Тимчасовий пароль<input id="tbpPseudoPassword" type="password" autocomplete="new-password" placeholder="мінімум 6 символів" /></label><label class="full">Власний реферальний код · необовʼязково<input id="tbpPseudoRef" inputmode="numeric" autocomplete="off" /></label></div>
+       <div class="tbp-convert-action"><button type="button" class="btn primary" id="tbpPseudoConvert">Створити кабінет і привʼязати історію</button></div>
+      </div>
+    </div></div>`;
+   overlay.classList.add('open');
+   document.getElementById('tbpPseudoConvert').onclick=async()=>{
+     const btn=document.getElementById('tbpPseudoConvert');btn.disabled=true;btn.textContent='Створюємо…';
+     try{
+       if(typeof bridge.control!=='function')throw new Error('ADMIN_CONTROL_UNAVAILABLE');
+       const result=await bridge.control('create_client_from_pseudo',{pseudoClientId:c.pseudoId,fullName:document.getElementById('tbpPseudoName').value.trim(),contact:document.getElementById('tbpPseudoContact').value.trim(),login:document.getElementById('tbpPseudoLogin').value.trim(),password:document.getElementById('tbpPseudoPassword').value,referralCode:document.getElementById('tbpPseudoRef').value.trim()});
+       await bridge.loadSnapshot({silent:true});close();showToast(`Кабінет створено · привʼязано робіт: ${Number(result?.linkedOrders||0)}`);
+     }catch(err){showToast(bridge.friendly?bridge.friendly(err):String(err?.message||err));btn.disabled=false;btn.textContent='Створити кабінет і привʼязати історію';}
+   };
+ }
+ const realOpenClient=window.openClient;
+ window.openClient=function(id,tab='profile'){const c=clients[id];if(c?.isPseudo)return openPseudoClient(id);return realOpenClient(id,tab)};
+ function addPseudoBanner(drawer,o){if(!drawer||!o?.client?.startsWith('pseudo:'))return;drawer.querySelectorAll('.tbp-pseudo-order-banner').forEach(n=>n.remove());const c=clients[o.client];if(!c)return;const node=document.createElement('div');node.className='tbp-pseudo-order-banner';node.innerHTML=`<strong>Псевдоклієнт · без кабінету</strong><p>${c.name}${c.contact?' · '+c.contact:''}. Історія його гостьових замовлень уже групується в окремій картці.</p><button type="button" class="btn small green">Відкрити картку / створити кабінет</button>`;node.querySelector('button').onclick=()=>openPseudoClient(o.client);const body=drawer.querySelector('.drawer-body');if(body)body.insertBefore(node,body.firstChild)}
+ const baseOrder=window.openOrder;window.openOrder=function(id){baseOrder(id);const o=orders.find(x=>x.id===id);addPseudoBanner(document.getElementById('orderDrawer'),o)};
+ const baseWork=window.openWork;window.openWork=function(id){baseWork(id);const o=orders.find(x=>x.id===id);addPseudoBanner(document.getElementById('workDrawer'),o)};
+ const search=document.getElementById('globalSearch');if(search){let engaged=false;const unlock=()=>{engaged=true;search.readOnly=false};search.addEventListener('pointerdown',unlock,{once:true});search.addEventListener('keydown',unlock,{once:true});search.addEventListener('focus',()=>{search.readOnly=false});search.value='';[80,300,800,1500].forEach(ms=>setTimeout(()=>{if(!engaged){search.value='';search.dispatchEvent(new Event('input',{bubbles:true}))}},ms));window.addEventListener('pageshow',()=>{if(!engaged)search.value=''})}
 })();
 </script>
 </body>
