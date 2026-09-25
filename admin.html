@@ -217,6 +217,44 @@ body[data-view="dashboard"]::after{background:radial-gradient(circle at 14% 14%,
 @media(max-width:1050px){.sidebar{width:min(86vw,310px);left:calc(-1 * min(86vw,310px) - 16px);z-index:60;padding:18px 14px 16px;border-right:1px solid rgba(240,209,140,.22);background:linear-gradient(180deg,rgba(20,84,64,.96),rgba(10,46,35,.96));box-shadow:18px 0 52px rgba(0,0,0,.35)}.sidebar.open{left:0}.brand{padding:5px 8px 13px}.brand-sub{color:#d7e7df}.navbtn{min-height:49px;padding:12px 13px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.06);font-size:15px;color:#f5fcf8}.navbtn+.navbtn{margin-top:2px}.navbtn.active{background:linear-gradient(135deg,rgba(255,230,171,.18),rgba(90,226,175,.14));border-color:rgba(240,209,140,.42)}.navbtn svg{stroke:#f0d18c}.nav-count{background:rgba(0,0,0,.17)}.sidebar-foot{background:rgba(255,255,255,.05);border-color:rgba(240,209,140,.15)}.mobile-menu{display:grid}.topbar{padding-left:12px;padding-right:12px}}
 @media(max-width:720px){.view[id^="view-"]{min-height:calc(100vh - 96px)}#view-dashboard::after,#view-orders::after,#view-worked::after,#view-clients::after,#view-finance::after,#view-statistics::after,#view-settings::after{justify-content:flex-start;padding:10px 6px 0 0;font-size:clamp(28px,9vw,54px);line-height:1.05;text-align:right}.sidebar{padding-bottom:20px}.nav-section{font-size:10px;padding-left:10px}.sidebar-foot{padding:11px 12px}.sidebar-foot p{font-size:10px}}
 </style>
+
+<style id="tbp-mobile-sidebar-stable-v7">
+/* Stable mobile navigation: bright drawer, darkened page behind, one native click per action. */
+@media(max-width:1050px){
+  body.nav-open{overflow:hidden}
+  body.nav-open .main{filter:none!important}
+  body.nav-open .main::after{content:"";position:fixed;inset:0;z-index:54;background:rgba(1,11,8,.64);backdrop-filter:blur(5px);pointer-events:none}
+  .sidebar{
+    position:fixed!important;top:0!important;bottom:0!important;left:-330px!important;z-index:70!important;
+    width:min(86vw,310px)!important;height:100dvh!important;overflow-y:auto!important;
+    padding:18px 14px 20px!important;border-right:1px solid rgba(240,209,140,.32)!important;
+    background:linear-gradient(180deg,#195b46 0%,#104533 54%,#0d382b 100%)!important;
+    box-shadow:22px 0 62px rgba(0,0,0,.44)!important;backdrop-filter:none!important;
+    transform:translateZ(0);transition:left .2s ease!important;
+    -webkit-overflow-scrolling:touch;
+  }
+  .sidebar.open{left:0!important}
+  .sidebar .brand,.sidebar .nav,.sidebar .sidebar-foot{opacity:1!important;filter:none!important}
+  .brand-top{color:#fff7df!important}.brand-by,.brand-sub{color:#f2d596!important}.brand-mark{background:linear-gradient(145deg,#2a7559,#164a38)!important}
+  .nav-section{color:#b9d6c7!important}
+  .navbtn{
+    min-height:50px!important;margin:0 0 5px!important;padding:12px 13px!important;border-radius:13px!important;
+    background:rgba(255,255,255,.065)!important;border:1px solid rgba(255,255,255,.09)!important;
+    color:#f6fff9!important;font-size:15px!important;font-weight:850!important;opacity:1!important;filter:none!important;
+    -webkit-tap-highlight-color:transparent!important;touch-action:manipulation!important;
+  }
+  .navbtn:active{transform:scale(.985);background:rgba(255,255,255,.11)!important}
+  .navbtn.active{background:linear-gradient(135deg,rgba(244,210,139,.24),rgba(76,190,143,.18))!important;border-color:rgba(245,210,137,.55)!important;color:#fff!important}
+  .navbtn svg{stroke:#f3d48e!important}.nav-count{background:rgba(0,0,0,.18)!important;color:#fff!important}
+  .sidebar-foot{background:rgba(3,29,21,.2)!important;border-color:rgba(240,209,140,.20)!important;color:#fff!important}
+  .sidebar-foot p{color:#cfe0d6!important}
+  .nav-backdrop{z-index:60!important;background:rgba(1,11,8,.52)!important;backdrop-filter:blur(3px)!important}
+}
+@media(max-width:430px){
+  .sidebar{width:min(88vw,304px)!important}
+  .navbtn{font-size:14.5px!important;min-height:49px!important}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -406,10 +444,35 @@ const clientLogin=o=>getClient(o)?.login||o.guestContact||'ручне замов
 const statusHTML=s=>`<span class="status ${s}">${statusMap[s]||s}</span>`;
 const payHTML=s=>`<span class="status ${s}">${paymentMap[s]||s}</span>`;
 function setMonth(){const d=new Date();const m=d.toLocaleDateString('uk-UA',{month:'long',year:'numeric'});document.querySelectorAll('.monthLabel').forEach(x=>x.textContent=m.charAt(0).toUpperCase()+m.slice(1))}
-function setSidebarOpen(open){const sidebar=document.getElementById('sidebar');if(!sidebar)return;sidebar.classList.toggle('open',!!open);document.body.classList.toggle('nav-open',!!open)}
-function switchView(view,opts){document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));document.getElementById('view-'+view)?.classList.add('active');document.querySelectorAll('.navbtn').forEach(b=>b.classList.toggle('active',b.dataset.view===view));document.body.dataset.view=view;setSidebarOpen(false);if(!opts||!opts.preserveScroll)window.scrollTo({top:0,behavior:'smooth'})}
-function bindSingleTap(nodes,callback){nodes.forEach(el=>{let lastTouch=0;const run=e=>{if(e.type==='click'&&Date.now()-lastTouch<420){e.preventDefault();return;}if(e.type==='touchend'||e.type==='pointerup')lastTouch=Date.now();if(e.cancelable)e.preventDefault();callback(el,e)};el.style.touchAction='manipulation';el.addEventListener('touchend',run,{passive:false});el.addEventListener('click',run);});}
-bindSingleTap([...document.querySelectorAll('.navbtn[data-view]')],el=>switchView(el.dataset.view));bindSingleTap([...document.querySelectorAll('[data-go]')],el=>switchView(el.dataset.go));const menuBtn=document.getElementById('menuBtn');if(menuBtn){let lastMenuTouch=0;const toggleMenu=e=>{if(e.type==='click'&&Date.now()-lastMenuTouch<420){e.preventDefault();return;}if(e.type==='touchend')lastMenuTouch=Date.now();if(e.cancelable)e.preventDefault();setSidebarOpen(!document.getElementById('sidebar').classList.contains('open'))};menuBtn.style.touchAction='manipulation';menuBtn.addEventListener('touchend',toggleMenu,{passive:false});menuBtn.addEventListener('click',toggleMenu)}
+function setSidebarOpen(open){
+ const sidebar=document.getElementById('sidebar');if(!sidebar)return;
+ sidebar.classList.toggle('open',!!open);
+ document.body.classList.toggle('nav-open',!!open);
+}
+function switchView(view,opts){
+ const target=document.getElementById('view-'+view);if(!target)return;
+ document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+ target.classList.add('active');
+ document.querySelectorAll('.navbtn[data-view]').forEach(b=>b.classList.toggle('active',b.dataset.view===view));
+ document.body.dataset.view=view;
+ setSidebarOpen(false);
+ if(!opts?.preserveScroll)window.scrollTo({top:0,behavior:'auto'});
+}
+// Native buttons already synthesize one reliable click on iOS/Safari/Telegram.
+// Do not mix touchend + click: that was the source of the double-tap bug.
+document.querySelectorAll('.navbtn[data-view]').forEach(btn=>{
+ btn.style.touchAction='manipulation';
+ btn.addEventListener('click',()=>switchView(btn.dataset.view));
+});
+document.querySelectorAll('[data-go]').forEach(btn=>{
+ btn.style.touchAction='manipulation';
+ btn.addEventListener('click',()=>switchView(btn.dataset.go));
+});
+const menuBtn=document.getElementById('menuBtn');
+if(menuBtn){
+ menuBtn.style.touchAction='manipulation';
+ menuBtn.addEventListener('click',()=>setSidebarOpen(!document.getElementById('sidebar').classList.contains('open')));
+}
 switchView(document.querySelector('.view.active')?.id.replace('view-','')||'dashboard',{preserveScroll:true});
 function renderDashboard(){const recent=[...orders].sort((a,b)=>b.id.localeCompare(a.id)).slice(0,5);document.getElementById('dashOrders').innerHTML=recent.map(o=>`<tr><td><strong>${o.number}</strong></td><td><div class="client-cell"><span class="mini-avatar">${initials(clientName(o))}</span><span class="client-meta"><strong>${clientName(o)}</strong><span>${clientLogin(o)}</span></span></div></td><td>${statusHTML(o.status)}</td><td>${o.deadline||'—'}</td><td class="money">${o.price?money(Math.max(o.price-o.discount-o.bonusUsed/(Number(o.rate)||1),0)):'—'}</td><td><button class="gear-btn" onclick="openOrder('${o.id}')">⚙</button></td></tr>`).join('');document.getElementById('dashActivity').innerHTML=`<div class="activity"><div class="activity-icon">+</div><div><strong>Нова заявка ${orders[0]?.number||'—'}</strong><p>${orders[0]?clientName(orders[0]):'—'} · очікує рішення</p></div><span class="time">щойно</span></div><div class="activity"><div class="activity-icon">✓</div><div><strong>Створено акаунт petia.ua</strong><p>Профіль + 100 стартових бонусів</p></div><span class="time">сьогодні</span></div><div class="activity"><div class="activity-icon">→</div><div><strong>${orders[2]?.number||'—'}</strong><p>Прогрес оновлено до ${orders[2]?.progress||0}%</p></div><span class="time">1 год</span></div>`;updateMetrics()}
 function updateMetrics(){const n=orders.filter(o=>o.status==='submitted').length,a=orders.filter(o=>o.status==='accepted').length,w=orders.filter(o=>['working','paused','ready'].includes(o.status)).length,expected=orders.filter(o=>['accepted','working','paused','ready'].includes(o.status)).reduce((s,o)=>s+Math.max(o.price-o.discount-o.bonusUsed/(Number(o.rate)||1),0),0),paid=orders.filter(o=>o.payment==='paid').reduce((s,o)=>s+Math.max(o.price-o.discount-o.bonusUsed/(Number(o.rate)||1),0),0);mNew.textContent=n;mAccepted.textContent=a;mWorked.textContent=w;mExpected.textContent=money(expected);mPaid.textContent=money(paid);newOrdersNav.textContent=n;newOrdersNav.style.display=n?'':'none';workedNav.textContent=a+w;newCount.textContent=n;workedCount.textContent=a+w;notifyBadge.textContent=n;notifyBadge.style.display=n?'grid':'none'}
