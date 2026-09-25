@@ -194,7 +194,21 @@ button,input,select,textarea{font:inherit}.app{position:relative;z-index:1;displ
 @media(max-width:700px){.tbp-private-deadline{padding:14px}.tbp-internal-date{width:100%}.tbp-internal-date input{flex:1;width:auto;min-width:0}.tbp-payment-breakdown{grid-template-columns:1fr 1fr}.tbp-work-rich{padding:15px!important}.tbp-work-rich h3{font-size:18px}.tbp-work-rich .tbp-wr-dates{grid-template-columns:1fr 1fr}}
 @media(max-width:355px){.tbp-payment-breakdown,.tbp-work-rich .tbp-wr-dates{grid-template-columns:1fr}}
 </style>
-</head>
+<style id="tbp-independent-workspace-v3">
+.tbp-private-workspace{padding:19px 20px 18px;margin:12px 0 22px;border:1px solid rgba(236,191,106,.52);border-radius:18px;background:radial-gradient(ellipse at 100% 0%,rgba(206,157,75,.16),transparent 56%),linear-gradient(130deg,rgba(23,72,52,.94),rgba(8,41,33,.97));box-shadow:0 14px 36px #00191136}
+.tbp-private-head h4,.tbp-client-section-title h4{font-size:21px;color:#ffdf9f;margin:5px 0}.tbp-private-head p,.tbp-client-section-title p{font-size:13px;line-height:1.55;color:#c9d9ce;margin:7px 0 15px}
+.tbp-private-kicker,.tbp-client-section-title>span{letter-spacing:.16em;font-weight:900;font-size:10px;color:#eac484}
+.tbp-private-fields{display:grid;grid-template-columns:1fr 1fr;gap:12px}.tbp-private-fields .field{min-width:0}.tbp-private-fields input,.tbp-private-fields select{width:100%;min-width:0;min-height:44px}
+.tbp-apply-private{margin-top:12px;min-height:37px;font-size:12px}.tbp-private-hint{display:block;margin-top:6px;color:#b5d1c0;font-size:11px;line-height:1.4}.tbp-private-note{margin:14px 0}.tbp-private-note textarea{width:100%;min-height:100px;resize:vertical}
+.tbp-private-workspace .tbp-private-deadline{background:rgba(1,32,24,.28);margin:15px 0;padding:12px}
+.tbp-save-private-line{display:grid;grid-template-columns:minmax(180px,max-content) minmax(0,1fr);align-items:center;gap:12px}
+.tbp-save-private-line button,.tbp-work-save button{min-height:44px}.tbp-save-private-line button:disabled,.tbp-work-save button:disabled{opacity:.55;cursor:wait}
+#tbpPrivateStatus,#tbpPublicStatus{font-size:12px;line-height:1.5;color:#b0efc9;white-space:normal;overflow-wrap:anywhere}#tbpPrivateStatus.error,#tbpPublicStatus.error{color:#ffc2aa}
+.tbp-client-section-title{border-left:3px solid #dcb66b;background:rgba(6,38,29,.5);border-radius:0 13px 13px 0;padding:14px 18px;margin:20px 0}
+.tbp-work-save{flex-wrap:wrap}.tbp-public-save-status{flex:1 1 100%;padding:5px 0}
+@media(max-width:650px){.tbp-private-workspace{padding:15px 13px}.tbp-private-fields{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}.tbp-save-private-line{grid-template-columns:1fr}.tbp-save-private-line button{width:100%}}
+@media(max-width:345px){.tbp-private-fields{grid-template-columns:1fr}}
+</style></head>
 <body>
 <div class="app">
   <aside class="sidebar" id="sidebar">
@@ -309,8 +323,13 @@ button,input,select,textarea{font:inherit}.app{position:relative;z-index:1;displ
   <div class="drawer-head"><div class="big-avatar">W</div><div><h2 id="wTitle">WORKED</h2><p id="wSubtitle">Керування виконанням</p></div><button class="iconbtn drawer-close" onclick="closeWork()" aria-label="Закрити">✕</button></div>
   <div class="drawer-body">
     <div class="order-summary"><div class="info-box"><span>Клієнт</span><strong id="wClient">—</strong></div><div class="info-box"><span>Дедлайн</span><strong id="wDeadline">—</strong></div><div class="info-box"><span>Робота</span><strong id="wStatusLabel">—</strong></div><div class="info-box"><span>Оплата</span><strong id="wPaymentLabel">—</strong></div></div>
-    <section class="tbp-private-deadline"><div><strong>Мій робочий дедлайн</strong><small>Лише для тебе · не змінює дедлайн клієнта</small></div>
- <div class="tbp-internal-date"><input id="wPrivateDeadline" type="date" aria-label="Мій внутрішній дедлайн"/><button id="tbpClearPrivateDeadline" type="button">Очистити ×</button></div></section>
+    <section class="tbp-private-workspace" aria-label="Мій робочий простір">
+ <div class="tbp-private-head"><span class="tbp-private-kicker">ЛИШЕ ДЛЯ ТЕБЕ</span><h4>Мій робочий простір</h4><p>Зберігай попередній розрахунок, нотатки й свій дедлайн незалежно від даних клієнта. Вони не змінюють оплату та бонуси.</p></div>
+ <div class="tbp-private-fields"><div class="field"><label for="tbpPrivatePrice">Попередня ціна</label><input id="tbpPrivatePrice" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Моя оцінка"></div><div class="field"><label for="tbpPrivateCurrency">Валюта оцінки</label><select id="tbpPrivateCurrency"><option value="UAH">UAH · ₴</option><option value="USD">USD · $</option><option value="EUR">EUR · €</option><option value="PLN">PLN · zł</option></select></div></div>
+ <button id="tbpApplyPrivateQuote" class="btn secondary tbp-apply-private" type="button">Перенести оцінку в клієнтську ціну →</button><small class="tbp-private-hint">Лише підставить суму. Клієнт побачить її після «Зберегти для клієнта».</small><div class="field full tbp-private-note"><label for="wNote">Мої нотатки</label><textarea id="wNote" placeholder="Що планую, скільки орієнтовно коштуватиме, що потрібно уточнити…"></textarea></div>
+ <section class="tbp-private-deadline"><div><strong>Мій робочий дедлайн</strong><small>Лише для тебе · не змінює дедлайн клієнта</small></div><div class="tbp-internal-date"><input id="wPrivateDeadline" type="date" aria-label="Мій внутрішній дедлайн"/><button id="tbpClearPrivateDeadline" type="button">Очистити ×</button></div></section>
+ <div class="tbp-save-private-line"><button type="button" class="btn green" id="tbpSavePrivate">Зберегти для себе</button><span id="tbpPrivateStatus" aria-live="polite" role="status"></span></div>
+ </section><div class="tbp-client-section-title"><span>ДАНІ ДЛЯ ЗАМОВНИКА</span><h4>Фактичні умови замовлення</h4><p>Ціна, етап, оплата та бонуси зміняться у клієнта лише після окремого збереження.</p></div>
     <div class="drawer-section tbp-work-stage">
       <div class="tbp-work-kicker">01 · КЕРУВАННЯ РОБОТОЮ</div><h4>Етап виконання</h4>
       <div class="tbp-stage-quick" role="group" aria-label="Швидка зміна статусу роботи">
@@ -342,8 +361,8 @@ button,input,select,textarea{font:inherit}.app{position:relative;z-index:1;displ
       </div>
     </details>
     <div class="drawer-section tbp-work-calculation"><h4>Розрахунок для клієнта</h4><div class="info-grid"><div class="info-box"><span>Ціна</span><strong id="calcPrice">0 ₴</strong></div><div class="info-box"><span>Знижка</span><strong id="calcDiscount">0 ₴</strong></div><div class="info-box"><span>Бонуси</span><strong id="calcBonus">0 ₴</strong></div><div class="info-box"><span>До оплати</span><strong id="calcNet" class="gold">0 ₴</strong></div></div></div>
-    <div class="drawer-section"><h4>Комунікація</h4><div class="fields"><div class="field full"><label for="wMessage">Повідомлення клієнту</label><textarea id="wMessage" placeholder="Наприклад: структуру погоджено, працюю над другим розділом..."></textarea></div><div class="field full"><label for="wNote">Внутрішня нотатка · клієнт не бачить</label><textarea id="wNote" placeholder="Службова інформація для себе"></textarea></div></div></div>
-    <div class="settings-footer tbp-work-save"><button class="btn secondary" type="button" id="tbpReopenWork" hidden>↶ Повернути в роботу</button><button class="btn green" id="tbpSaveWork" onclick="updateClientViewLocal()">Зберегти зміни</button></div>
+    <div class="drawer-section"><h4>Комунікація</h4><div class="fields"><div class="field full"><label for="wMessage">Повідомлення клієнту</label><textarea id="wMessage" placeholder="Наприклад: структуру погоджено, працюю над другим розділом..."></textarea></div></div></div>
+    <div class="settings-footer tbp-work-save"><button class="btn secondary" type="button" id="tbpReopenWork" hidden>↶ Повернути в роботу</button><button class="btn green" type="button" id="tbpSaveWork" onclick="updateClientViewLocal()">Зберегти для клієнта</button><div class="tbp-public-save-status" id="tbpPublicStatus" aria-live="polite" role="status"></div></div>
   </div>
 </aside></div>
 
@@ -1182,7 +1201,7 @@ renderStatistics();renderFinanceExtras();
     Object.keys(clients).forEach(key=>delete clients[key]);
     profiles.forEach(p=>{const id=String(p.id);clients[id]={id,name:htmlSafe(p.fullName||'Без імені'),rawName:String(p.fullName||''),login:htmlSafe(p.login||''),rawLogin:String(p.login||''),contact:htmlSafe(p.contact||''),rawContact:String(p.contact||''),ref:htmlSafe(p.referralCode||''),rawRef:String(p.referralCode||''),level:levelOf(p),balance:asNumber(p.balance),completed:asNumber(p.completed),joined:dateText(p.createdAt),createdAt:String(p.createdAt||''),activity:timeText(p.createdAt),referredBy:p.referredBy||null,blocked:!!p.blockedAt,referrals:[],events:activities.filter(a=>a.userId===p.id).map(a=>[activityLabel(a.action),htmlSafe(JSON.stringify(a.details||{})),timeText(a.createdAt)])}});
     Object.values(clients).forEach(c=>{if(c.referredBy&&clients[c.referredBy])clients[c.referredBy].referrals.push(c.id)});
-    orders=(Array.isArray(snapshot?.orders)?snapshot.orders:[]).map(row=>{const f=row.form&&typeof row.form==='object'?row.form:{};const rawType=String(f.type||'Без типу'),rawTopic=String(f.topic||'Без теми'),rawDetails=String(f.notes||''),rawContact=String(f.contact||row.guestContact||'');return {id:String(row.id),number:htmlSafe(row.number||'—'),client:row.userId||'',guestName:htmlSafe(row.guestName||f.fullName||''),rawGuestName:String(row.guestName||f.fullName||''),guestContact:htmlSafe(row.guestContact||rawContact),rawGuestContact:String(row.guestContact||rawContact),type:htmlSafe(rawType),rawType,topic:htmlSafe(rawTopic),rawTopic,details:htmlSafe(rawDetails),rawDetails,contact:htmlSafe(rawContact),rawContact,status:String(row.status||'submitted'),progress:asNumber(row.progress),payment:String(row.paymentStatus||'unpaid'),price:row.price==null?0:asNumber(row.price),discount:asNumber(row.discount),currency:String(row.currency||'UAH'),rate:asNumber(row.rate,1),date:dateText(row.createdAt),createdAt:row.createdAt,updatedAt:row.updatedAt,deadline:String(row.deadline||f.deadline||'—'),workDeadline:String(row.workDeadline||''),paidAmount:asNumber(row.paidAmount),files:Array.isArray(row.files)?row.files.length:0,fileItems:Array.isArray(row.files)?row.files:[],bonusPercent:f.useBonuses?asNumber(f.bonusAmount):0,bonusUsed:asNumber(row.bonusUsed),message:String(row.clientMessage||''),note:String(row.adminNote||''),history:Array.isArray(row.history)?row.history:[],source:String(row.source||'client')}});
+    orders=(Array.isArray(snapshot?.orders)?snapshot.orders:[]).map(row=>{const f=row.form&&typeof row.form==='object'?row.form:{};const rawType=String(f.type||'Без типу'),rawTopic=String(f.topic||'Без теми'),rawDetails=String(f.notes||''),rawContact=String(f.contact||row.guestContact||'');return {id:String(row.id),number:htmlSafe(row.number||'—'),client:row.userId||'',guestName:htmlSafe(row.guestName||f.fullName||''),rawGuestName:String(row.guestName||f.fullName||''),guestContact:htmlSafe(row.guestContact||rawContact),rawGuestContact:String(row.guestContact||rawContact),type:htmlSafe(rawType),rawType,topic:htmlSafe(rawTopic),rawTopic,details:htmlSafe(rawDetails),rawDetails,contact:htmlSafe(rawContact),rawContact,status:String(row.status||'submitted'),progress:asNumber(row.progress),payment:String(row.paymentStatus||'unpaid'),price:row.price==null?0:asNumber(row.price),discount:asNumber(row.discount),currency:String(row.currency||'UAH'),rate:asNumber(row.rate,1),date:dateText(row.createdAt),createdAt:row.createdAt,updatedAt:row.updatedAt,deadline:String(row.deadline||f.deadline||'—'),workDeadline:String(row.workDeadline||''),paidAmount:asNumber(row.paidAmount),privateQuoteAmount:row.privateQuoteAmount==null?null:asNumber(row.privateQuoteAmount),privateQuoteCurrency:String(row.privateQuoteCurrency||'UAH'),privateQuoteRate:asNumber(row.privateQuoteRate,1),files:Array.isArray(row.files)?row.files.length:0,fileItems:Array.isArray(row.files)?row.files:[],bonusPercent:f.useBonuses?asNumber(f.bonusAmount):0,bonusUsed:asNumber(row.bonusUsed),message:String(row.clientMessage||''),note:String(row.adminNote||''),history:Array.isArray(row.history)?row.history:[],source:String(row.source||'client')}});
     accounts=(Array.isArray(snapshot?.paymentAccounts)?snapshot.paymentAccounts:[]).map(a=>({id:String(a.id),label:htmlSafe(a.label||''),currency:String(a.currency||'UAH'),number:htmlSafe(a.details||''),rawNumber:String(a.details||''),note:htmlSafe(a.note||''),rawNote:String(a.note||''),active:a.is_active!==false}));
     payoutRows=Array.isArray(snapshot?.payouts)?snapshot.payouts:[];
     const settings=snapshot?.settings||{};if(settings.maxBonus!=null)LOYALTY.maxBonus=asNumber(settings.maxBonus,90);if(settings.minWithdraw!=null)LOYALTY.minWithdraw=asNumber(settings.minWithdraw,350);if(settings.welcome!=null)LOYALTY.welcome=asNumber(settings.welcome,100);if(settings.bonusRate!=null)LOYALTY.bonusRate=asNumber(settings.bonusRate,1);if(settings.referral!=null)LOYALTY.referral=asNumber(settings.referral,10);if(settings.maxFiles!=null)LOYALTY.maxFiles=asNumber(settings.maxFiles,8);if(settings.refDigits!=null)LOYALTY.refDigits=asNumber(settings.refDigits,5);if(settings.fx){FX_RATES.USD=asNumber(settings.fx.USD,FX_RATES.USD);FX_RATES.EUR=asNumber(settings.fx.EUR,FX_RATES.EUR);FX_RATES.PLN=asNumber(settings.fx.PLN,FX_RATES.PLN)}
@@ -1264,6 +1283,13 @@ renderStatistics();renderFinanceExtras();
     try{const {data:isAdmin,error}=await sb.rpc('is_admin');if(error||!isAdmin){await sb.auth.signOut({scope:'local'});return showGate('Збережена сесія не має прав адміністратора.')}hideGate();await loadSnapshot();subscribeRealtime()}catch(err){showGate(friendly(err))}
     sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||!session){showGate();setSync('Не авторизовано','error')}});
   }
+  // Safe, minimal bridge for the independent premium UI module.
+  // All RPC operations still validate the authenticated admin on the server.
+  window.PETRO_ADMIN_BRIDGE=Object.freeze({
+    rpc:(name,args)=>rpc(name,args),
+    loadSnapshot:(options)=>loadSnapshot(options),
+    friendly:(error,fallback)=>friendly(error,fallback)
+  });
   start();
 })();
 </script>
@@ -1293,6 +1319,10 @@ renderStatistics();renderFinanceExtras();
 (()=>{
  'use strict';
  // All data comes from the existing Supabase snapshot. No demo data and no new credentials.
+ const {rpc,loadSnapshot,friendly}=window.PETRO_ADMIN_BRIDGE||{};
+ if(typeof rpc!=='function'||typeof loadSnapshot!=='function'||typeof friendly!=='function')
+   throw new Error('ADMIN_BRIDGE_MISSING');
+
  let clientTier='all';
  let period='all';
  let customStart='',customEnd='';
@@ -1469,24 +1499,86 @@ renderStatistics();renderFinanceExtras();
     ${o.payment==='partial'?`<div class="tbp-wr-person" style="margin-top:8px">Оплачено: ${fmtMoney(paid,o.currency)} · Залишок: ${fmtMoney(Math.max(0,total-paid),o.currency)}</div>`:''}
     </article>`}).join('')||'<div class="empty"><strong>Активних робіт немає</strong>Прийняті заявки зʼявляться тут.</div>';
  };
- // Save is atomic in admin_update_order_v2; confirmation for completion / reopening / bonus changes.
- updateClientViewLocal=function(){const o=currentOrder();if(!o)return;
-  const b=refreshWork(),partial=tbpPaymentParts();if(!b.valid){$('tbpBonusDetails').open=true;showToast('Перевір ліміт бонусів');return}
-  if(!partial.valid){$('wPaidAmount').focus();showToast('Перевір суму часткової оплати');return}
-  if(Number($('wDiscount').value)>Number($('wPrice').value)){showToast('Знижка перевищує ціну');return}
-  const newBonus=$('wBonusEnabled').checked?Number($('wBonus').value||0):0;
-  if(newBonus>0&&!o.client){showToast('Бонуси доступні лише клієнтам із кабінетом');return}
-  const newStatus=$('wStatus').value;
-  const payload={p_order_id:o.id,p_status:newStatus,p_progress:Number($('wProgress').value),p_price:Number($('wPrice').value),p_discount:Number($('wDiscount').value),
-    p_currency:$('wCurrency').value,p_rate:$('wCurrency').value==='UAH'?1:Number($('wRate').value),p_payment_status:$('wPayment').value,p_bonus_used:newBonus,p_deadline:null,
-    p_client_message:$('wMessage').value,p_admin_note:$('wNote').value,p_paid_amount:partial.paid,p_work_deadline:$('wPrivateDeadline').value||null,p_clear_work_deadline:!$('wPrivateDeadline').value};
-  if(payload.p_currency!=='UAH'&&!(payload.p_rate>0)){showToast('Вкажи коректний курс валюти');return}
-  const save=()=>mutate(()=>rpc('admin_update_order_v2',payload),'Замовлення збережено',()=>{if(newStatus==='completed'){closeWork();switchView('orders')}else openWork(o.id)});
-  if(newStatus!==o.status&&(newStatus==='completed'||o.status==='completed')){
-    return openConfirm(newStatus==='completed'?'Завершити роботу?':'Повернути завершене замовлення в роботу?',
-      newStatus==='completed'?'Робота перейде в завершені. Статус оплати не зміниться.':'Замовлення знову з’явиться у WORKED. Статус оплати залишиться без змін.',save);
+ // --- Two independent server writes: private workspace vs client-visible terms ---
+ const tbpPublicStatus=$('tbpPublicStatus'),tbpPrivateStatus=$('tbpPrivateStatus');
+ let tbpClientSaving=false,tbpPrivateSaving=false;
+ function tbpErrorText(err){const text=friendly(err,'Помилка збереження');return text||'Не вдалося зберегти зміни.'}
+ function tbpShowResult(el,message,error=false){el.textContent=message;el.classList.toggle('error',error);el.hidden=!message}
+ function tbpPrivatePrice(){const raw=$('tbpPrivatePrice').value.trim();return raw===''?null:Number(raw)}
+ const oldOpenWorkPrivate=openWork;
+ openWork=function(id){oldOpenWorkPrivate(id);const o=currentOrder();if(!o)return;
+  $('tbpPrivatePrice').value=o.privateQuoteAmount==null?'':String(o.privateQuoteAmount);
+  $('tbpPrivateCurrency').value=o.privateQuoteCurrency||'UAH';
+  tbpShowResult(tbpPublicStatus,'');tbpShowResult(tbpPrivateStatus,'');
+  $('tbpSaveWork').textContent='Зберегти для клієнта';
+ };
+ async function tbpSavePrivateOrder(){const o=currentOrder();if(!o||tbpPrivateSaving)return;
+  const amount=tbpPrivatePrice(),currency=$('tbpPrivateCurrency').value;
+  if(amount!==null&&(!Number.isFinite(amount)||amount<0||amount>9999999999||Math.abs(Math.round(amount*100)-amount*100)>1e-6)){
+   tbpShowResult(tbpPrivateStatus,'Перевір попередню ціну (до двох знаків після коми).',true);return;
   }
-  if(newBonus!==Number(o.bonusUsed||0))return openConfirm('Підтвердити зміну бонусів?',`Списати ${newBonus} бонусів замість ${o.bonusUsed||0}?`,save);
+  if($('wNote').value.length>12000){tbpShowResult(tbpPrivateStatus,'Нотатка завелика (максимум 12 000 символів).',true);return}
+  const payload={p_order_id:o.id,p_note:$('wNote').value,p_quote_amount:amount,
+   p_quote_currency:currency,p_quote_rate:currency==='UAH'?1:rateFor(currency),
+   p_work_deadline:$('wPrivateDeadline').value||null,p_clear_work_deadline:!$('wPrivateDeadline').value};
+  tbpPrivateSaving=true;$('tbpSavePrivate').disabled=true;tbpShowResult(tbpPrivateStatus,'Зберігаємо…');
+  try{const saved=await rpc('admin_save_private_order',payload);
+   // Do not reload/open the drawer: unsaved client-visible edits must remain untouched.
+   o.note=String(saved.adminNote??payload.p_note);o.workDeadline=String(saved.workDeadline||'');
+   o.privateQuoteAmount=saved.privateQuoteAmount==null?null:Number(saved.privateQuoteAmount);
+   o.privateQuoteCurrency=String(saved.privateQuoteCurrency||currency);
+   o.privateQuoteRate=Number(saved.privateQuoteRate||payload.p_quote_rate);
+   renderWorked();tbpShowResult(tbpPrivateStatus,'✓ Особисті дані збережено. Клієнт нічого нового не бачить.');
+  }catch(err){tbpShowResult(tbpPrivateStatus,'Не збережено: '+tbpErrorText(err),true)}
+  finally{tbpPrivateSaving=false;$('tbpSavePrivate').disabled=false}
+ }
+ $('tbpSavePrivate').addEventListener('click',tbpSavePrivateOrder);
+ $('tbpApplyPrivateQuote').addEventListener('click',()=>{
+  const amount=tbpPrivatePrice(),currency=$('tbpPrivateCurrency').value;
+  if(amount===null||!Number.isFinite(amount)||amount<0){tbpShowResult(tbpPrivateStatus,'Спершу вкажи свою попередню ціну.',true);return}
+  const o=currentOrder();
+  $('wPrice').value=String(amount);$('wCurrency').value=currency;
+  $('wRate').value=String(currency==='UAH'?1:(o?.privateQuoteCurrency===currency&&o.privateQuoteRate>0?o.privateQuoteRate:rateFor(currency)));
+  refreshWork();
+  tbpShowResult(tbpPublicStatus,'Попередню ціну підставлено. Для публікації натисни «Зберегти для клієнта».');
+ });
+ updateClientViewLocal=function(){const o=currentOrder();if(!o||tbpClientSaving)return;
+  tbpShowResult(tbpPublicStatus,'');
+  const b=refreshWork(),partial=tbpPaymentParts();
+  if(!b.valid){$('tbpBonusDetails').open=true;tbpShowResult(tbpPublicStatus,'Бонуси перевищують 90% вартості або доступний баланс.',true);return}
+  if(!partial.valid){$('wPaidAmount').focus();tbpShowResult(tbpPublicStatus,'Для часткової оплати вкажи суму від 0 до повної вартості.',true);return}
+  if(Number($('wDiscount').value)>Number($('wPrice').value)){tbpShowResult(tbpPublicStatus,'Знижка не може перевищувати ціну.',true);return}
+  const bonus=$('wBonusEnabled').checked?Number($('wBonus').value||0):0;
+  if(bonus>0&&!o.client){tbpShowResult(tbpPublicStatus,'Бонуси доступні лише клієнту з кабінетом.',true);return}
+  const status=$('wStatus').value;
+  const payload={p_order_id:o.id,p_status:status,p_progress:Number($('wProgress').value),
+   p_price:Number($('wPrice').value),p_discount:Number($('wDiscount').value),
+   p_currency:$('wCurrency').value,p_rate:$('wCurrency').value==='UAH'?1:Number($('wRate').value),
+   p_payment_status:$('wPayment').value,p_bonus_used:bonus,p_deadline:null,
+   p_client_message:$('wMessage').value,p_admin_note:null,p_paid_amount:partial.paid,
+   p_work_deadline:null,p_clear_work_deadline:false};
+  if(payload.p_currency!=='UAH'&&!(payload.p_rate>0)){
+   tbpShowResult(tbpPublicStatus,'Вкажи коректний курс валюти.',true);return}
+  const save=async()=>{if(tbpClientSaving)return;tbpClientSaving=true;
+   $('tbpSaveWork').disabled=true;tbpShowResult(tbpPublicStatus,'Зберігаємо умови для клієнта…');
+   try{const saved=await rpc('admin_update_order_v2',payload);
+    if(!saved?.id)throw Error('Сервер не підтвердив збереження');
+    tbpShowResult(tbpPublicStatus,'✓ Умови для клієнта збережено.');
+    // RPC success and snapshot refresh are different operations. Never report a saved
+    // update as failed solely because background refresh was interrupted.
+    try{await loadSnapshot({silent:true});}
+    catch(err){tbpShowResult(tbpPublicStatus,'✓ Збережено в базі, але список не оновився. Натисни «Оновити список».');return}
+    if(status==='completed'){closeWork();switchView('orders')}
+    else if(orders.some(row=>row.id===o.id))openWork(o.id);
+    showToast('✓ Оновлення для клієнта збережено');
+   }catch(err){tbpShowResult(tbpPublicStatus,'Не збережено: '+tbpErrorText(err),true)}
+   finally{tbpClientSaving=false;$('tbpSaveWork').disabled=false}
+  };
+  if(status!==o.status&&(status==='completed'||o.status==='completed'))
+   return openConfirm(status==='completed'?'Завершити роботу?':'Повернути завершене замовлення в роботу?',
+    'Це змінить етап замовлення у клієнтському кабінеті. Оплата залишається окремою.',save);
+  if(bonus!==Number(o.bonusUsed||0))return openConfirm('Змінити бонуси клієнта?',
+     `Зараз ${o.bonusUsed||0}, після збереження ${bonus}.`,save);
   save();
  };
  renderPremiumClients();
