@@ -285,6 +285,81 @@ button,.btn,.navbtn,.iconbtn,.profilebtn,[data-go]{touch-action:manipulation;-we
 .tbp-pseudo-overlay{position:fixed;inset:0;z-index:120;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(2,18,13,.58)}.tbp-pseudo-overlay.open{display:flex}.tbp-pseudo-modal{width:min(760px,96vw);max-height:92vh;overflow:auto;border:1px solid rgba(240,209,140,.34);border-radius:22px;background:linear-gradient(180deg,#154d3a,#092f24);box-shadow:0 28px 75px rgba(0,0,0,.36)}.tbp-pseudo-head{display:flex;gap:12px;align-items:center;padding:18px;border-bottom:1px solid rgba(255,255,255,.08)}.tbp-pseudo-head>div{flex:1;min-width:0}.tbp-pseudo-head h3{margin:0;color:#ffe0a0;font-size:19px}.tbp-pseudo-head p{margin:4px 0 0;color:#b9cdc3;font-size:12px}.tbp-pseudo-body{padding:18px}.tbp-pseudo-summary{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}.tbp-pseudo-summary>div{padding:12px;border:1px solid rgba(255,255,255,.08);border-radius:13px;background:rgba(3,33,25,.45)}.tbp-pseudo-summary span{display:block;color:#a9c1b5;font-size:10px}.tbp-pseudo-summary strong{display:block;margin-top:4px;font-size:14px;overflow-wrap:anywhere}.tbp-pseudo-orders{margin:14px 0;display:grid;gap:7px}.tbp-pseudo-order{display:flex;gap:9px;align-items:center;padding:10px 12px;border:1px solid rgba(255,255,255,.07);border-radius:11px;background:rgba(255,255,255,.025)}.tbp-pseudo-order>div{flex:1;min-width:0}.tbp-pseudo-order strong{font-size:12px}.tbp-pseudo-order small{display:block;color:#a9c0b5;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.tbp-convert-box{margin-top:15px;padding:15px;border:1px solid rgba(240,209,140,.29);border-radius:16px;background:rgba(218,179,100,.055)}.tbp-convert-box h4{margin:0 0 5px;color:#ffe0a0}.tbp-convert-box>p{margin:0 0 13px;color:#b9cdc3;font-size:12px;line-height:1.5}.tbp-convert-fields{display:grid;grid-template-columns:1fr 1fr;gap:9px}.tbp-convert-fields label{display:grid;gap:5px;color:#b8cbbf;font-size:10px}.tbp-convert-fields input{width:100%;min-height:42px;padding:9px 10px;border:1px solid rgba(240,209,140,.22);border-radius:10px;background:#082c21;color:#fff}.tbp-convert-fields .full{grid-column:1/-1}.tbp-convert-action{display:flex;justify-content:flex-end;margin-top:12px}.tbp-pseudo-order-banner{margin:13px 0;padding:13px 14px;border:1px solid rgba(85,223,164,.3);border-radius:14px;background:rgba(45,164,109,.08)}.tbp-pseudo-order-banner strong{display:block;color:#c9ffe3;font-size:13px}.tbp-pseudo-order-banner p{margin:4px 0 10px;color:#b9cfc4;font-size:11px;line-height:1.5}
 @media(max-width:720px){.tbp-fx-hero-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.tbp-fx-hero{min-width:0}.tbp-fx-hero strong{font-size:18px}.tbp-pseudo-overlay{padding:8px}.tbp-pseudo-modal{width:100%;max-height:96vh;border-radius:18px}.tbp-pseudo-head{padding:14px}.tbp-pseudo-body{padding:13px}.tbp-pseudo-summary{grid-template-columns:1fr 1fr}.tbp-convert-fields{grid-template-columns:1fr}.tbp-convert-fields .full{grid-column:auto}#orderDrawer .drawer-head h2,#workDrawer .drawer-head h2{font-size:17px!important}#orderDrawer .drawer-head p,#workDrawer .drawer-head p{font-size:10px!important}#orderDrawer .drawer-section,#workDrawer .drawer-section{padding:12px!important}#orderDrawer .drawer-section h4,#workDrawer .drawer-section h4{font-size:13px!important}#orderDrawer .info-box span,#workDrawer .info-box span{font-size:9px!important}#orderDrawer .info-box strong,#workDrawer .info-box strong{font-size:11.5px!important}#orderDrawer .field label,#workDrawer .field label{font-size:10px!important}#orderDrawer .field input,#orderDrawer .field textarea,#workDrawer .field input,#workDrawer .field select,#workDrawer .field textarea{font-size:12px!important}.tbp-pseudo-order-banner p{font-size:10.5px}}
 </style>
+
+<style id="tbp-iphone-fit-v8">
+/* Currency totals: one clean hierarchy, no duplicated nested cards. */
+.tbp-finance-currency-list{display:grid;gap:7px;margin:12px 0 8px}
+.tbp-finance-currency-row{display:flex;align-items:baseline;justify-content:space-between;gap:14px;min-width:0;padding:3px 0}
+.tbp-finance-currency-row span{font-size:11px;font-weight:850;letter-spacing:.09em;color:#afcbbf}
+.tbp-finance-currency-row strong{font-size:clamp(22px,2.4vw,29px);line-height:1.08;color:#fff4d3;white-space:nowrap;text-align:right}
+.tbp-multi-metric{display:grid;gap:1px;min-width:0}
+.tbp-multi-metric b{display:block;font:inherit;line-height:1.08;white-space:nowrap}
+
+/* Generic width safety: a child should never widen the entire admin page. */
+.app,.main,.content,.view,.card,.section-block,.table-card,.drawer,.modal,.finance-card,.metric,.tbp-work-rich,.tbp-client-card{min-width:0;max-width:100%}
+input,select,textarea,button{max-width:100%}
+img,svg,canvas{max-width:100%}
+
+@media(max-width:720px){
+  html,body{width:100%;max-width:100%;overflow-x:hidden}
+  .main,.content,.view{width:100%;max-width:100%;min-width:0}
+  .content{padding:12px 10px!important}
+  .page-head{gap:10px;margin-bottom:14px}
+  .page-head h1{font-size:25px!important;line-height:1.08}
+  .section-block,.table-card,.card{max-width:100%;overflow:hidden}
+  .finance-grid,.metric-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+  .finance-card,.metric{padding:13px!important;border-radius:16px!important}
+  .finance-card .label,.metric .label{font-size:10.5px!important;line-height:1.2}
+  .finance-card .sub{font-size:10.5px!important;line-height:1.35}
+  .tbp-finance-currency-list{gap:4px;margin:10px 0 7px}
+  .tbp-finance-currency-row{display:grid;grid-template-columns:minmax(34px,auto) minmax(0,1fr);gap:7px;padding:1px 0}
+  .tbp-finance-currency-row span{font-size:10px}
+  .tbp-finance-currency-row strong{font-size:20px;overflow:hidden;text-overflow:ellipsis}
+  .tbp-multi-metric b{font-size:18px;overflow:hidden;text-overflow:ellipsis}
+  .fields,.tbp-private-fields,.info-grid,.order-summary{min-width:0}
+  .field,.info-box{min-width:0}
+  .field input,.field select,.field textarea{width:100%;min-width:0}
+  .drawer,.modal{width:100vw!important;max-width:100vw!important}
+  .drawer-body{width:100%;max-width:100%;overflow-x:hidden}
+  .tabs{overflow-x:auto;flex-wrap:nowrap;scrollbar-width:none}.tabs::-webkit-scrollbar{display:none}
+  .tab{flex:0 0 auto}
+  .head-actions,.settings-footer,.account-actions,.tbp-work-save{max-width:100%;flex-wrap:wrap}
+  .head-actions .btn,.settings-footer .btn{min-width:0}
+  .order-cards,.clients-grid,#workedCards{max-width:100%}
+
+  /* Every data table becomes a compact readable card list on iPhone. */
+  .table-card{overflow:visible!important;background:transparent!important;border:0!important;box-shadow:none!important}
+  .table-card .data-table{display:block;width:100%!important;min-width:0!important}
+  .data-table thead{display:none!important}
+  .data-table tbody{display:grid;gap:10px;width:100%}
+  .data-table tr{display:grid!important;width:100%;min-width:0;padding:11px 12px;border:1px solid rgba(231,190,110,.20);border-radius:14px;background:rgba(7,48,36,.86)}
+  .data-table td{display:grid!important;grid-template-columns:minmax(82px,.72fr) minmax(0,1.28fr);align-items:start;gap:8px;width:100%!important;max-width:100%;padding:6px 0!important;border:0!important;font-size:11.5px!important;line-height:1.35;overflow-wrap:anywhere}
+  .data-table td::before{content:attr(data-label);font-size:9px;line-height:1.35;font-weight:850;letter-spacing:.04em;text-transform:uppercase;color:#94b3a5}
+  .data-table td[colspan]{display:block!important;text-align:center}
+  .data-table td[colspan]::before{content:none}
+  .data-table .client-cell{min-width:0;max-width:100%}
+  .data-table .client-meta{min-width:0}.data-table .client-meta strong,.data-table .client-meta span{overflow-wrap:anywhere;white-space:normal}
+  .data-table .btn,.data-table .gear-btn{justify-self:end;max-width:100%}
+  .data-table .money{white-space:normal}
+}
+
+@media(max-width:390px){
+  .content{padding:10px 8px!important}
+  .topbar{gap:7px;padding:9px 8px!important}
+  .search{min-width:0}.search input{font-size:13px!important}
+  .finance-grid,.metric-grid{gap:7px!important}
+  .finance-card,.metric{padding:11px!important}
+  .tbp-finance-currency-row strong{font-size:18px}
+  .tbp-multi-metric b{font-size:17px}
+  .data-table tr{padding:10px}
+  .data-table td{grid-template-columns:76px minmax(0,1fr);font-size:11px!important}
+}
+
+@media(max-width:345px){
+  .finance-grid,.metric-grid{grid-template-columns:1fr!important}
+  .tbp-finance-currency-row strong{font-size:20px}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -549,8 +624,18 @@ function fmtMoney(n,c='UAH'){const cfg=V3_CURRENCIES[c]||V3_CURRENCIES.UAH;const
 function groupedAmounts(list,selector=o=>Math.max((Number(o.price)||0)-(Number(o.discount)||0)-(Number(o.bonusUsed)||0)/(Number(o.rate)||1),0)){
   const g={UAH:0,USD:0,EUR:0,PLN:0}; list.forEach(o=>g[o.currency||'UAH']=(g[o.currency||'UAH']||0)+selector(o)); return g;
 }
-function currencyLines(g){return Object.keys(V3_CURRENCIES).map(c=>`<div class="currency-line ${Math.abs(g[c]||0)<.0001?'zero':''}"><span>${c}</span><strong>${fmtMoney(g[c]||0,c)}</strong></div>`).join('')}
-function currencyHero(g){return ['USD','EUR','PLN'].filter(c=>Math.abs(Number(g[c]||0))>.0001).map(c=>`<div class="tbp-fx-hero"><span>${c}</span><strong>${fmtMoney(g[c]||0,c)}</strong></div>`).join('')}
+function currencyLines(g){
+ const order=['UAH','USD','EUR','PLN'];
+ const active=order.filter(c=>Math.abs(Number(g?.[c]||0))>.0001);
+ const shown=active.length?active:['UAH'];
+ return shown.map(c=>`<div class="tbp-finance-currency-row"><span>${c}</span><strong>${fmtMoney(Number(g?.[c]||0),c)}</strong></div>`).join('');
+}
+function currencyMetric(g){
+ const order=['UAH','USD','EUR','PLN'];
+ const active=order.filter(c=>Math.abs(Number(g?.[c]||0))>.0001);
+ const shown=active.length?active:['UAH'];
+ return `<span class="tbp-multi-metric">${shown.map(c=>`<b>${fmtMoney(Number(g?.[c]||0),c)}</b>`).join('')}</span>`;
+}
 function parseDeadline(s){if(!s||s==='—')return null;let m=s.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);if(m)return new Date(Number(m[3]),Number(m[2])-1,Number(m[1]),23,59,59);if(/^\d{4}-\d{2}-\d{2}$/.test(s)){const [y,mo,d]=s.split('-').map(Number);return new Date(y,mo-1,d,23,59,59)}return null}
 function deadlineMeta(s){const d=parseDeadline(s);if(!d)return {text:'Без дедлайну',cls:'ok',days:null};const now=new Date();now.setHours(0,0,0,0);const days=Math.ceil((d-now)/86400000);if(days<0)return{text:`прострочено ${Math.abs(days)} дн.`,cls:'urgent',days};if(days===0)return{text:'сьогодні',cls:'urgent',days};if(days===1)return{text:'1 день',cls:'urgent',days};if(days<=3)return{text:`${days} дні`,cls:'soon',days};return{text:`${days} днів`,cls:'ok',days}}
 function deadlineBadge(s){const x=deadlineMeta(s);return `<span class="deadline-left ${x.cls}">${x.text}</span>`}
@@ -602,10 +687,9 @@ updateMetrics=function(){
  const eg=groupedAmounts(orders.filter(o=>['accepted','working','paused','ready'].includes(o.status)));
  const pg=groupedAmounts(orders.filter(o=>o.payment==='paid'));
  mNew.textContent=n;mAccepted.textContent=a;mWorked.textContent=w;
- mExpected.textContent=fmtMoney(eg.UAH,'UAH');mPaid.textContent=fmtMoney(pg.UAH,'UAH');
+ mExpected.innerHTML=currencyMetric(eg);mPaid.innerHTML=currencyMetric(pg);
  const ed=mExpected.parentElement.querySelector('.delta'),pd=mPaid.parentElement.querySelector('.delta');
- if(ed)ed.innerHTML=`USD ${fmtMoney(eg.USD,'USD')} · EUR ${fmtMoney(eg.EUR,'EUR')} · PLN ${fmtMoney(eg.PLN,'PLN')}`;
- if(pd)pd.innerHTML=`USD ${fmtMoney(pg.USD,'USD')} · EUR ${fmtMoney(pg.EUR,'EUR')} · PLN ${fmtMoney(pg.PLN,'PLN')}`;
+ if(ed)ed.textContent='';if(pd)pd.textContent='';
  newOrdersNav.textContent=n;newOrdersNav.style.display=n?'':'none';workedNav.textContent=a+w;newCount.textContent=n;workedCount.textContent=a+w;notifyBadge.textContent=n;notifyBadge.style.display=n?'grid':'none';
 };
 renderOrders=function(){
@@ -628,8 +712,9 @@ renderFinance=function(){
  const paid=orders.filter(o=>o.payment==='paid');
  const dueG=groupedAmounts(due,o=>Math.max(0,Number(o.net??Math.max(o.price-o.discount-o.bonusUsed/(Number(o.rate)||1),0))-(o.payment==='partial'?Number(o.paidAmount)||0:0))),paidG=groupedAmounts(orders.filter(o=>o.payment==='paid'||o.payment==='partial'),o=>o.payment==='paid'?Number(o.net)||0:Number(o.paidAmount)||0);const bonusG={UAH:0,USD:0,EUR:0,PLN:0};active.forEach(o=>bonusG[o.currency||'UAH']+=(Number(o.bonusUsed)||0)/(Number(o.rate)||1));
  const cards=document.querySelectorAll('#view-finance .finance-card');
- if(cards[0])cards[0].innerHTML=`<div class="label">До оплати</div><div class="amount">${fmtMoney(dueG.UAH,'UAH')}</div><div class="sub">чиста сума, яку очікуєш</div><div class="sub gold" style="margin-top:6px">Використано бонусів: ${fmtMoney(bonusG.UAH,'UAH')}</div><div class="tbp-fx-hero-row">${currencyHero(dueG)}</div><div class="currency-stack">${currencyLines(dueG)}</div>`;
- if(cards[1])cards[1].innerHTML=`<div class="label">Оплачено</div><div class="amount">${fmtMoney(paidG.UAH,'UAH')}</div><div class="sub">за вибраний період</div><div class="tbp-fx-hero-row">${currencyHero(paidG)}</div><div class="currency-stack">${currencyLines(paidG)}</div>`;
+ const bonusTotal=active.reduce((sum,o)=>sum+Math.max(0,Number(o.bonusUsed)||0),0);
+ if(cards[0])cards[0].innerHTML=`<div class="label">До оплати</div><div class="tbp-finance-currency-list">${currencyLines(dueG)}</div><div class="sub">чиста сума, яку очікуєш</div><div class="sub gold" style="margin-top:6px">Використано бонусів: ${Math.round(bonusTotal)} б.</div>`;
+ if(cards[1])cards[1].innerHTML=`<div class="label">Оплачено</div><div class="tbp-finance-currency-list">${currencyLines(paidG)}</div><div class="sub">за вибраний період</div>`;
  document.getElementById('financeDue').innerHTML=due.map(o=>`<div class="security-item"><div class="grow"><strong>${o.number} · ${clientName(o)}</strong><p>${o.type} · ${o.deadline} · ${deadlineMeta(o.deadline).text}</p></div><span class="money gold">${fmtMoney(Math.max(0,Number(o.net??Math.max(o.price-o.discount-o.bonusUsed/(Number(o.rate)||1),0))-(o.payment==='partial'?Number(o.paidAmount)||0:0)),o.currency)}</span></div>`).join('')||`<div class="empty-mini">Немає актуальних сум до оплати</div>`;
  renderAccounts();
 };
@@ -1384,6 +1469,19 @@ renderStatistics();renderFinanceExtras();
     loadSnapshot:(options)=>loadSnapshot(options),
     friendly:(error,fallback)=>friendly(error,fallback)
   });
+  // Add semantic labels to all table cells. CSS uses them on iPhone to render
+  // every administrative table as readable cards without horizontal page overflow.
+  function decorateResponsiveTables(root=document){
+    root.querySelectorAll('.data-table').forEach(table=>{
+      const labels=[...table.querySelectorAll('thead th')].map(th=>th.textContent.trim());
+      table.querySelectorAll('tbody tr').forEach(tr=>{
+        [...tr.children].forEach((td,i)=>{if(td.tagName==='TD'&&labels[i])td.dataset.label=labels[i]});
+      });
+    });
+  }
+  decorateResponsiveTables();
+  const tableObserver=new MutationObserver(()=>decorateResponsiveTables());
+  tableObserver.observe(document.body,{subtree:true,childList:true});
   start();
 })();
 </script>
