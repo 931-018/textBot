@@ -274,6 +274,11 @@ button,.btn,.navbtn,.iconbtn,.profilebtn,[data-go]{touch-action:manipulation;-we
   .navbtn{font-size:14px!important;min-height:47px!important}
 }
 </style>
+
+<style id="tbp-confirm-action-fix-v1">
+#confirmModal{z-index:240!important}
+#confirmModal .modal{position:relative;z-index:241}
+</style>
 </head>
 <body>
 <div class="app">
@@ -1446,13 +1451,13 @@ renderStatistics();renderFinanceExtras();
  $('tbpClientTo')?.addEventListener('change',event=>{customEnd=event.target.value;renderPremiumClients()});
  $('clientSearch')?.addEventListener('input',()=>renderPremiumClients());
  // Work progress, payment and bonus editing retain the production save RPC.
- function currentOrder(){return orders.find(o=>o.id===currentWork)}
+ function currentWorkOrder(){return orders.find(o=>o.id===currentWork)}
  function paymentUI(){const state=$('wPayment')?.value||'unpaid',labels={unpaid:'○ НЕ ОПЛАЧЕНО',partial:'◐ ЧАСТКОВО ОПЛАЧЕНО',paid:'✓ ОПЛАЧЕНО',refunded:'↶ ПОВЕРНЕНО'};
   const badge=$('tbpPaymentBadge');if(badge){badge.textContent=labels[state]||state;badge.classList.toggle('paid',state==='paid');badge.classList.toggle('partial',state==='partial')}
   document.querySelectorAll('[data-tbp-payment]').forEach(b=>{const on=b.dataset.tbpPayment===state;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});
  }
  function stageUI(){document.querySelectorAll('[data-tbp-work]').forEach(b=>{const on=b.dataset.tbpWork===$('wStatus').value;b.classList.toggle('active',on);b.setAttribute('aria-pressed',String(on))});}
- function maxBonus(){const o=currentOrder(),c=o?getClient(o):null;
+ function maxBonus(){const o=currentWorkOrder(),c=o?getClient(o):null;
   const currency=$('wCurrency')?.value||'UAH';const rate=currency==='UAH'?1:(Number($('wRate')?.value)||Number(o?.rate)||1);
   const price=Number($('wPrice')?.value)||0,discount=Math.max(0,Number($('wDiscount')?.value)||0);
   const discounted=Math.max(0,price-discount);
@@ -1485,7 +1490,7 @@ renderStatistics();renderFinanceExtras();
  recalcWork=refreshWork;
  const baseOpenWork=openWork;
  openWork=function(id){baseOpenWork(id);
-  const order=currentOrder();if(!order)return;
+  const order=currentWorkOrder();if(!order)return;
   const state=maxBonus(),balance=Math.max(0,Number(getClient(order)?.balance||0)+Number(order.bonusUsed||0));
   const request=Math.floor(balance*(Number(order.bonusPercent)||0)/100);
   const selected=Number(order.bonusUsed)>0?Number(order.bonusUsed):Math.min(state.max,request);
@@ -1518,7 +1523,7 @@ renderStatistics();renderFinanceExtras();
  updateClientViewLocal=function(){const {valid,state}=refreshWork();
   if(state.discount>state.price){showToast('Знижка не може перевищувати ціну');return;}
   if(!valid){$('tbpBonusDetails').open=true;$('wBonus').focus();showToast('Бонуси перевищують дозволений ліміт 90% або баланс клієнта');return;}
-  if($('wBonusEnabled').checked&&Number($('wBonus').value)>0&&!currentOrder()?.client){showToast('Бонуси доступні лише клієнту з кабінетом');return;}
+  if($('wBonusEnabled').checked&&Number($('wBonus').value)>0&&!currentWorkOrder()?.client){showToast('Бонуси доступні лише клієнту з кабінетом');return;}
   return savedUpdate();
  };
 
@@ -1536,7 +1541,7 @@ renderStatistics();renderFinanceExtras();
  refreshWork=function(){const result=previousRefreshWork();tbpPaymentParts();return result;};
  recalcWork=refreshWork;
  const previousOpenWork=openWork;
- openWork=function(id){previousOpenWork(id);const o=currentOrder();if(!o)return;
+ openWork=function(id){previousOpenWork(id);const o=currentWorkOrder();if(!o)return;
   $('wPrivateDeadline').value=o.workDeadline||'';
   $('wPaidAmount').value=o.payment==='paid'?Number(o.price-o.discount-o.bonusUsed/(o.rate||1)).toFixed(2):String(o.paidAmount||'');
   // Old accepted/completed statuses remain selected until explicitly changed.
@@ -1548,9 +1553,9 @@ renderStatistics();renderFinanceExtras();
   refreshWork();
  };
  $('wCurrency').addEventListener('change',()=>{const c=$('wCurrency').value;$('wRate').value=c==='UAH'?1:rateFor(c);refreshWork();});
- $('tbpReopenWork').addEventListener('click',()=>{const o=currentOrder();if(!o||o.status!=='completed')return; $('wStatus').value='working'; $('wProgress').value=50;refreshWork();updateClientViewLocal();});
+ $('tbpReopenWork').addEventListener('click',()=>{const o=currentWorkOrder();if(!o||o.status!=='completed')return; $('wStatus').value='working'; $('wProgress').value=50;refreshWork();updateClientViewLocal();});
  $('wPaidAmount').addEventListener('input',tbpPaymentParts);
- document.querySelectorAll('[data-tbp-work]').forEach(button=>button.addEventListener('click',()=>{const prev=currentOrder();if(prev?.status==='completed'&&button.dataset.tbpWork==='working'){$('wProgress').value=50;refreshWork();}}));
+ document.querySelectorAll('[data-tbp-work]').forEach(button=>button.addEventListener('click',()=>{const prev=currentWorkOrder();if(prev?.status==='completed'&&button.dataset.tbpWork==='working'){$('wProgress').value=50;refreshWork();}}));
  $('tbpClearPrivateDeadline').addEventListener('click',()=>{$('wPrivateDeadline').value='';});
  for(const b of document.querySelectorAll('[data-tbp-payment]'))b.addEventListener('click',()=>{if(b.dataset.tbpPayment==='partial'&&Number($('wPaidAmount').value)===0){$('wPaidAmount').value='';}setTimeout(tbpPaymentParts,0)});
  const previousRenderOrders=renderAllOrders;
@@ -1586,13 +1591,13 @@ renderStatistics();renderFinanceExtras();
  function tbpShowResult(el,message,error=false){el.textContent=message;el.classList.toggle('error',error);el.hidden=!message}
  function tbpPrivatePrice(){const raw=$('tbpPrivatePrice').value.trim();return raw===''?null:Number(raw)}
  const oldOpenWorkPrivate=openWork;
- openWork=function(id){oldOpenWorkPrivate(id);const o=currentOrder();if(!o)return;
+ openWork=function(id){oldOpenWorkPrivate(id);const o=currentWorkOrder();if(!o)return;
   $('tbpPrivatePrice').value=o.privateQuoteAmount==null?'':String(o.privateQuoteAmount);
   $('tbpPrivateCurrency').value=o.privateQuoteCurrency||'UAH';
   tbpShowResult(tbpPublicStatus,'');tbpShowResult(tbpPrivateStatus,'');
   $('tbpSaveWork').textContent='Зберегти для клієнта';
  };
- async function tbpSavePrivateOrder(){const o=currentOrder();if(!o||tbpPrivateSaving)return;
+ async function tbpSavePrivateOrder(){const o=currentWorkOrder();if(!o||tbpPrivateSaving)return;
   const amount=tbpPrivatePrice(),currency=$('tbpPrivateCurrency').value;
   if(amount!==null&&(!Number.isFinite(amount)||amount<0||amount>9999999999||Math.abs(Math.round(amount*100)-amount*100)>1e-6)){
    tbpShowResult(tbpPrivateStatus,'Перевір попередню ціну (до двох знаків після коми).',true);return;
@@ -1616,13 +1621,13 @@ renderStatistics();renderFinanceExtras();
  $('tbpApplyPrivateQuote').addEventListener('click',()=>{
   const amount=tbpPrivatePrice(),currency=$('tbpPrivateCurrency').value;
   if(amount===null||!Number.isFinite(amount)||amount<0){tbpShowResult(tbpPrivateStatus,'Спершу вкажи свою попередню ціну.',true);return}
-  const o=currentOrder();
+  const o=currentWorkOrder();
   $('wPrice').value=String(amount);$('wCurrency').value=currency;
   $('wRate').value=String(currency==='UAH'?1:(o?.privateQuoteCurrency===currency&&o.privateQuoteRate>0?o.privateQuoteRate:rateFor(currency)));
   refreshWork();
   tbpShowResult(tbpPublicStatus,'Попередню ціну підставлено. Для публікації натисни «Зберегти для клієнта».');
  });
- updateClientViewLocal=function(){const o=currentOrder();if(!o||tbpClientSaving)return;
+ updateClientViewLocal=function(){const o=currentWorkOrder();if(!o||tbpClientSaving)return;
   tbpShowResult(tbpPublicStatus,'');
   const b=refreshWork(),partial=tbpPaymentParts();
   if(!b.valid){$('tbpBonusDetails').open=true;tbpShowResult(tbpPublicStatus,'Бонуси перевищують 90% вартості або доступний баланс.',true);return}
