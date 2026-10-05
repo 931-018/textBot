@@ -1825,5 +1825,167 @@ renderStatistics();renderFinanceExtras();
  const search=document.getElementById('globalSearch');if(search){let engaged=false;const unlock=()=>{engaged=true;search.readOnly=false};search.addEventListener('pointerdown',unlock,{once:true});search.addEventListener('keydown',unlock,{once:true});search.addEventListener('focus',()=>{search.readOnly=false});search.value='';[80,300,800,1500].forEach(ms=>setTimeout(()=>{if(!engaged){search.value='';search.dispatchEvent(new Event('input',{bubbles:true}))}},ms));window.addEventListener('pageshow',()=>{if(!engaged)search.value=''})}
 })();
 </script>
+
+
+<style id="tbp-admin-hardening-v6">
+/* ===== V6 · stability, desktop readability, backups, WORKED deadline signal ===== */
+.modal{position:relative}
+.tbp-modal-x{position:absolute;right:13px;top:13px;z-index:5;width:38px;height:38px;border-radius:11px;border:1px solid var(--line);background:rgba(255,255,255,.045);color:#fff;display:grid;place-items:center;cursor:pointer;font-size:18px;line-height:1}
+.tbp-modal-x:hover{border-color:var(--line2);background:rgba(255,255,255,.075)}
+#manualModal .modal-foot .btn.secondary,#addClientModal .modal-foot .btn.secondary,#periodModal .modal-foot .btn.secondary,#accountModal .modal-foot .btn.secondary,#confirmModal .modal-foot .btn.secondary{display:none!important}
+
+/* WORKED deadline — inspired by planner, adapted to admin visual language */
+.tbp-deadline-signal{margin-top:9px;padding-top:8px;border-top:1px solid rgba(255,255,255,.07)}
+.tbp-deadline-signal .tbp-deadline-label{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:10.5px;font-weight:950;letter-spacing:.035em;text-transform:uppercase}
+.tbp-deadline-signal .tbp-deadline-label b{font:inherit;color:inherit}
+.tbp-deadline-signal .tbp-deadline-track{height:5px;margin-top:7px;border-radius:999px;background:rgba(210,228,217,.14);overflow:hidden}
+.tbp-deadline-signal .tbp-deadline-track i{display:block;height:100%;border-radius:inherit;background:currentColor;box-shadow:0 0 13px currentColor}
+.tbp-deadline-signal.danger{color:#ff786c}.tbp-deadline-signal.urgent{color:#ff9e4d}.tbp-deadline-signal.soon{color:#f0d36d}.tbp-deadline-signal.safe{color:#70e98d}
+#view-worked .tbp-wr-dates>div{border:1px solid rgba(240,209,140,.12);background:linear-gradient(145deg,rgba(5,35,27,.72),rgba(8,48,37,.72))}
+
+/* Backup block */
+.tbp-backup-card{grid-column:1/-1;border-color:rgba(240,209,140,.25)!important}
+.tbp-backup-grid{display:grid;grid-template-columns:minmax(0,1.2fr) minmax(270px,.8fr);gap:16px;align-items:center}
+.tbp-backup-copy h4{margin:0 0 7px;color:#ffe5aa;font-size:16px}.tbp-backup-copy p{margin:0;color:#c4d7cd;font-size:12.5px;line-height:1.6}
+.tbp-backup-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}.tbp-backup-actions .btn{min-height:42px}
+
+/* Larger, adaptive desktop typography only. Mobile rules remain untouched. */
+@media(min-width:1051px){
+  .content{max-width:1760px;padding:30px 30px 38px}
+  .navbtn{font-size:15px;min-height:45px}.nav-section{font-size:10.5px}.brand-top{font-size:24px}.brand-by{font-size:11.5px}.sidebar-foot p{font-size:11px}
+  .page-head h1{font-size:34px}.section-bar h2{font-size:19px}.card-head h3{font-size:17px}.drawer-head h2{font-size:22px}.modal-head h3{font-size:18px}
+  .metric .label,.finance-card .label{font-size:12px!important}.metric .value{font-size:30px}.finance-card .amount{font-size:30px}
+  .data-table th{font-size:12.5px!important}.data-table td{font-size:15px!important}.data-table .muted,.data-table .client-meta span{font-size:12.5px!important}.data-table td strong,.data-table .client-meta strong{font-size:14.5px!important}
+  .field label{font-size:12.5px!important}.field input,.field textarea,.field select{font-size:15px!important;min-height:43px}.field textarea{line-height:1.55}
+  .btn{font-size:13px}.btn.small{font-size:12px!important}.chip{font-size:11.5px}.status{font-size:11.5px}
+  .activity strong{font-size:14px}.activity p{font-size:12.5px}.info-box span{font-size:11.5px!important}.info-box strong{font-size:15px!important}
+  .tbp-work-rich h3{font-size:21px}.tbp-work-rich .tbp-wr-person{font-size:13.5px}.tbp-work-rich .tbp-wr-topic{font-size:15.5px}.tbp-work-rich .tbp-wr-dates small{font-size:11.5px}.tbp-work-rich .tbp-wr-dates strong{font-size:14.5px}.tbp-work-rich .tbp-wr-note{font-size:13.5px}
+  #view-clients .tbp-client-card{min-height:305px}.tbp-card-identity h4{font-size:18px}.tbp-card-identity p{font-size:12px}.tbp-card-details small{font-size:10.5px}.tbp-card-details b{font-size:18px}
+}
+@media(min-width:1500px){
+  .content{max-width:1860px;padding-left:36px;padding-right:36px}
+  .page-head h1{font-size:36px}.data-table td{font-size:15.5px!important}.field input,.field textarea,.field select{font-size:15.5px!important}.navbtn{font-size:15.5px}
+  .tbp-work-rich h3{font-size:22px}.tbp-work-rich .tbp-wr-topic{font-size:16px}.tbp-client-toolbar{font-size:15px}
+}
+@media(max-width:720px){.tbp-backup-grid{grid-template-columns:1fr}.tbp-backup-actions{justify-content:stretch}.tbp-backup-actions .btn{flex:1}.tbp-deadline-signal .tbp-deadline-label{font-size:9.5px}}
+</style>
+<script id="tbp-admin-hardening-v6">
+(()=>{
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ const bridge=window.PETRO_ADMIN_BRIDGE||{};
+
+ // 1) Modal stability: backdrop clicks and Escape can no longer discard work.
+ document.addEventListener('click',e=>{
+   const overlay=e.target;
+   if(overlay?.classList?.contains('modal-overlay')||overlay?.classList?.contains('drawer-overlay')||overlay?.classList?.contains('tbp-pseudo-overlay')){
+     e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   }
+ },true);
+ document.addEventListener('keydown',e=>{
+   if(e.key==='Escape'&&document.querySelector('.modal-overlay.open,.drawer-overlay.open,.tbp-pseudo-overlay.open')){
+     e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
+   }
+ },true);
+
+ // Add a single explicit close X to every modal.
+ const closers={manualModal:'closeManualOrder',addClientModal:'closeAddClient',periodModal:'closePeriodPicker',accountModal:'closeAccountModal',confirmModal:'closeConfirm'};
+ Object.entries(closers).forEach(([id,fn])=>{
+   const modal=$(id)?.querySelector('.modal');if(!modal||modal.querySelector('.tbp-modal-x'))return;
+   const b=document.createElement('button');b.type='button';b.className='tbp-modal-x';b.setAttribute('aria-label','Закрити');b.textContent='×';b.onclick=()=>window[fn]?.();modal.appendChild(b);
+ });
+
+ // 2) Disable browser autofill throughout the admin interface, including dynamic fields.
+ function hardenAutofill(root=document){
+   root.querySelectorAll('input,textarea').forEach(el=>{
+     el.setAttribute('autocomplete','off');el.setAttribute('autocorrect','off');el.setAttribute('autocapitalize','off');el.setAttribute('spellcheck','false');el.setAttribute('data-1p-ignore','true');el.setAttribute('data-lpignore','true');el.setAttribute('data-form-type','other');
+     if(el.type==='password')el.setAttribute('autocomplete','new-password');
+   });
+   root.querySelectorAll('form').forEach(f=>f.setAttribute('autocomplete','off'));
+ }
+ hardenAutofill();new MutationObserver(m=>m.forEach(x=>x.addedNodes.forEach(n=>{if(n.nodeType===1)hardenAutofill(n)}))).observe(document.body,{subtree:true,childList:true});
+
+ // Manual order always starts from a truly blank state.
+ function resetManualOrder(){
+   const values={manualGuestName:'',manualGuestContact:'',manualType:'',manualDeadline:'',manualTopic:'',manualDetails:'',manualPrice:'0',manualRate:''};
+   Object.entries(values).forEach(([id,v])=>{const el=$(id);if(el)el.value=v});
+   if($('manualStatus'))$('manualStatus').value='accepted';if($('manualCurrency'))$('manualCurrency').value='UAH';if($('manualRateField'))$('manualRateField').style.display='none';
+   if($('manualClient')){$('manualClient').value='guest';typeof manualClientChanged==='function'&&manualClientChanged()}
+ }
+ const baseOpenManual=window.openManualOrder;
+ if(typeof baseOpenManual==='function')window.openManualOrder=function(){baseOpenManual();resetManualOrder();setTimeout(()=>$('manualGuestName')?.focus(),30)};
+ const baseCloseManual=window.closeManualOrder;
+ if(typeof baseCloseManual==='function')window.closeManualOrder=function(){baseCloseManual();resetManualOrder()};
+ window.addEventListener('pageshow',()=>{if(!$('manualModal')?.classList.contains('open'))resetManualOrder()});
+
+ // 3) WORKED deadline indicator with planner-like urgency scale.
+ function parseDate(raw){
+   const v=String(raw||'').trim();if(!v||v==='—'||/не встановлено/i.test(v))return null;
+   let m=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m)return new Date(+m[1],+m[2]-1,+m[3]);
+   m=v.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);if(m)return new Date(+m[3],+m[2]-1,+m[1]);return null;
+ }
+ function dayWord(n){const x=Math.abs(n)%100,y=x%10;if(x>10&&x<20)return 'днів';if(y===1)return 'день';if(y>=2&&y<=4)return 'дні';return 'днів'}
+ function deadlineMeta(raw){
+   const d=parseDate(raw);if(!d)return null;d.setHours(23,59,59,999);const now=new Date();now.setHours(0,0,0,0);const days=Math.ceil((d-now)/86400000);
+   if(days<0)return {cls:'danger',text:`ПРОСТРОЧЕНО НА ${Math.abs(days)} ${dayWord(days)}`,pct:8,days};
+   if(days===0)return {cls:'danger',text:'ДЕДЛАЙН СЬОГОДНІ',pct:10,days};
+   const cls=days<=3?'urgent':days<=10?'soon':'safe';const pct=days<=3?18:days<=5?28:days<=10?42:days<=26?68:100;
+   return {cls,text:`ЗАЛИШИЛОСЬ ${days} ${dayWord(days)}`,pct,days};
+ }
+ function decorateWorkedDeadlines(){
+   document.querySelectorAll('#workedCards .tbp-wr-dates>div').forEach(box=>{
+     box.querySelector('.tbp-deadline-signal')?.remove();const strong=box.querySelector('strong');if(!strong)return;const meta=deadlineMeta(strong.textContent);if(!meta)return;
+     box.insertAdjacentHTML('beforeend',`<div class="tbp-deadline-signal ${meta.cls}"><div class="tbp-deadline-label"><b>${meta.text}</b><span>${meta.days>0?meta.days+'д':''}</span></div><div class="tbp-deadline-track"><i style="width:${meta.pct}%"></i></div></div>`);
+   });
+ }
+ const worked=$('workedCards');if(worked){new MutationObserver(decorateWorkedDeadlines).observe(worked,{childList:true,subtree:true});decorateWorkedDeadlines()}
+
+ // 4) Backups in Settings: raw DB snapshot + current admin HTML.
+ function downloadBlob(name,text,type){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1200)}
+ function stamp(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}_${String(d.getHours()).padStart(2,'0')}-${String(d.getMinutes()).padStart(2,'0')}`}
+ async function exportData(){
+   if(typeof bridge.rpc!=='function')throw new Error('Адмінка ще не підключена до бази.');const snapshot=await bridge.rpc('admin_get_snapshot');
+   const bundle={format:'TEXT_BY_PETRO_ADMIN_BACKUP',version:1,exportedAt:new Date().toISOString(),snapshot};downloadBlob(`text-by-petro-data-${stamp()}.json`,JSON.stringify(bundle,null,2),'application/json;charset=utf-8');
+ }
+ async function exportHtml(){
+   let html='';try{const r=await fetch(location.href,{cache:'no-store'});if(r.ok)html=await r.text()}catch(_){ }
+   if(!html)html='<!DOCTYPE html>\n'+document.documentElement.outerHTML;downloadBlob(`admin-${stamp()}.html`,html,'text/html;charset=utf-8');
+ }
+ window.downloadAdminDataBackup=async()=>{try{await exportData();showToast('Копію даних завантажено')}catch(e){showToast(String(e?.message||e))}};
+ window.downloadAdminHtmlBackup=async()=>{try{await exportHtml();showToast('Копію admin.html завантажено')}catch(e){showToast(String(e?.message||e))}};
+ window.downloadAdminFullBackup=async()=>{try{await exportData();setTimeout(()=>exportHtml(),220);showToast('Повна резервна копія створена')}catch(e){showToast(String(e?.message||e))}};
+ function ensureBackupCard(){const layout=$('view-settings')?.querySelector('.layout2');if(!layout||$('tbpBackupCard'))return;layout.insertAdjacentHTML('beforeend',`<div class="card tbp-backup-card" id="tbpBackupCard"><div class="card-head"><div><h3>Резервна копія</h3><p>Дані системи та файл адмінки</p></div></div><div class="card-body"><div class="tbp-backup-grid"><div class="tbp-backup-copy"><h4>Повна копія TEXT BY PETRO</h4><p>JSON містить поточний знімок клієнтів, псевдоклієнтів, замовлень, рахунків, виплат, активності та системних налаштувань. Окремо можна завантажити сам файл адмінки.</p></div><div class="tbp-backup-actions"><button type="button" class="btn primary" onclick="downloadAdminFullBackup()">⬇ Повна копія</button><button type="button" class="btn secondary" onclick="downloadAdminDataBackup()">Дані JSON</button><button type="button" class="btn secondary" onclick="downloadAdminHtmlBackup()">admin.html</button></div></div></div></div>`)}
+ ensureBackupCard();
+
+ // Pseudo clients also get a real delete action, backed by an admin-only RPC.
+ const basePseudo=window.openPseudoClient;
+ if(typeof basePseudo==='function')window.openPseudoClient=function(id){basePseudo(id);const c=clients[id];const body=$('tbpPseudoOverlay')?.querySelector('.tbp-pseudo-body');if(!c?.isPseudo||!body||body.querySelector('.tbp-pseudo-delete'))return;const z=document.createElement('div');z.className='tbp-delete-zone tbp-pseudo-delete';z.innerHTML='<button type="button" class="btn danger">Видалити псевдоклієнта</button>';z.querySelector('button').onclick=()=>deletePseudoClient(id);body.appendChild(z)};
+ window.deletePseudoClient=function(id){const c=clients[id];if(!c?.isPseudo||typeof bridge.rpc!=='function')return;openConfirm('Видалити псевдоклієнта?',`${c.name} буде видалено. Його замовлення залишаться в історії як гостьові.`,async()=>{try{await bridge.rpc('admin_delete_pseudo_client',{p_pseudo_client_id:c.pseudoId});await bridge.loadSnapshot({silent:true});window.closePseudoClient?.();showToast('Псевдоклієнта видалено')}catch(e){showToast(bridge.friendly?bridge.friendly(e):String(e?.message||e))}})};
+})();
+</script>
+
+
+<script id="tbp-delete-client-route-v1">
+(()=>{
+ 'use strict';
+ const bridge=window.PETRO_ADMIN_BRIDGE||{};
+ window.deleteClient=function(id){
+   const c=clients[id];if(!c)return;
+   if(c.isPseudo)return window.deletePseudoClient?.(id);
+   const cnt=orders.filter(o=>o.client===id).length;
+   openConfirm('Видалити клієнта?',`${c.name} буде видалено.${cnt?` Його ${cnt} замовл. залишаться в історії як гостьові.`:''}`,async()=>{
+     try{
+       const sb=window.PETRO_ADMIN_SUPABASE;if(!sb)throw new Error('Адмінка ще не підключена до бази.');
+       const {data,error}=await sb.functions.invoke('admin-delete-client',{body:{userId:id}});
+       if(error){let msg='';try{const body=await error.context?.json?.();msg=body?.message||body?.error||''}catch(_){ }throw new Error(msg||error.message||'CLIENT_DELETE_FAILED')}
+       if(data?.error)throw new Error(data.message||data.error);
+       if(typeof bridge.loadSnapshot==='function')await bridge.loadSnapshot({silent:true});
+       closeClient();showToast('Клієнта видалено · історію замовлень збережено');
+     }catch(err){showToast(bridge.friendly?bridge.friendly(err,'Не вдалося видалити клієнта.'):String(err?.message||err))}
+   });
+ };
+})();
+</script>
+
 </body>
 </html>
