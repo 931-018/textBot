@@ -4,7 +4,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <meta name="theme-color" content="#124634" />
-<title>TEXT · BY PETRO — Admin UI V4</title>
+<title>TEXT · BY PETRO — Admin Stable</title>
 <!-- TEXT BY PETRO · Stage 2: client order reliability -->
 <style>
 :root{
@@ -1292,7 +1292,70 @@ renderStatistics();renderFinanceExtras();
 @keyframes adminPulse{50%{opacity:.28;transform:scale(.72)}}
 @media(max-width:720px){.admin-auth-card{padding:22px}.admin-sync-state{display:none}}
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js" onerror="this.onerror=null;this.src='https://unpkg.com/@supabase/supabase-js@2/dist/umd/supabase.min.js'"></script>
+<script id="tbp-supabase-rest-shim">
+(()=>{
+'use strict';
+/* Lightweight Supabase-compatible client. No external CDN: safe for file:// and GitHub Pages. */
+const DEFAULT_TIMEOUT=9000;
+function timeoutFetch(url,opts={},ms=DEFAULT_TIMEOUT){
+  const c=new AbortController();const t=setTimeout(()=>c.abort(),ms);
+  return fetch(url,{...opts,signal:c.signal}).finally(()=>clearTimeout(t));
+}
+function safeParse(text){try{return text?JSON.parse(text):null}catch(_){return text}}
+function makeError(status,payload){
+  const msg=typeof payload==='string'?payload:(payload?.msg||payload?.message||payload?.error_description||payload?.error||`HTTP_${status}`);
+  const err=new Error(String(msg||`HTTP_${status}`));err.status=status;err.payload=payload;
+  err.context={json:async()=>payload};return err;
+}
+function createClient(url,key,options={}){
+  const storageKey=options?.auth?.storageKey||'text-by-petro-admin-auth-v1';
+  const REST_KEY=storageKey+'-rest-v1';
+  let authListeners=[];
+  function read(){try{return JSON.parse(localStorage.getItem(REST_KEY)||'null')}catch(_){return null}}
+  function write(s){try{s?localStorage.setItem(REST_KEY,JSON.stringify(s)):localStorage.removeItem(REST_KEY)}catch(_){} }
+  function expired(s){return !s?.access_token || (Number(s.expires_at||0)>0 && Number(s.expires_at)*1000<Date.now()+60000)}
+  async function api(path,{method='GET',body,token,timeout=DEFAULT_TIMEOUT,headers={}}={}){
+    const h={'apikey':key,'Accept':'application/json',...headers};
+    if(token)h.Authorization='Bearer '+token;
+    if(body!==undefined)h['Content-Type']='application/json';
+    let r;
+    try{r=await timeoutFetch(url+path,{method,headers:h,body:body===undefined?undefined:JSON.stringify(body)},timeout)}
+    catch(e){if(e?.name==='AbortError')throw new Error('REQUEST_TIMEOUT');throw e}
+    const raw=await r.text();const data=safeParse(raw);
+    if(!r.ok)throw makeError(r.status,data);return data;
+  }
+  async function refreshSession(){
+    const old=read();if(!old?.refresh_token)return null;
+    try{
+      const data=await api('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:old.refresh_token},timeout:8000});
+      const s={...data,expires_at:data.expires_at||Math.floor(Date.now()/1000)+Number(data.expires_in||3600)};write(s);return s;
+    }catch(_){write(null);return null}
+  }
+  async function session(){let s=read();if(s&&expired(s))s=await refreshSession();return s}
+  const auth={
+    async getSession(){return {data:{session:await session()},error:null}},
+    async signInWithPassword({email,password}){
+      try{const data=await api('/auth/v1/token?grant_type=password',{method:'POST',body:{email,password},timeout:9000});const s={...data,expires_at:data.expires_at||Math.floor(Date.now()/1000)+Number(data.expires_in||3600)};write(s);authListeners.forEach(fn=>{try{fn('SIGNED_IN',s)}catch(_){}});return {data:{session:s,user:data.user},error:null}}catch(error){return {data:{session:null,user:null},error}}
+    },
+    async signOut(){write(null);authListeners.forEach(fn=>{try{fn('SIGNED_OUT',null)}catch(_){}});return {error:null}},
+    onAuthStateChange(fn){authListeners.push(fn);return {data:{subscription:{unsubscribe(){authListeners=authListeners.filter(x=>x!==fn)}}}}}
+  };
+  async function rpc(name,args={}){
+    try{const s=await session();if(!s)return {data:null,error:makeError(401,{error:'AUTH_REQUIRED'})};const data=await api('/rest/v1/rpc/'+encodeURIComponent(name),{method:'POST',body:args||{},token:s.access_token,timeout:9000});return {data,error:null}}catch(error){return {data:null,error}}
+  }
+  const functions={invoke:async(name,{body}={})=>{
+    try{const s=await session();if(!s)return {data:null,error:makeError(401,{error:'AUTH_REQUIRED'})};const data=await api('/functions/v1/'+encodeURIComponent(name),{method:'POST',body:body||{},token:s.access_token,timeout:10000});return {data,error:null}}catch(error){return {data:null,error}}
+  }};
+  const storage={from(bucket){return {createSignedUrl:async(path,expiresIn=900)=>{
+    try{const s=await session();if(!s)return {data:null,error:makeError(401,{error:'AUTH_REQUIRED'})};const data=await api('/storage/v1/object/sign/'+encodeURIComponent(bucket)+'/'+String(path).split('/').map(encodeURIComponent).join('/'),{method:'POST',body:{expiresIn},token:s.access_token,timeout:9000});let signed=data?.signedUrl||data?.signedURL||data?.signed_url;if(signed&&signed.startsWith('/'))signed=url.replace(/\/$/,'')+'/storage/v1'+signed;return {data:{signedUrl:signed},error:null}}catch(error){return {data:null,error}}
+  }}}};
+  function channel(){const obj={on(){return obj},subscribe(cb){setTimeout(()=>cb?.('SUBSCRIBED'),0);return obj}};return obj}
+  async function removeChannel(){return 'ok'}
+  return {auth,rpc,functions,storage,channel,removeChannel};
+}
+window.supabase={createClient};
+})();
+</script>
 <script id="petro-admin-supabase-bridge">
 (() => {
   'use strict';
@@ -1324,7 +1387,7 @@ renderStatistics();renderFinanceExtras();
   function friendly(error, fallback='Не вдалося виконати дію. Спробуйте ще раз.'){
     const raw=rawError(error);for(const [code,text] of Object.entries(FRIENDLY))if(raw.includes(code))return text;
     if(/invalid login credentials/i.test(raw))return 'Неправильний логін або пароль.';
-    if(/failed to fetch|network|load failed/i.test(raw))return 'Немає зв’язку з сервером. Перевірте інтернет.';
+    if(/REQUEST_TIMEOUT|AbortError|failed to fetch|network|load failed/i.test(raw))return 'Сервер не відповів. Перевірте інтернет і спробуйте ще раз.';
     return raw && raw.length<220 ? raw : fallback;
   }
   async function functionError(error){
@@ -1342,8 +1405,9 @@ renderStatistics();renderFinanceExtras();
   }
   function ensureAuthGate(){
     if(document.getElementById('adminAuthGate'))return;
-    document.body.insertAdjacentHTML('beforeend',`<div class="admin-auth-gate" id="adminAuthGate"><form class="admin-auth-card" id="adminAuthForm"><div class="admin-auth-brand">TEXT · BY PETRO</div><h2>Вхід до адмін-панелі</h2><p>Доступ має лише власник. Дані клієнтів і замовлень завантажуються із захищеної бази.</p><div class="field"><label>Логін адміністратора</label><input id="adminLogin" autocomplete="username" required /></div><div class="field"><label>Пароль</label><input id="adminPassword" type="password" autocomplete="current-password" required minlength="6" /></div><div class="admin-auth-actions"><button class="btn primary" id="adminLoginBtn" type="submit">Увійти</button></div><div class="admin-auth-error" id="adminAuthError" role="alert"></div><div class="admin-auth-note">Сесія зберігається лише у цьому браузері. Ключ із повними правами в HTML не використовується.</div></form></div>`);
+    document.body.insertAdjacentHTML('beforeend',`<div class="admin-auth-gate" id="adminAuthGate"><form class="admin-auth-card" id="adminAuthForm"><div class="admin-auth-brand">TEXT · BY PETRO</div><h2>Вхід до адмін-панелі</h2><p>Доступ має лише власник. Дані клієнтів і замовлень завантажуються із захищеної бази.</p><div class="field"><label>Логін адміністратора</label><input id="adminLogin" autocomplete="username" required /></div><div class="field"><label>Пароль</label><input id="adminPassword" type="password" autocomplete="current-password" required minlength="6" /></div><div class="admin-auth-actions"><button class="btn primary" id="adminLoginBtn" type="submit">Увійти</button><button class="btn secondary" id="adminResetSessionBtn" type="button">Очистити сесію</button></div><div class="admin-auth-error" id="adminAuthError" role="alert"></div><div class="admin-auth-note">Сесія зберігається лише у цьому браузері. Ключ із повними правами в HTML не використовується.</div></form></div>`);
     document.getElementById('adminAuthForm').addEventListener('submit',loginAdmin);
+    document.getElementById('adminResetSessionBtn')?.addEventListener('click',async()=>{try{await sb?.auth?.signOut?.({scope:'local'})}catch(_){};try{localStorage.removeItem('text-by-petro-admin-auth-v1-rest-v1')}catch(_){};document.getElementById('adminAuthError').textContent='Сесію очищено. Введіть логін і пароль заново.';setSync('Не авторизовано','error')});
     const topActions=document.querySelector('.top-actions');
     if(topActions&&!document.getElementById('adminSyncState'))topActions.insertAdjacentHTML('afterbegin','<div class="admin-sync-state" id="adminSyncState"><i class="admin-sync-dot"></i><span>Підключення…</span></div>');
   }
@@ -1361,7 +1425,7 @@ renderStatistics();renderFinanceExtras();
       if(signError)throw signError;
       const {data:isAdmin,error:adminError}=await sb.rpc('is_admin');
       if(adminError||!isAdmin){await sb.auth.signOut({scope:'local'});throw new Error('ADMIN_REQUIRED')}
-      document.getElementById('adminPassword').value='';hideGate();await loadSnapshot();subscribeRealtime();showToast('Адмін-панель підключена');
+      document.getElementById('adminPassword').value='';setSync('Завантаження даних…','loading');await loadSnapshot();hideGate();subscribeRealtime();showToast('Адмін-панель підключена');
     }catch(err){error.textContent=friendly(err,'Не вдалося увійти.')}finally{btn.disabled=false;btn.textContent='Увійти'}
   }
   async function logoutAdmin(){
@@ -1458,7 +1522,7 @@ renderStatistics();renderFinanceExtras();
     ensureAuthGate();if(!window.supabase?.createClient){showGate('Не вдалося завантажити модуль бази. Перевірте інтернет.');return}
     sb=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:false,storageKey:'text-by-petro-admin-auth-v1'},realtime:{params:{eventsPerSecond:5}}});
     window.PETRO_ADMIN_SUPABASE=sb;window.PETRO_ADMIN_SUPABASE=sb;const {data}=await sb.auth.getSession();if(!data?.session)return showGate();
-    try{const {data:isAdmin,error}=await sb.rpc('is_admin');if(error||!isAdmin){await sb.auth.signOut({scope:'local'});return showGate('Збережена сесія не має прав адміністратора.')}hideGate();await loadSnapshot();subscribeRealtime()}catch(err){showGate(friendly(err))}
+    try{const {data:isAdmin,error}=await sb.rpc('is_admin');if(error||!isAdmin){await sb.auth.signOut({scope:'local'});return showGate('Збережена сесія не має прав адміністратора.')}setSync('Завантаження даних…','loading');await loadSnapshot();hideGate();subscribeRealtime()}catch(err){showGate(friendly(err))}
     sb.auth.onAuthStateChange((event,session)=>{if(event==='SIGNED_OUT'||!session){showGate();setSync('Не авторизовано','error')}});
   }
   // Safe, minimal bridge for the independent premium UI module.
@@ -1826,138 +1890,122 @@ renderStatistics();renderFinanceExtras();
 })();
 </script>
 
-<style id="tbp-safe-recovery-ui-v1">
-/* Safe recovery layer: visual/readability changes only. Core Supabase bridge remains untouched. */
-.tbp-modal-x{position:absolute;right:14px;top:12px;width:38px;height:38px;border:1px solid var(--line2);border-radius:11px;background:rgba(5,37,28,.88);color:var(--gold2);font-size:23px;line-height:1;cursor:pointer;z-index:5;display:grid;place-items:center}
-.modal{position:relative}.tbp-backup-card{grid-column:1/-1}.tbp-backup-grid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,.65fr);gap:14px;align-items:center}.tbp-backup-copy h4{margin:0 0 7px;color:var(--gold3);font-size:16px}.tbp-backup-copy p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}.tbp-backup-actions{display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap}
-.tbp-deadline-signal{margin-top:9px;padding:9px 10px;border:1px solid rgba(240,209,140,.18);border-radius:11px;background:rgba(4,31,24,.45)}
-.tbp-deadline-signal .tbp-deadline-label{display:flex!important;align-items:center;justify-content:space-between;gap:8px;margin:0 0 7px!important;font-size:10px!important;line-height:1.2;font-weight:950;letter-spacing:.035em;text-transform:uppercase}
-.tbp-deadline-signal .tbp-deadline-label b{font:inherit;color:inherit}.tbp-deadline-signal .tbp-deadline-label span{font-size:9px;opacity:.76;white-space:nowrap}
-.tbp-deadline-track{height:6px;border-radius:999px;background:rgba(255,255,255,.10);overflow:hidden}.tbp-deadline-track i{display:block;height:100%;border-radius:inherit;min-width:7px;transition:width .25s ease}
-.tbp-deadline-signal.danger{color:#ff766f;border-color:rgba(255,118,111,.28)}.tbp-deadline-signal.danger .tbp-deadline-track i{background:linear-gradient(90deg,#ff5c55,#ff8a66)}
-.tbp-deadline-signal.urgent{color:#ff9a45;border-color:rgba(255,154,69,.30)}.tbp-deadline-signal.urgent .tbp-deadline-track i{background:linear-gradient(90deg,#ff8a39,#f0b46e)}
-.tbp-deadline-signal.soon{color:#f3d36f;border-color:rgba(243,211,111,.28)}.tbp-deadline-signal.soon .tbp-deadline-track i{background:linear-gradient(90deg,#e6b84f,#f2df79)}
-.tbp-deadline-signal.safe{color:#72e99f;border-color:rgba(114,233,159,.25)}.tbp-deadline-signal.safe .tbp-deadline-track i{background:linear-gradient(90deg,#50cb84,#86ef7d)}
+<style id="tbp-stable-readability-v2">
 @media(min-width:1051px){
-  .content{max-width:1760px;padding:30px 30px 38px}.navbtn{font-size:15px;min-height:45px}.nav-section{font-size:10.5px}.brand-top{font-size:24px}.brand-by{font-size:11.5px}.sidebar-foot p{font-size:11px}
-  .page-head h1{font-size:34px}.section-bar h2{font-size:19px}.card-head h3{font-size:17px}.drawer-head h2{font-size:22px}.modal-head h3{font-size:18px}
-  .metric .label,.finance-card .label{font-size:12px!important}.metric .value,.finance-card .amount{font-size:30px}.data-table th{font-size:12.5px!important}.data-table td{font-size:15px!important}.data-table .muted,.data-table .client-meta span{font-size:12.5px!important}.data-table td strong,.data-table .client-meta strong{font-size:14.5px!important}
-  .field label{font-size:12.5px!important}.field input,.field textarea,.field select{font-size:15px!important;min-height:43px}.btn{font-size:13px}.btn.small{font-size:12px!important}.chip,.status{font-size:11.5px}.info-box span{font-size:11.5px!important}.info-box strong{font-size:15px!important}
-  .tbp-work-rich h3{font-size:21px}.tbp-work-rich .tbp-wr-person{font-size:13.5px}.tbp-work-rich .tbp-wr-topic{font-size:15.5px}.tbp-work-rich .tbp-wr-dates small{font-size:11.5px}.tbp-work-rich .tbp-wr-dates strong{font-size:14.5px}.tbp-work-rich .tbp-wr-note{font-size:13.5px}
+ .content{max-width:1760px;padding:30px}.navbtn{font-size:15px;min-height:45px}.nav-section{font-size:10.5px}
+ .page-head h1{font-size:34px}.section-bar h2{font-size:19px}.card-head h3{font-size:17px}
+ .data-table th{font-size:12.5px!important}.data-table td{font-size:15px!important}.data-table .muted,.data-table .client-meta span{font-size:12.5px!important}
+ .field label{font-size:12.5px!important}.field input,.field textarea,.field select{font-size:15px!important}.info-box span{font-size:11.5px!important}.info-box strong{font-size:15px!important}
 }
-@media(min-width:1500px){.content{max-width:1860px;padding-left:36px;padding-right:36px}.page-head h1{font-size:36px}.data-table td{font-size:15.5px!important}.field input,.field textarea,.field select{font-size:15.5px!important}.navbtn{font-size:15.5px}}
-@media(max-width:720px){.tbp-backup-grid{grid-template-columns:1fr}.tbp-backup-actions{justify-content:stretch}.tbp-backup-actions .btn{flex:1}}
+@media(min-width:1500px){.page-head h1{font-size:36px}.data-table td{font-size:15.5px!important}.navbtn{font-size:15.5px}}
+.tbp-days-left{display:inline-flex;align-items:center;gap:7px;margin-top:7px;padding:6px 9px;border:1px solid rgba(240,209,140,.22);border-radius:10px;background:rgba(4,31,24,.48);font-size:10.5px;font-weight:950;letter-spacing:.025em;text-transform:uppercase}
+.tbp-days-left.danger{color:#ff837b;border-color:rgba(255,117,107,.35)}.tbp-days-left.urgent{color:#ffad61}.tbp-days-left.soon{color:#f2d36d}.tbp-days-left.safe{color:#78eaa2}
+.admin-auth-actions{flex-wrap:wrap}.admin-auth-actions .btn{min-width:150px}
 </style>
-
-<script id="tbp-safe-recovery-behavior-v1">
+<script id="tbp-stable-small-fixes-v2">
 (()=>{
  'use strict';
- const $=id=>document.getElementById(id);
- const bridge=window.PETRO_ADMIN_BRIDGE||{};
+ const byId=id=>document.getElementById(id);
+ function clearManual(){
+   ['manualGuestName','manualGuestContact','manualType','manualDeadline','manualTopic','manualDetails','manualRate'].forEach(id=>{const e=byId(id);if(e)e.value=''});
+   if(byId('manualPrice'))byId('manualPrice').value='0';if(byId('manualStatus'))byId('manualStatus').value='accepted';if(byId('manualCurrency'))byId('manualCurrency').value='UAH';
+ }
+ const old=window.openManualOrder;if(typeof old==='function')window.openManualOrder=function(){old.apply(this,arguments);clearManual();if(byId('manualClient')){byId('manualClient').value='guest';window.manualClientChanged?.()}};
+ document.querySelectorAll('#manualModal input,#manualModal textarea,#addClientModal input,#accountModal input').forEach(e=>e.setAttribute('autocomplete','off'));
+ function daysMeta(date){if(!date||date==='—')return null;let d;if(/^\d{4}-\d{2}-\d{2}$/.test(date)){const [y,m,x]=date.split('-').map(Number);d=new Date(y,m-1,x)}else{const m=String(date).match(/^(\d{2})\.(\d{2})\.(\d{4})$/);if(!m)return null;d=new Date(+m[3],+m[2]-1,+m[1])}const n=new Date();n.setHours(0,0,0,0);d.setHours(0,0,0,0);const days=Math.ceil((d-n)/86400000);return {days,cls:days<0?'danger':days<=3?'urgent':days<=10?'soon':'safe',label:days<0?`Прострочено на ${Math.abs(days)} дн.`:days===0?'Дедлайн сьогодні':`Залишилось ${days} дн.`}}
+ const base=window.renderWorked;if(typeof base==='function')window.renderWorked=function(){base.apply(this,arguments);document.querySelectorAll('#workedCards .work-card').forEach(card=>{const strong=card.querySelector('.deadline strong');if(!strong||card.querySelector('.tbp-days-left'))return;const m=daysMeta(strong.textContent.trim());if(m)strong.insertAdjacentHTML('afterend',`<span class="tbp-days-left ${m.cls}">${m.label}</span>`)})};
+ try{window.renderWorked?.()}catch(_){}
+})();
+</script>
 
- // Keep accidental clicks/Escape from closing work. Explicit buttons still work.
- document.addEventListener('click',e=>{
-   if(e.target?.classList?.contains('modal-overlay')||e.target?.classList?.contains('drawer-overlay')||e.target?.classList?.contains('tbp-pseudo-overlay')){
-     e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-   }
- },true);
- document.addEventListener('keydown',e=>{
-   if(e.key==='Escape'&&document.querySelector('.modal-overlay.open,.drawer-overlay.open,.tbp-pseudo-overlay.open')){
-     e.preventDefault();e.stopPropagation();e.stopImmediatePropagation();
-   }
- },true);
 
- // Explicit X for classic modals. Login gate is intentionally excluded.
- const closers={manualModal:'closeManualOrder',addClientModal:'closeAddClient',periodModal:'closePeriodPicker',accountModal:'closeAccountModal',confirmModal:'closeConfirm'};
- Object.entries(closers).forEach(([id,fn])=>{
-   const modal=$(id)?.querySelector('.modal');if(!modal||modal.querySelector('.tbp-modal-x'))return;
-   const b=document.createElement('button');b.type='button';b.className='tbp-modal-x';b.setAttribute('aria-label','Закрити');b.textContent='×';b.onclick=()=>window[fn]?.();modal.appendChild(b);
- });
-
- // Disable browser autofill in admin work forms, but do not break the admin login form.
- function hardenAutofill(root=document){
-   root.querySelectorAll('input,textarea').forEach(el=>{
-     if(el.closest('#adminAuthGate'))return;
-     el.setAttribute('autocomplete',el.type==='password'?'new-password':'off');
-     el.setAttribute('autocorrect','off');el.setAttribute('autocapitalize','off');el.setAttribute('spellcheck','false');
-     el.setAttribute('data-1p-ignore','true');el.setAttribute('data-lpignore','true');el.setAttribute('data-form-type','other');
+<style id="tbp-worked-deadline-indicator-v1">
+/* WORKED deadline indicator — isolated visual module; no auth/data logic touched. */
+.tbp-deadline-meter{
+  --tbp-deadline-accent:#79e99f;
+  --tbp-deadline-glow:rgba(121,233,159,.26);
+  margin:10px 0 12px;
+  padding:10px 12px 11px;
+  border:1px solid color-mix(in srgb,var(--tbp-deadline-accent) 38%, transparent);
+  border-radius:12px;
+  background:linear-gradient(135deg,rgba(3,31,23,.72),rgba(13,62,46,.52));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 7px 18px rgba(0,0,0,.08);
+  overflow:hidden;
+}
+.tbp-deadline-meter.is-overdue{--tbp-deadline-accent:#ff736a;--tbp-deadline-glow:rgba(255,115,106,.26)}
+.tbp-deadline-meter.is-today{--tbp-deadline-accent:#ff8b55;--tbp-deadline-glow:rgba(255,139,85,.27)}
+.tbp-deadline-meter.is-urgent{--tbp-deadline-accent:#ffad58;--tbp-deadline-glow:rgba(255,173,88,.25)}
+.tbp-deadline-meter.is-soon{--tbp-deadline-accent:#f1d45d;--tbp-deadline-glow:rgba(241,212,93,.24)}
+.tbp-deadline-meter.is-safe{--tbp-deadline-accent:#72e897;--tbp-deadline-glow:rgba(114,232,151,.24)}
+.tbp-deadline-line{display:flex;align-items:center;justify-content:space-between;gap:10px;min-width:0}
+.tbp-deadline-copy{min-width:0}
+.tbp-deadline-source{display:block;margin-bottom:3px;color:#9fbeb0;font-size:9.5px;font-weight:850;letter-spacing:.09em;text-transform:uppercase}
+.tbp-deadline-label{display:block;color:var(--tbp-deadline-accent);font-size:12.5px;font-weight:950;line-height:1.25;letter-spacing:.015em;text-transform:uppercase;text-shadow:0 0 14px var(--tbp-deadline-glow)}
+.tbp-deadline-days{flex:0 0 auto;display:grid;place-items:center;min-width:38px;height:31px;padding:0 8px;border-radius:10px;border:1px solid color-mix(in srgb,var(--tbp-deadline-accent) 42%, transparent);background:color-mix(in srgb,var(--tbp-deadline-accent) 9%, transparent);color:var(--tbp-deadline-accent);font-size:13px;font-weight:950;box-shadow:0 0 18px var(--tbp-deadline-glow)}
+.tbp-deadline-track{position:relative;height:5px;margin-top:9px;border-radius:999px;background:rgba(188,217,204,.14);overflow:hidden}
+.tbp-deadline-fill{position:absolute;inset:0 auto 0 0;width:var(--tbp-deadline-fill,50%);border-radius:inherit;background:linear-gradient(90deg,color-mix(in srgb,var(--tbp-deadline-accent) 78%, #fff 8%),var(--tbp-deadline-accent));box-shadow:0 0 13px var(--tbp-deadline-glow);transform-origin:left center;animation:tbpDeadlineGrow .7s cubic-bezier(.2,.85,.25,1) both}
+.tbp-deadline-fill::after{content:"";position:absolute;inset:0;width:42%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.52),transparent);transform:translateX(-120%);animation:tbpDeadlineShine 2.8s ease-in-out 1s infinite}
+@keyframes tbpDeadlineGrow{from{transform:scaleX(0);opacity:.5}to{transform:scaleX(1);opacity:1}}
+@keyframes tbpDeadlineShine{0%,58%{transform:translateX(-140%)}78%,100%{transform:translateX(340%)}}
+@media (prefers-reduced-motion:reduce){.tbp-deadline-fill,.tbp-deadline-fill::after{animation:none!important}}
+@media(max-width:720px){.tbp-deadline-meter{padding:9px 10px}.tbp-deadline-label{font-size:11.5px}.tbp-deadline-source{font-size:9px}}
+</style>
+<script id="tbp-worked-deadline-indicator-v1-script">
+(()=>{
+ 'use strict';
+ const DAY=86400000;
+ function parseDeadlineValue(value){
+   const s=String(value||'').trim();
+   if(!s||s==='—'||s==='Не встановлено')return null;
+   let m=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+   if(m)return new Date(Number(m[1]),Number(m[2])-1,Number(m[3]));
+   m=s.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+   if(m)return new Date(Number(m[3]),Number(m[2])-1,Number(m[1]));
+   return null;
+ }
+ function deadlineView(value){
+   const d=parseDeadlineValue(value);if(!d)return null;
+   const today=new Date();today.setHours(0,0,0,0);d.setHours(0,0,0,0);
+   const days=Math.round((d-today)/DAY);
+   if(days<0)return {days,cls:'is-overdue',label:`Прострочено на ${Math.abs(days)} ${dayWord(Math.abs(days))}`,badge:`−${Math.abs(days)}`,fill:100};
+   if(days===0)return {days,cls:'is-today',label:'Дедлайн сьогодні',badge:'!',fill:100};
+   let cls='is-safe';if(days<=3)cls='is-urgent';else if(days<=10)cls='is-soon';
+   // Visual urgency: closer deadline = fuller bar. 30+ days stays calm and short.
+   const fill=Math.max(16,Math.min(96,Math.round(100-(Math.min(days,30)/30)*78)));
+   return {days,cls,label:`Залишилось ${days} ${dayWord(days)}`,badge:String(days),fill};
+ }
+ function dayWord(n){
+   const mod10=n%10,mod100=n%100;
+   if(mod10===1&&mod100!==11)return 'день';
+   if(mod10>=2&&mod10<=4&&(mod100<12||mod100>14))return 'дні';
+   return 'днів';
+ }
+ function renderDeadlineMeters(){
+   const root=document.getElementById('workedCards');if(!root)return;
+   const cards=[...root.querySelectorAll('.tbp-work-rich')];
+   cards.forEach(card=>{
+     card.querySelectorAll('.tbp-deadline-meter').forEach(n=>n.remove());
+     const dates=card.querySelector('.tbp-wr-dates');if(!dates)return;
+     const boxes=[...dates.children];
+     const privateText=boxes[0]?.querySelector('strong')?.textContent?.trim()||'';
+     const clientText=boxes[1]?.querySelector('strong')?.textContent?.trim()||'';
+     const usePrivate=!!parseDeadlineValue(privateText);
+     const raw=usePrivate?privateText:clientText;
+     const meta=deadlineView(raw);if(!meta)return;
+     const source=usePrivate?'Мій дедлайн':'Дедлайн клієнта';
+     const meter=document.createElement('div');
+     meter.className=`tbp-deadline-meter ${meta.cls}`;
+     meter.setAttribute('aria-label',`${source}: ${meta.label}`);
+     meter.innerHTML=`<div class="tbp-deadline-line"><div class="tbp-deadline-copy"><span class="tbp-deadline-source">${source}</span><strong class="tbp-deadline-label">${meta.label}</strong></div><span class="tbp-deadline-days">${meta.badge}</span></div><div class="tbp-deadline-track"><span class="tbp-deadline-fill" style="--tbp-deadline-fill:${meta.fill}%"></span></div>`;
+     dates.insertAdjacentElement('afterend',meter);
    });
  }
- hardenAutofill();
- new MutationObserver(m=>m.forEach(x=>x.addedNodes.forEach(n=>{if(n.nodeType===1)hardenAutofill(n)}))).observe(document.body,{subtree:true,childList:true});
-
- // Manual order always opens blank, without touching the server/data bridge.
- function resetManualOrder(){
-   const values={manualGuestName:'',manualGuestContact:'',manualType:'',manualDeadline:'',manualTopic:'',manualDetails:'',manualPrice:'0',manualRate:''};
-   Object.entries(values).forEach(([id,v])=>{const el=$(id);if(el)el.value=v});
-   if($('manualStatus'))$('manualStatus').value='accepted';
-   if($('manualCurrency'))$('manualCurrency').value='UAH';
-   if($('manualRateField'))$('manualRateField').style.display='none';
-   if($('manualClient')){$('manualClient').value='guest';window.manualClientChanged?.()}
+ const previous=window.renderWorked;
+ if(typeof previous==='function'){
+   window.renderWorked=function(){const result=previous.apply(this,arguments);try{renderDeadlineMeters()}catch(e){console.warn('Deadline indicator:',e)}return result};
  }
- const openManualBase=window.openManualOrder;
- if(typeof openManualBase==='function')window.openManualOrder=function(){openManualBase();resetManualOrder();setTimeout(()=>$('manualGuestName')?.focus(),40)};
- const closeManualBase=window.closeManualOrder;
- if(typeof closeManualBase==='function')window.closeManualOrder=function(){closeManualBase();resetManualOrder()};
-
- // Planner-like deadline indicator in WORKED. It is visual only.
- function parseDate(raw){
-   const v=String(raw||'').trim();if(!v||v==='—'||/не встановлено/i.test(v))return null;
-   let m=v.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m)return new Date(+m[1],+m[2]-1,+m[3]);
-   m=v.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);if(m)return new Date(+m[3],+m[2]-1,+m[1]);return null;
- }
- function dayWord(n){const x=Math.abs(n)%100,y=x%10;if(x>10&&x<20)return 'днів';if(y===1)return 'день';if(y>=2&&y<=4)return 'дні';return 'днів'}
- function meta(raw){
-   const d=parseDate(raw);if(!d)return null;d.setHours(23,59,59,999);const now=new Date();now.setHours(0,0,0,0);const days=Math.ceil((d-now)/86400000);
-   if(days<0)return {cls:'danger',text:`ПРОСТРОЧЕНО НА ${Math.abs(days)} ${dayWord(days)}`,pct:8,days};
-   if(days===0)return {cls:'danger',text:'ДЕДЛАЙН СЬОГОДНІ',pct:10,days};
-   const cls=days<=3?'urgent':days<=10?'soon':'safe',pct=days<=3?18:days<=5?28:days<=10?42:days<=26?68:100;
-   return {cls,text:`ЗАЛИШИЛОСЬ ${days} ${dayWord(days)}`,pct,days};
- }
- function decorateWorked(){
-   document.querySelectorAll('#workedCards .tbp-wr-dates>div').forEach(box=>{
-     box.querySelector('.tbp-deadline-signal')?.remove();const strong=box.querySelector('strong');if(!strong)return;const m=meta(strong.textContent);if(!m)return;
-     box.insertAdjacentHTML('beforeend',`<div class="tbp-deadline-signal ${m.cls}"><div class="tbp-deadline-label"><b>${m.text}</b><span>${m.days>0?m.days+'д':''}</span></div><div class="tbp-deadline-track"><i style="width:${m.pct}%"></i></div></div>`);
-   });
- }
- const worked=$('workedCards');if(worked){new MutationObserver(decorateWorked).observe(worked,{childList:true,subtree:true});decorateWorked()}
-
- // Backups: database snapshot + exact current HTML file.
- function download(name,text,type){const blob=new Blob([text],{type});const url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),800)}
- function stamp(){const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}_${String(d.getHours()).padStart(2,'0')}-${String(d.getMinutes()).padStart(2,'0')}`}
- async function exportData(){if(typeof bridge.rpc!=='function')throw Error('Немає підключення до бази. Увійди в адмінку.');const snapshot=await bridge.rpc('admin_get_snapshot');download(`text-by-petro-data-${stamp()}.json`,JSON.stringify({format:'TEXT_BY_PETRO_ADMIN_BACKUP',version:1,exportedAt:new Date().toISOString(),snapshot},null,2),'application/json;charset=utf-8')}
- async function exportHtml(){let text='';try{const r=await fetch(location.href,{cache:'no-store'});if(r.ok)text=await r.text()}catch(_){}if(!text)text='<!DOCTYPE html>\n'+document.documentElement.outerHTML;download(`admin-${stamp()}.html`,text,'text/html;charset=utf-8')}
- window.downloadAdminDataBackup=async()=>{try{await exportData();window.showToast?.('Копію даних завантажено')}catch(e){window.showToast?.(String(e.message||e))}};
- window.downloadAdminHtmlBackup=async()=>{try{await exportHtml();window.showToast?.('Копію admin.html завантажено')}catch(e){window.showToast?.(String(e.message||e))}};
- window.downloadAdminFullBackup=async()=>{try{await exportData();setTimeout(exportHtml,250);window.showToast?.('Повну резервну копію створено')}catch(e){window.showToast?.(String(e.message||e))}};
- function addBackupCard(){const layout=$('view-settings')?.querySelector('.layout2');if(!layout||$('tbpBackupCard'))return;layout.insertAdjacentHTML('beforeend',`<div class="card tbp-backup-card" id="tbpBackupCard"><div class="card-head"><div><h3>Резервна копія</h3><p>Дані системи та файл адмінки</p></div></div><div class="card-body"><div class="tbp-backup-grid"><div class="tbp-backup-copy"><h4>Повна копія TEXT BY PETRO</h4><p>Завантажує актуальний знімок даних із Supabase та окремо поточний файл admin.html. Це не замінює базу і нічого з неї не видаляє.</p></div><div class="tbp-backup-actions"><button class="btn primary" type="button" onclick="downloadAdminFullBackup()">Повна копія</button><button class="btn secondary" type="button" onclick="downloadAdminDataBackup()">Дані JSON</button><button class="btn secondary" type="button" onclick="downloadAdminHtmlBackup()">admin.html</button></div></div></div></div>`)}
- addBackupCard();
-
- // Reliable deletion without altering the original Supabase snapshot/load logic.
- const originalDeleteClient=window.deleteClient;
- window.deleteClient=function(id){
-   const c=window.clients?.[id]||clients?.[id];if(!c)return;
-   const cnt=(window.orders||orders||[]).filter(o=>o.client===id).length;
-   window.openConfirm?.('Видалити клієнта?',`${c.name} буде видалено.${cnt?` Його ${cnt} замовл. залишаться в історії як гостьові.`:''}`,async()=>{
-     try{
-       const sb=window.PETRO_ADMIN_SUPABASE;if(!sb)throw Error('Адмінка ще не підключена до бази.');
-       const {data,error}=await sb.functions.invoke('admin-delete-client',{body:{userId:id}});if(error)throw error;if(data?.error)throw Error(data.error);
-       if(typeof bridge.loadSnapshot==='function')await bridge.loadSnapshot({silent:true});
-       window.closeClient?.();window.showToast?.('Клієнта видалено · історію замовлень збережено');
-     }catch(err){window.showToast?.(typeof bridge.friendly==='function'?bridge.friendly(err,'Не вдалося видалити клієнта.'):String(err?.message||err))}
-   });
- };
-
- // Pseudo-client deletion uses the server RPC installed for this admin.
- window.deletePseudoClient=function(id){
-   const c=window.clients?.[id]||clients?.[id];if(!c?.isPseudo||typeof bridge.rpc!=='function')return;
-   window.openConfirm?.('Видалити псевдоклієнта?',`${c.name} буде видалено. Його замовлення залишаться в історії як гостьові.`,async()=>{
-     try{await bridge.rpc('admin_delete_pseudo_client',{p_pseudo_client_id:c.pseudoId});await bridge.loadSnapshot({silent:true});window.closePseudoClient?.();window.showToast?.('Псевдоклієнта видалено')}
-     catch(err){window.showToast?.(typeof bridge.friendly==='function'?bridge.friendly(err):String(err?.message||err))}
-   });
- };
- const pseudoBase=window.openPseudoClient;
- if(typeof pseudoBase==='function')window.openPseudoClient=function(id){pseudoBase(id);const body=$('tbpPseudoOverlay')?.querySelector('.tbp-pseudo-body');const c=window.clients?.[id]||clients?.[id];if(body&&c?.isPseudo&&!body.querySelector('.tbp-safe-delete-pseudo')){body.insertAdjacentHTML('beforeend',`<div class="tbp-delete-zone tbp-safe-delete-pseudo" style="margin-top:14px"><button type="button" class="btn danger" onclick="deletePseudoClient('${id}')">Видалити псевдоклієнта</button></div>`)}};
+ // Initial pass for an already-rendered WORKED view; does not trigger any data/network operation.
+ try{renderDeadlineMeters()}catch(e){console.warn('Deadline indicator init:',e)}
 })();
 </script>
 
