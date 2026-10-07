@@ -7,7 +7,7 @@
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>TEXT · BY PETRO — реклама v7 PREMIUM</title>
+<title>TEXT · BY PETRO — promo v10</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -260,7 +260,13 @@ body{position:fixed;inset:0;touch-action:manipulation;overscroll-behavior:none;-
 .app{width:100%;height:100%!important;min-height:0!important;max-height:none!important;display:flex;align-items:stretch;justify-content:stretch;overflow:hidden;background:#03110c;}
 .scaler{position:relative!important;flex:1 1 auto!important;width:100%!important;height:100%!important;min-height:0!important;overflow:hidden!important;background:#03110c;}
 .stage{position:absolute!important;left:50%!important;top:50%!important;width:450px!important;height:800px!important;transform-origin:center center!important;border-radius:0!important;box-shadow:none!important;}
-.controls{display:none!important;}
+
+.controls{display:flex!important;position:relative!important;z-index:100!important;flex:0 0 58px!important;width:100%!important;max-width:none!important;align-items:center!important;justify-content:center!important;padding:7px 12px calc(7px + env(safe-area-inset-bottom,0px))!important;background:#03110c!important;border-top:1px solid rgba(248,227,160,.10)!important;}
+.controls .track,.controls #restartBtn,.controls #soundBtn,.controls #recBtn,.controls .time,.controls .hint{display:none!important;}
+.controls .btns{display:flex!important;align-items:center!important;justify-content:center!important;width:100%!important;overflow:visible!important;}
+#playBtn{min-width:132px!important;justify-content:center!important;padding:11px 22px!important;border-radius:14px!important;font-size:13px!important;letter-spacing:.02em!important;background:linear-gradient(180deg,#f8e3a0,#e2b75e)!important;color:#191207!important;border:none!important;box-shadow:0 8px 24px rgba(226,183,94,.18)!important;}
+#playBtn svg{width:15px!important;height:15px!important;}
+
 
 #launchOverlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;padding:24px;
   background:radial-gradient(90% 70% at 50% 20%,rgba(23,86,60,.52),rgba(3,17,12,.92) 70%);transition:opacity .32s ease,visibility .32s ease;}
@@ -290,24 +296,33 @@ body.show-controls #launchOverlay{display:none!important;}
   .launch-title{font-size:24px}.launch-copy{margin:8px auto 12px}#launchBtn{min-height:46px}
 }
 
+
+/* v10: clean external control + 1.5s intro bumper */
+#introBumper{position:absolute;inset:0;z-index:95;display:flex;align-items:center;justify-content:center;pointer-events:none;overflow:hidden;background:radial-gradient(120% 90% at 50% 32%,#174a36 0%,#09281d 48%,#03110c 100%);opacity:1;}
+#introBumper::before{content:"";position:absolute;width:320px;height:320px;border-radius:50%;background:radial-gradient(circle,rgba(240,211,138,.18),rgba(240,211,138,0) 66%);filter:blur(8px);transform:scale(.72);opacity:0;}
+.introMark{text-align:center;transform:translateY(10px) scale(.96);opacity:0;}
+.introKicker{font:700 9px/1.2 var(--sans);letter-spacing:.34em;text-transform:uppercase;color:var(--sage);margin-bottom:10px;}
+.introTitle{font:600 34px/1 var(--serif);letter-spacing:-.025em;color:var(--ivory);white-space:nowrap;}
+.introTitle span{background:linear-gradient(170deg,#fff0bf,#f0d38a 50%,#d9aa4f);-webkit-background-clip:text;background-clip:text;color:transparent;}
+.introLine{width:0;height:1px;margin:14px auto 0;background:linear-gradient(90deg,transparent,#f0d38a,transparent);box-shadow:0 0 18px rgba(240,211,138,.22);}
+.introSub{margin-top:9px;font:600 9px/1.2 var(--sans);letter-spacing:.18em;text-transform:uppercase;color:rgba(198,216,205,.78);opacity:0;}
+
 </style>
 </head>
 <body>
-
-<div id="launchOverlay" role="dialog" aria-label="Запуск рекламної анімації">
-  <div class="launch-card">
-    <div class="launch-kicker">TEXT · BY PETRO</div>
-    <div class="launch-title">Рекламна <span>анімація</span></div>
-    <div class="launch-copy">Натисни один раз — ролик запуститься з початку разом з озвучкою. Після старту залишиться чистий кадр 9:16.</div>
-    <button id="launchBtn" type="button">▶&nbsp;&nbsp;Запустити ролик</button>
-    <div class="launch-note">Для запису екрана відкривай цю сторінку в Chrome.</div>
-  </div>
-</div>
 
 <div class="app">
   <div class="scaler" id="scaler">
     <div class="stage" id="stage">
       <div id="rays"></div>
+      <div id="introBumper" aria-hidden="true">
+        <div class="introMark" id="introMark">
+          <div class="introKicker">PERSONAL SERVICE</div>
+          <div class="introTitle">TEXT <span>· BY PETRO</span></div>
+          <div class="introLine" id="introLine"></div>
+          <div class="introSub" id="introSub">особисто · без посередників</div>
+        </div>
+      </div>
       <div id="topglow"></div>
       <!-- particles injected by JS -->
 
@@ -522,11 +537,11 @@ body.show-controls #launchOverlay{display:none!important;}
   <div class="controls">
     <div class="track" id="track"><div class="fill" id="trackFill"></div><div class="knob" id="trackKnob"></div></div>
     <div class="btns">
-      <button class="btn primary" id="playBtn"><svg id="playIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><span id="playLabel">Play</span></button>
+      <button class="btn primary" id="playBtn"><svg id="playIcon" width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg><span id="playLabel">Старт</span></button>
       <button class="btn" id="restartBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12a9 9 0 1 0 3-6.7"/><path d="M3 4v5h5"/></svg><span>Заново</span></button>
       <button class="btn" id="soundBtn"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"/><path d="M15.5 8.5a5 5 0 0 1 0 7"/><path d="M19 5a9 9 0 0 1 0 14"/></svg><span id="soundLabel">Звук</span></button>
       <button class="btn" id="recBtn"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="8"/></svg><span>Записати</span></button>
-      <div class="time"><span id="tCur">0.0</span> / 36.7</div>
+      <div class="time"><span id="tCur">0.0</span> / 38.2</div>
     </div>
     <div class="hint" id="hint">9:16 · 37 сек · WEB HOSTED · озвучка вшита.</div>
   </div>
@@ -536,7 +551,7 @@ body.show-controls #launchOverlay{display:none!important;}
 <script>
 (function(){
   "use strict";
-  const DUR=36.7;
+  const DUR=36.7, INTRO=1.5, TOTAL=DUR+INTRO;
   const stage=document.getElementById('stage'),scaler=document.getElementById('scaler');
   const $=id=>document.getElementById(id);
 
@@ -740,13 +755,30 @@ body.show-controls #launchOverlay{display:none!important;}
     if(t>=27.2&&t<=28.3)sweep($('globalSweep'),t,27.2,28.3);
   }
 
+  // ===== intro bumper (outside the original 36.7s content timeline) =====
+  const introBumper=$('introBumper'),introMark=$('introMark'),introLine=$('introLine'),introSub=$('introSub');
+  function updateIntro(totalT){
+    if(!introBumper)return;
+    const t=clamp(totalT,0,INTRO);
+    if(totalT>=INTRO){introBumper.style.opacity='0';introBumper.style.visibility='hidden';return;}
+    introBumper.style.visibility='visible';
+    const enter=eOutQuint(clamp(t/.48,0,1));
+    const exit=clamp((t-(INTRO-.34))/.34,0,1);
+    introBumper.style.opacity=String(1-exit);
+    introMark.style.opacity=String(enter);
+    introMark.style.transform='translateY('+lerp(10,0,enter)+'px) scale('+lerp(.96,1,enter)+')';
+    introLine.style.width=(170*eOutQuint(clamp((t-.18)/.58,0,1)))+'px';
+    introSub.style.opacity=String(clamp((t-.42)/.40,0,1)*(1-exit));
+    const glow=introBumper.querySelector('::before');
+  }
+
   // ===== clock =====
   let T=0,lastT=0,playing=false,rafId=null,lastFrame=0,seeking=false,ended=false;
   const playIcon=$('playIcon'),playLabel=$('playLabel'),trackFill=$('trackFill'),trackKnob=$('trackKnob'),tCur=$('tCur');
-  function render(){update(RT(T));const p=T/DUR*100;trackFill.style.width=p+'%';trackKnob.style.left=p+'%';tCur.textContent=T.toFixed(1);}
-  function loop(now){if(!playing)return;const dt=(now-lastFrame)/1000;lastFrame=now;T+=dt;if(T>=DUR){T=DUR;playing=false;ended=true;setPlayUI(false);if(voFull){try{voFull.pause();}catch(e){}}}const told=RT(T);audioFrame(told,Math.max(0,told-lastT),false);voFrame(T);update(told);const p=T/DUR*100;trackFill.style.width=p+'%';trackKnob.style.left=p+'%';tCur.textContent=T.toFixed(1);lastT=told;if(playing)rafId=requestAnimationFrame(loop);}
-  function setPlayUI(p){playIcon.innerHTML=p?'<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>':'<path d="M8 5v14l11-7z"/>';playLabel.textContent=p?'Пауза':(ended?'Ще раз':'Play');}
-  function play(){if(ended||T>=DUR){T=0;lastT=0;ended=false;voReset();}initAudio();if(audioReady&&typeof Tone!=='undefined'&&Tone.context.state!=='running')Tone.start();playing=true;lastFrame=performance.now();lastT=RT(T);setPlayUI(true);voResync(T);rafId=requestAnimationFrame(loop);}
+  function render(){const ct=Math.max(0,T-INTRO);update(RT(ct));updateIntro(T);const p=T/TOTAL*100;trackFill.style.width=p+'%';trackKnob.style.left=p+'%';tCur.textContent=T.toFixed(1);}
+  function loop(now){if(!playing)return;const dt=(now-lastFrame)/1000;lastFrame=now;const prevT=T;T+=dt;if(T>=TOTAL){T=TOTAL;playing=false;ended=true;setPlayUI(false);if(voFull){try{voFull.pause();}catch(e){}}}const ct=Math.max(0,T-INTRO),prevCt=Math.max(0,prevT-INTRO);const told=RT(ct),prevOld=RT(prevCt);if(T>=INTRO){audioFrame(told,Math.max(0,told-prevOld),false);if(prevT<INTRO)voResync(0);voFrame(ct);}else if(voFull){try{voFull.pause();voFull.currentTime=0;}catch(e){}}update(told);updateIntro(T);const p=T/TOTAL*100;trackFill.style.width=p+'%';trackKnob.style.left=p+'%';tCur.textContent=T.toFixed(1);lastT=told;if(playing)rafId=requestAnimationFrame(loop);}
+  function setPlayUI(p){playIcon.innerHTML=p?'<path d="M6 5h4v14H6zM14 5h4v14h-4z"/>':'<path d="M8 5v14l11-7z"/>';playLabel.textContent=p?'Пауза':(ended?'Ще раз':'Старт');}
+  function play(){if(ended||T>=TOTAL){T=0;lastT=0;ended=false;voReset();}initAudio();if(audioReady&&typeof Tone!=='undefined'&&Tone.context.state!=='running')Tone.start();playing=true;lastFrame=performance.now();const ct=Math.max(0,T-INTRO);lastT=RT(ct);setPlayUI(true);if(T>=INTRO)voResync(ct);rafId=requestAnimationFrame(loop);}
   function pause(){playing=false;setPlayUI(false);if(rafId)cancelAnimationFrame(rafId);if(voFull){try{voFull.pause();}catch(e){}}}
   function restart(){T=0;lastT=0;ended=false;voReset();render();}
   $('playBtn').addEventListener('click',()=>{playing?pause():play();});
@@ -754,28 +786,13 @@ body.show-controls #launchOverlay{display:none!important;}
   $('soundBtn').addEventListener('click',()=>{muted=!muted;voMute(muted);$('soundLabel').textContent=muted?'Звук вимк.':'Звук';$('soundBtn').style.opacity=muted?.6:1;});
 
 
-  // Reliable mobile start: audio playback begins only from a real user gesture.
-  const launchOverlay=$('launchOverlay'), launchBtn=$('launchBtn');
-  const showControls=new URLSearchParams(location.search).get('controls')==='1';
-  if(showControls){document.body.classList.add('show-controls');}
-  function launchAd(){
-    if(!launchOverlay||!launchBtn)return;
-    launchBtn.disabled=true;
-    pause();restart();muted=false;voMute(false);
-    launchOverlay.classList.add('hidden');
-    // Start directly inside the user's tap. This is the most reliable mobile
-    // autoplay path for Chrome/Safari and keeps VO + animation synchronized.
-    fit();
-    play();
-    setTimeout(()=>{launchBtn.disabled=false;},500);
-  }
-  if(launchBtn)launchBtn.addEventListener('click',launchAd);
+  // Playback is controlled only by the button below the 9:16 frame.
   const track=$('track');
-  function scrubTo(x){const r=track.getBoundingClientRect();T=clamp((x-r.left)/r.width,0,1)*DUR;lastT=RT(T);ended=(T>=DUR);if(voFull){try{voFull.pause();voFull.currentTime=Math.min(T,DUR-0.03);}catch(e){}}render();}
+  function scrubTo(x){const r=track.getBoundingClientRect();T=clamp((x-r.left)/r.width,0,1)*TOTAL;const ct=Math.max(0,T-INTRO);lastT=RT(ct);ended=(T>=TOTAL);if(voFull){try{voFull.pause();voFull.currentTime=Math.min(ct,DUR-0.03);}catch(e){}}render();}
   let dragging=false;
   track.addEventListener('pointerdown',e=>{dragging=true;seeking=true;track.setPointerCapture(e.pointerId);scrubTo(e.clientX);});
   track.addEventListener('pointermove',e=>{if(dragging)scrubTo(e.clientX);});
-  track.addEventListener('pointerup',()=>{dragging=false;seeking=false;lastFrame=performance.now();if(playing)voResync(T);});
+  track.addEventListener('pointerup',()=>{dragging=false;seeking=false;lastFrame=performance.now();if(playing&&T>=INTRO)voResync(Math.max(0,T-INTRO));});
 
   // ===== record =====
   $('recBtn').addEventListener('click',async()=>{
