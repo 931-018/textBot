@@ -480,26 +480,29 @@ body.show-controls #launchOverlay{display:none!important;}
           </div>
           <div style="text-align:center;margin-top:11px;"><span class="subcap" style="font-size:11px;padding:5px 11px;border-radius:9px;">кешбек з кожного замовлення · <span class="hi">до 5%</span></span></div>
         </div>
-        <div class="el" id="valCard" style="top:632px;left:38px;width:190px;">
-          <div style="position:relative;width:100%;height:104px;border-radius:14px;background:linear-gradient(135deg,#1d6246 0%,#10402c 52%,#0a2417 100%);border:1px solid rgba(240,211,138,.5);padding:11px 13px;box-shadow:0 14px 30px rgba(0,0,0,.55), inset 0 1px 0 rgba(255,255,255,.08);text-align:left;overflow:hidden;">
-            <div style="position:absolute;top:-40%;left:-15%;width:55%;height:180%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.1),transparent);transform:skewX(-12deg);pointer-events:none;"></div>
-            <div style="display:flex;align-items:center;gap:8px;position:relative;">
-              <div style="width:30px;height:22px;border-radius:4px;background:linear-gradient(135deg,#fdeec0,#e2b75e);position:relative;box-shadow:inset 0 0 0 1px rgba(150,110,35,.45);flex:0 0 auto;">
-                <div style="position:absolute;left:3px;right:3px;top:7px;height:1px;background:rgba(120,88,28,.55);"></div>
-                <div style="position:absolute;left:3px;right:3px;top:14px;height:1px;background:rgba(120,88,28,.55);"></div>
-                <div style="position:absolute;top:3px;bottom:3px;left:50%;width:1px;background:rgba(120,88,28,.55);"></div>
+        <div class="el" id="valCard" style="top:626px;left:31px;width:207px;">
+          <div id="bankCardFace" style="position:relative;width:100%;height:116px;border-radius:16px;background:linear-gradient(145deg,#172a31 0%,#102127 48%,#081518 100%);border:1px solid rgba(240,211,138,.42);padding:12px 14px;box-shadow:0 16px 34px rgba(0,0,0,.58),inset 0 1px 0 rgba(255,255,255,.08),0 0 0 1px rgba(255,255,255,.018);text-align:left;overflow:hidden;transform-origin:50% 60%;">
+            <div style="position:absolute;inset:0;background:radial-gradient(circle at 84% 16%,rgba(226,183,94,.14),transparent 34%),linear-gradient(120deg,transparent 10%,rgba(255,255,255,.022) 48%,transparent 74%);pointer-events:none;"></div>
+            <div id="valCardShine" style="position:absolute;top:-48%;left:-62%;width:46%;height:205%;background:linear-gradient(105deg,transparent,rgba(255,255,255,.02) 18%,rgba(255,244,211,.24) 48%,rgba(255,255,255,.035) 75%,transparent);transform:skewX(-16deg);opacity:0;pointer-events:none;"></div>
+            <div style="display:flex;align-items:center;gap:9px;position:relative;z-index:1;">
+              <div style="width:31px;height:23px;border-radius:4px;background:linear-gradient(135deg,#fff0bd,#d6a94e);position:relative;box-shadow:inset 0 0 0 1px rgba(127,91,26,.48),0 2px 5px rgba(0,0,0,.18);flex:0 0 auto;">
+                <div style="position:absolute;left:3px;right:3px;top:7px;height:1px;background:rgba(102,72,18,.48);"></div>
+                <div style="position:absolute;left:3px;right:3px;top:15px;height:1px;background:rgba(102,72,18,.48);"></div>
+                <div style="position:absolute;top:3px;bottom:3px;left:50%;width:1px;background:rgba(102,72,18,.48);"></div>
               </div>
-              <svg width="13" height="16" viewBox="0 0 13 16" fill="none" stroke="#f0d38a" stroke-width="1.4" stroke-linecap="round" opacity=".85"><path d="M3 4.5a6.5 6.5 0 0 1 0 7"/><path d="M6.2 2.5a10 10 0 0 1 0 11"/></svg>
-              <div style="margin-left:auto;font-family:var(--serif);font-weight:600;font-size:10.5px;letter-spacing:.05em;color:var(--champagne);">TEXT · BY PETRO</div>
+              <div id="valBankIcon" style="width:26px;height:26px;border-radius:8px;border:1px solid rgba(240,211,138,.3);background:rgba(240,211,138,.07);display:flex;align-items:center;justify-content:center;box-shadow:inset 0 1px 0 rgba(255,255,255,.04);">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f0d38a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9h18"/><path d="M5 9v8M9.5 9v8M14.5 9v8M19 9v8"/><path d="M2.5 19h19"/><path d="M12 3 3 7h18l-9-4Z"/></svg>
+              </div>
+              <div style="margin-left:auto;font-size:8.5px;font-weight:800;letter-spacing:.14em;color:rgba(235,241,238,.72);text-transform:uppercase;">BANK CARD</div>
             </div>
-            <div style="font-size:12.5px;font-weight:700;letter-spacing:.14em;color:var(--sage-soft);margin-top:11px;position:relative;">•••• •••• 4417</div>
-            <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:7px;position:relative;">
-              <div style="font-size:9px;letter-spacing:.1em;color:var(--sage-soft);text-transform:uppercase;font-weight:700;">Petro · бонуси</div>
-              <div id="valCardAmt" class="goldgrad" style="font-family:var(--serif);font-size:20px;line-height:1;">+0&nbsp;₴</div>
+            <div style="font-size:13px;font-weight:700;letter-spacing:.16em;color:#e9f1ed;margin-top:13px;position:relative;z-index:1;text-shadow:0 1px 1px rgba(0,0,0,.35);">•••• &nbsp;•••• &nbsp;4417</div>
+            <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-top:10px;position:relative;z-index:1;gap:8px;">
+              <div style="font-size:8.2px;letter-spacing:.09em;color:rgba(198,216,205,.72);text-transform:uppercase;font-weight:750;white-space:nowrap;">БАНКІВСЬКА КАРТКА</div>
+              <div id="valCardAmt" class="goldgrad" style="font-family:var(--serif);font-size:20px;line-height:1;white-space:nowrap;">+0&nbsp;₴</div>
             </div>
           </div>
-          <div style="text-align:center;margin-top:7px;"><span class="subcap" style="font-size:11px;padding:5px 12px;border-radius:9px;"><span class="hi">виводь</span> бонуси на картку</span></div>
-          <div id="valCoin" style="position:absolute;left:82px;top:-78px;width:26px;height:26px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#fdeec0,#e2b75e);box-shadow:0 5px 14px rgba(226,183,94,.55);display:flex;align-items:center;justify-content:center;font-weight:800;color:#1a1205;font-size:14px;opacity:0;">₴</div>
+          <div style="text-align:center;margin-top:8px;width:230px;margin-left:-11px;"><span class="subcap" style="font-size:10.3px;padding:5px 9px;border-radius:9px;white-space:nowrap;"><span class="hi">вивід</span> на будь-яку свою банківську картку</span></div>
+          <div id="valCoin" style="position:absolute;left:90px;top:-78px;width:27px;height:27px;border-radius:50%;background:radial-gradient(circle at 34% 30%,#fff0bd,#e2b75e);box-shadow:0 5px 15px rgba(226,183,94,.58);display:flex;align-items:center;justify-content:center;font-weight:800;color:#1a1205;font-size:14px;opacity:0;">₴</div>
         </div>
 
         <!-- referral caption -->
@@ -709,7 +712,10 @@ body.show-controls #launchOverlay{display:none!important;}
       const vb=lerp(0,870,eOutExpo(prog(t,18.4,20.2)));$('wBonus').textContent=fmt(vb);$('wUah').textContent=fmt(vb);
       document.querySelectorAll('#scWallet .wbtn').forEach((b,i)=>{const p=prog(t,20.4+i*0.12,20.8+i*0.12);b.style.opacity=0.35+0.65*p;});
       const pcard=eOutBack(prog(t,20.2,20.9));$('valCard').style.opacity=clamp(prog(t,20.2,20.5));$('valCard').style.transform='translateY('+lerp(16,0,pcard)+'px)';$('valCard').style.filter='';
-      const pcoin=prog(t,20.6,21.35);const coin=$('valCoin');coin.style.opacity=(pcoin>0.02&&pcoin<0.97)?1:0;coin.style.top=lerp(-78,36,eInOutCubic(pcoin))+'px';coin.style.transform='scale('+lerp(.7,1,clamp(pcoin*2))+')';
+      const face=$('bankCardFace'),faceIn=eOutCubic(prog(t,20.25,21.0));face.style.transform='perspective(520px) rotateX('+lerp(4,0,faceIn)+'deg) rotateY('+lerp(-5,0,faceIn)+'deg) scale('+lerp(.965,1,faceIn)+')';
+      const bankPulse=prog(t,20.7,21.25),bankGlow=Math.sin(bankPulse*Math.PI);$('valBankIcon').style.transform='scale('+(1+0.08*bankGlow)+')';$('valBankIcon').style.boxShadow='0 0 '+lerp(0,14,bankGlow)+'px rgba(226,183,94,.18),inset 0 1px 0 rgba(255,255,255,.04)';
+      const shine=prog(t,21.05,22.0),shineEl=$('valCardShine');shineEl.style.opacity=(shine>0&&shine<1)?1:0;shineEl.style.left=lerp(-62,132,eInOutCubic(shine))+'%';
+      const pcoin=prog(t,20.6,21.35);const coin=$('valCoin');coin.style.opacity=(pcoin>0.02&&pcoin<0.97)?1:0;coin.style.top=lerp(-78,39,eInOutCubic(pcoin))+'px';coin.style.transform='scale('+lerp(.7,1,clamp(pcoin*2))+') rotate('+lerp(-16,8,pcoin)+'deg)';
       $('valCardAmt').textContent='+'+fmt(lerp(0,870,eOutExpo(prog(t,21.2,22.3))))+' ₴';
       if(t>22.9){const e=prog(t,22.9,23.5);$('ovValTop').style.opacity=1-e;$('valLadder').style.opacity=(1-e)*pl;$('valCard').style.opacity=(1-e);}
     }
