@@ -419,7 +419,16 @@ img,svg,canvas{max-width:100%}
 
       <section class="view" id="view-worked">
         <div class="page-head"><div><div class="eyebrow">WORKED · Execution</div><h1>Активне виконання</h1><p>Дедлайни, ціна, прогрес, бонуси, оплата та оновлення даних клієнту.</p></div><div class="head-actions"><button class="btn secondary" onclick="showToast('Список оновлено')">Оновити список</button></div></div>
-        <div class="section-bar"><h2>Роботи в процесі</h2><span class="count-pill" id="workedCount">3</span><p>Прийняті / в роботі / пауза / готово</p></div><div class="order-cards" id="workedCards"></div>
+        <div class="tbp-worked-groups">
+          <section class="tbp-worked-group tbp-worked-active-group" aria-labelledby="tbpWorkedActiveTitle">
+            <div class="section-bar"><h2 id="tbpWorkedActiveTitle">В роботі</h2><span class="count-pill" id="workedCount">0</span><p>Прийняті / в роботі / пауза</p></div>
+            <div class="order-cards" id="workedCards"></div>
+          </section>
+          <section class="tbp-worked-group tbp-worked-unpaid-group" aria-labelledby="tbpWorkedUnpaidTitle">
+            <div class="section-bar"><h2 id="tbpWorkedUnpaidTitle">Не оплачені</h2><span class="count-pill red" id="unpaidWorkedCount">0</span><p>Готові або завершені роботи, де ще є залишок до оплати</p></div>
+            <div class="order-cards" id="unpaidCards"></div>
+          </section>
+        </div>
       </section>
 
       <section class="view" id="view-clients">
@@ -1831,7 +1840,7 @@ window.supabase={createClient};
     // update as failed solely because background refresh was interrupted.
     try{await loadSnapshot({silent:true});}
     catch(err){tbpShowResult(tbpPublicStatus,'✓ Збережено в базі, але список не оновився. Натисни «Оновити список».');return}
-    if(status==='completed'){closeWork();switchView('orders')}
+    if(status==='completed'){closeWork();switchView('worked')}
     else if(orders.some(row=>row.id===o.id))openWork(o.id);
     showToast('✓ Оновлення для клієнта збережено');
    }catch(err){tbpShowResult(tbpPublicStatus,'Не збережено: '+tbpErrorText(err),true)}
@@ -2006,6 +2015,417 @@ window.supabase={createClient};
  }
  // Initial pass for an already-rendered WORKED view; does not trigger any data/network operation.
  try{renderDeadlineMeters()}catch(e){console.warn('Deadline indicator init:',e)}
+})();
+</script>
+
+
+<style id="tbp-worked-list-layout-v1">
+/* WORKED list layout — presentation only. Existing rendering/data/actions stay unchanged. */
+#view-worked #workedCards{
+  display:flex!important;
+  flex-direction:column!important;
+  gap:8px!important;
+}
+#view-worked .tbp-work-rich{
+  display:grid!important;
+  grid-template-columns:minmax(150px,.78fr) minmax(280px,1.65fr) minmax(270px,1.15fr) minmax(175px,.72fr)!important;
+  grid-template-rows:auto auto auto auto;
+  align-items:center;
+  column-gap:18px!important;
+  row-gap:5px!important;
+  width:100%;
+  min-height:0!important;
+  padding:13px 16px!important;
+  border-radius:14px!important;
+  background:linear-gradient(105deg,rgba(19,69,52,.96),rgba(7,43,32,.98))!important;
+  box-shadow:0 7px 18px rgba(0,0,0,.10)!important;
+  transition:border-color .16s ease,background .16s ease,box-shadow .16s ease!important;
+}
+#view-worked .tbp-work-rich:hover,
+#view-worked .tbp-work-rich:focus-visible{
+  transform:none!important;
+  border-color:rgba(240,209,140,.62)!important;
+  background:linear-gradient(105deg,rgba(23,79,60,.98),rgba(8,47,35,.99))!important;
+  box-shadow:0 9px 22px rgba(0,0,0,.14)!important;
+}
+#view-worked .tbp-work-rich .tbp-wr-top{
+  grid-column:1;grid-row:1 / span 4;
+  align-self:stretch;
+  display:flex;flex-direction:column;justify-content:center;align-items:flex-start;
+  gap:9px;
+  padding-right:15px;
+  border-right:1px solid rgba(255,255,255,.075);
+}
+#view-worked .tbp-work-rich .tbp-wr-top .status{font-size:10.5px;padding:6px 9px}
+#view-worked .tbp-work-rich h3{
+  grid-column:2;grid-row:1;
+  margin:0!important;
+  font-size:16px!important;
+  line-height:1.2;
+}
+#view-worked .tbp-work-rich > .tbp-wr-person:not([style]){
+  grid-column:2;grid-row:2;
+  margin:0!important;
+  font-size:11.5px!important;
+}
+#view-worked .tbp-work-rich .tbp-wr-topic{
+  grid-column:2;grid-row:3;
+  margin:1px 0 0!important;
+  font-size:13px!important;
+  line-height:1.35!important;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+#view-worked .tbp-work-rich .tbp-wr-note{
+  grid-column:2;grid-row:4;
+  margin:2px 0 0!important;
+  padding:7px 9px!important;
+  min-height:0!important;
+  max-height:42px;
+  overflow:hidden;
+  border-left-width:2px!important;
+  border-radius:8px!important;
+  font-size:10.5px!important;
+  line-height:1.25!important;
+  white-space:nowrap!important;
+  text-overflow:ellipsis;
+}
+#view-worked .tbp-work-rich .tbp-wr-note b{
+  display:inline!important;
+  margin:0 7px 0 0!important;
+  font-size:9.5px!important;
+}
+#view-worked .tbp-work-rich .tbp-wr-dates{
+  grid-column:3;grid-row:1 / span 2;
+  margin:0!important;
+  gap:7px!important;
+}
+#view-worked .tbp-work-rich .tbp-wr-dates div{padding:8px 9px!important;border-radius:9px!important}
+#view-worked .tbp-work-rich .tbp-wr-dates small{font-size:9.5px!important;margin-bottom:3px!important}
+#view-worked .tbp-work-rich .tbp-wr-dates strong{font-size:12px!important}
+#view-worked .tbp-work-rich .tbp-deadline-meter{
+  grid-column:3;grid-row:3 / span 2;
+  margin:0!important;
+  padding:8px 10px 9px!important;
+  border-radius:10px!important;
+  align-self:stretch;
+}
+#view-worked .tbp-work-rich .tbp-deadline-source{font-size:8.5px!important;margin-bottom:2px!important}
+#view-worked .tbp-work-rich .tbp-deadline-label{font-size:10.5px!important}
+#view-worked .tbp-work-rich .tbp-deadline-days{min-width:33px;height:28px;font-size:11px!important}
+#view-worked .tbp-work-rich .tbp-deadline-track{height:4px;margin-top:7px!important}
+#view-worked .tbp-work-rich .tbp-wr-foot{
+  grid-column:4;grid-row:1 / span 2;
+  align-self:stretch;
+  display:flex!important;
+  flex-direction:column;
+  justify-content:center;
+  align-items:flex-end!important;
+  gap:7px!important;
+  margin:0!important;
+  padding:0 0 0 15px!important;
+  border-top:0!important;
+  border-left:1px solid rgba(255,255,255,.075);
+  text-align:right;
+}
+#view-worked .tbp-work-rich .tbp-wr-foot strong{font-size:17px!important}
+#view-worked .tbp-work-rich .tbp-wr-progress{
+  grid-column:4;grid-row:3;
+  width:100%;
+  height:6px!important;
+  margin:0 0 0 15px!important;
+}
+#view-worked .tbp-work-rich > .tbp-wr-person[style]{
+  grid-column:4;grid-row:4;
+  margin:0 0 0 15px!important;
+  text-align:right;
+  font-size:10px!important;
+  line-height:1.25;
+}
+@media(max-width:1180px){
+  #view-worked .tbp-work-rich{
+    grid-template-columns:minmax(145px,.7fr) minmax(240px,1.45fr) minmax(230px,1fr)!important;
+  }
+  #view-worked .tbp-work-rich .tbp-wr-dates{grid-column:3;grid-row:1 / span 2}
+  #view-worked .tbp-work-rich .tbp-deadline-meter{grid-column:3;grid-row:3 / span 2}
+  #view-worked .tbp-work-rich .tbp-wr-foot{grid-column:1;grid-row:5;flex-direction:row!important;justify-content:space-between;align-items:center!important;border-left:0!important;border-top:1px solid rgba(255,255,255,.075)!important;padding:8px 0 0!important}
+  #view-worked .tbp-work-rich .tbp-wr-progress{grid-column:2 / 4;grid-row:5;margin:0!important}
+  #view-worked .tbp-work-rich > .tbp-wr-person[style]{grid-column:2 / 4;grid-row:6;margin:0!important;text-align:left}
+}
+@media(max-width:820px){
+  #view-worked #workedCards{gap:7px!important}
+  #view-worked .tbp-work-rich{
+    grid-template-columns:1fr 1fr!important;
+    padding:12px!important;
+    column-gap:10px!important;
+  }
+  #view-worked .tbp-work-rich .tbp-wr-top{grid-column:1 / 3;grid-row:1;flex-direction:row;justify-content:space-between;align-items:center;border-right:0;border-bottom:1px solid rgba(255,255,255,.075);padding:0 0 8px}
+  #view-worked .tbp-work-rich h3{grid-column:1 / 3;grid-row:2;font-size:15px!important}
+  #view-worked .tbp-work-rich > .tbp-wr-person:not([style]){grid-column:1 / 3;grid-row:3}
+  #view-worked .tbp-work-rich .tbp-wr-topic{grid-column:1 / 3;grid-row:4}
+  #view-worked .tbp-work-rich .tbp-wr-dates{grid-column:1 / 3;grid-row:5}
+  #view-worked .tbp-work-rich .tbp-deadline-meter{grid-column:1 / 3;grid-row:6}
+  #view-worked .tbp-work-rich .tbp-wr-note{grid-column:1 / 3;grid-row:7}
+  #view-worked .tbp-work-rich .tbp-wr-progress{grid-column:1 / 3;grid-row:8;margin:2px 0!important}
+  #view-worked .tbp-work-rich .tbp-wr-foot{grid-column:1 / 3;grid-row:9;flex-direction:row!important;justify-content:space-between;align-items:center!important;border-left:0!important;border-top:1px solid rgba(255,255,255,.075)!important;padding:8px 0 0!important}
+  #view-worked .tbp-work-rich > .tbp-wr-person[style]{grid-column:1 / 3;grid-row:10;margin:0!important;text-align:left}
+}
+</style>
+
+
+
+<style id="tbp-worked-unpaid-and-drawer-v1">
+/* WORKED organization upgrade — admin presentation only. Client-visible fields/statuses stay unchanged. */
+.tbp-worked-groups{display:grid;gap:20px}
+.tbp-worked-group{min-width:0}
+.tbp-worked-unpaid-group{padding-top:18px;border-top:1px solid rgba(240,209,140,.16)}
+#view-worked #workedCards,#view-worked #unpaidCards{display:flex!important;flex-direction:column!important;gap:8px!important}
+#view-worked .tbp-worked-unpaid-group .tbp-work-rich{border-color:rgba(255,157,111,.30)!important;background:linear-gradient(105deg,rgba(62,54,34,.46),rgba(9,45,34,.98))!important}
+#view-worked .tbp-worked-unpaid-group .tbp-work-rich:hover{border-color:rgba(255,192,104,.65)!important}
+#view-worked .tbp-unpaid-hint{display:inline-flex;align-items:center;gap:6px;padding:5px 8px;border-radius:999px;border:1px solid rgba(255,160,107,.28);background:rgba(255,141,86,.08);color:#ffd0ad;font-size:9.5px;font-weight:900;white-space:nowrap}
+#view-worked .tbp-unpaid-hint:before{content:"";width:6px;height:6px;border-radius:50%;background:#ff9b70;box-shadow:0 0 9px rgba(255,155,112,.55)}
+
+/* Work drawer: larger workspace and clearly separated function zones. */
+#workDrawer .tbp-work-drawer{width:min(1060px,96vw)!important}
+#workDrawer .tbp-work-drawer .drawer-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:14px 14px;padding:20px 22px 28px!important}
+#workDrawer .tbp-work-drawer .drawer-body>.order-summary,
+#workDrawer .tbp-work-drawer .drawer-body>.tbp-private-workspace,
+#workDrawer .tbp-work-drawer .drawer-body>.tbp-client-section-title,
+#workDrawer .tbp-work-drawer .drawer-body>.tbp-work-calculation,
+#workDrawer .tbp-work-drawer .drawer-body>.settings-footer,
+#workDrawer .tbp-work-drawer .drawer-body>.tbp-delete-zone{grid-column:1/-1}
+#workDrawer .tbp-work-drawer .drawer-body>.order-summary{grid-template-columns:repeat(4,minmax(0,1fr));gap:9px;margin-bottom:0}
+#workDrawer .tbp-work-drawer .drawer-body>.tbp-private-workspace{margin:0!important}
+#workDrawer .tbp-client-section-title{margin:2px 0 0!important;padding:12px 15px!important}
+#workDrawer .tbp-work-drawer .drawer-section,
+#workDrawer .tbp-bonus-details{margin:0!important;border-radius:16px!important;box-shadow:0 8px 22px rgba(0,0,0,.08)}
+#workDrawer .tbp-work-stage{border-color:rgba(109,222,169,.24)!important}
+#workDrawer .tbp-work-payment{border-color:rgba(255,187,105,.28)!important}
+#workDrawer .tbp-work-finance{border-color:rgba(240,209,140,.31)!important}
+#workDrawer .tbp-bonus-details{border-color:rgba(190,159,255,.24)!important}
+#workDrawer .tbp-work-stage:before,#workDrawer .tbp-work-payment:before,#workDrawer .tbp-work-finance:before{display:block;margin-bottom:5px;font-size:9px;font-weight:950;letter-spacing:.14em;text-transform:uppercase;color:#9fbdaf}
+#workDrawer .tbp-work-stage:before{content:"РОБОТА"}
+#workDrawer .tbp-work-payment:before{content:"ОПЛАТА"}
+#workDrawer .tbp-work-finance:before{content:"ВАРТІСТЬ"}
+#workDrawer .tbp-work-save{grid-column:1/-1!important;margin:2px -6px -28px!important;padding:14px 6px max(14px,env(safe-area-inset-bottom))!important}
+#workDrawer .tbp-work-save #tbpSaveWork{min-height:52px;font-size:15px}
+#workDrawer .tbp-work-save #tbpPublicStatus{padding:5px 8px 0}
+#workDrawer .tbp-private-workspace{border-color:rgba(240,209,140,.34)!important;background:radial-gradient(circle at 92% 8%,rgba(240,209,140,.11),transparent 34%),linear-gradient(135deg,rgba(22,73,55,.94),rgba(8,41,33,.98))!important}
+#workDrawer .tbp-private-workspace .tbp-private-head p{max-width:760px}
+#workDrawer .drawer-section h4{margin-bottom:12px!important}
+#workDrawer .tbp-work-calculation{background:linear-gradient(135deg,rgba(19,72,54,.91),rgba(9,43,33,.94))!important}
+#workDrawer .tbp-work-calculation .info-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+#workDrawer .tbp-work-drawer .drawer-body>.drawer-section:not(.tbp-work-stage):not(.tbp-work-payment):not(.tbp-work-finance):not(.tbp-work-calculation){grid-column:1/-1}
+
+@media(max-width:900px){
+ #workDrawer .tbp-work-drawer .drawer-body{grid-template-columns:1fr!important;padding:14px!important}
+ #workDrawer .tbp-work-drawer .drawer-body>*{grid-column:1!important}
+ #workDrawer .tbp-work-drawer .drawer-body>.order-summary{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #workDrawer .tbp-work-calculation .info-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+ #workDrawer .tbp-work-save{margin:2px -2px -14px!important}
+}
+@media(max-width:520px){
+ #workDrawer .tbp-work-drawer .drawer-body>.order-summary{grid-template-columns:1fr 1fr!important}
+ #workDrawer .tbp-work-calculation .info-grid{grid-template-columns:1fr 1fr!important}
+}
+</style>
+<script id="tbp-worked-unpaid-and-drawer-v1-script">
+(()=>{
+ 'use strict';
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const dayWord=n=>{const a=Math.abs(n),m10=a%10,m100=a%100;if(m10===1&&m100!==11)return 'день';if(m10>=2&&m10<=4&&(m100<12||m100>14))return 'дні';return 'днів'};
+ function parseDate(v){const s=String(v||'').trim();let m=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m)return new Date(+m[1],+m[2]-1,+m[3]);m=s.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);if(m)return new Date(+m[3],+m[2]-1,+m[1]);return null}
+ function deadlineMeter(o){const own=parseDate(o.workDeadline),client=parseDate(o.deadline),d=own||client;if(!d)return '';const now=new Date();now.setHours(0,0,0,0);d.setHours(0,0,0,0);const days=Math.round((d-now)/86400000);let cls='is-safe',label,badge,fill;if(days<0){cls='is-overdue';label=`Прострочено на ${Math.abs(days)} ${dayWord(days)}`;badge=`−${Math.abs(days)}`;fill=100}else if(days===0){cls='is-today';label='Дедлайн сьогодні';badge='!';fill=100}else{if(days<=3)cls='is-urgent';else if(days<=10)cls='is-soon';label=`Залишилось ${days} ${dayWord(days)}`;badge=String(days);fill=Math.max(16,Math.min(96,Math.round(100-(Math.min(days,30)/30)*78)))}const source=own?'Мій дедлайн':'Дедлайн клієнта';return `<div class="tbp-deadline-meter ${cls}"><div class="tbp-deadline-line"><div class="tbp-deadline-copy"><span class="tbp-deadline-source">${source}</span><strong class="tbp-deadline-label">${label}</strong></div><span class="tbp-deadline-days">${badge}</span></div><div class="tbp-deadline-track"><span class="tbp-deadline-fill" style="--tbp-deadline-fill:${fill}%"></span></div></div>`}
+ function sortKey(o){const d=parseDate(o.workDeadline)||parseDate(o.deadline);return d?d.getTime():Number.MAX_SAFE_INTEGER}
+ function totalFor(o){return Math.max(0,Number(o.price||0)-Number(o.discount||0)-Number(o.bonusUsed||0)/(Number(o.rate)||1))}
+ function row(o,unpaid=false){const total=totalFor(o),paid=o.payment==='paid'?total:o.payment==='partial'?Number(o.paidAmount)||0:0,remain=Math.max(0,total-paid);return `<article class="tbp-work-rich" tabindex="0" role="button" onclick="openWork('${o.id}')" onkeydown="if(event.key==='Enter')openWork('${o.id}')">
+  <div class="tbp-wr-top"><span class="tbp-work-kicker">${esc(o.number)} · ${esc(o.type)}</span>${statusHTML(o.status)}${unpaid?'<span class="tbp-unpaid-hint">Очікує оплату</span>':''}</div>
+  <h3>${esc(clientName(o))}</h3><div class="tbp-wr-person">${esc(o.type)} · ${esc(o.currency||'UAH')}</div>
+  <p class="tbp-wr-topic">${esc(o.topic)}</p>
+  <div class="tbp-wr-dates"><div><small>Мій дедлайн</small><strong>${esc(o.workDeadline||'Не встановлено')}</strong></div><div><small>Дедлайн клієнта</small><strong>${esc(o.deadline||'—')}</strong></div></div>
+  ${deadlineMeter(o)}
+  <div class="tbp-wr-note"><b>МОЇ НОТАТКИ</b>${esc(o.note||'Поки немає нотаток')}</div>
+  <div class="tbp-wr-progress"><span style="width:${Math.max(0,Math.min(100,Number(o.progress)||0))}%"></span></div>
+  <div class="tbp-wr-foot"><span>${payHTML(o.payment)} · ${Math.round(Number(o.progress)||0)}%</span><strong>${fmtMoney(unpaid?remain:total,o.currency||'UAH')}</strong></div>
+  ${o.payment==='partial'?`<div class="tbp-wr-person" style="margin-top:8px">Оплачено: ${fmtMoney(paid,o.currency||'UAH')} · Залишок: ${fmtMoney(remain,o.currency||'UAH')}</div>`:''}
+ </article>`}
+ window.renderWorked=function(){
+   const active=orders.filter(o=>['accepted','working','paused'].includes(o.status)||(o.status==='ready'&&o.payment==='paid')).sort((a,b)=>sortKey(a)-sortKey(b));
+   const unpaid=orders.filter(o=>['ready','completed'].includes(o.status)&&o.payment!=='paid').sort((a,b)=>sortKey(a)-sortKey(b));
+   const wc=document.getElementById('workedCards'),uc=document.getElementById('unpaidCards');
+   if(document.getElementById('workedCount'))document.getElementById('workedCount').textContent=active.length;
+   if(document.getElementById('unpaidWorkedCount'))document.getElementById('unpaidWorkedCount').textContent=unpaid.length;
+   if(wc)wc.innerHTML=active.length?active.map(o=>row(o,false)).join(''):'<div class="empty"><strong>Активних робіт немає</strong>Нові прийняті роботи зʼявляться тут.</div>';
+   if(uc)uc.innerHTML=unpaid.length?unpaid.map(o=>row(o,true)).join(''):'<div class="empty"><strong>Немає неоплачених робіт</strong>Готові або завершені неоплачені замовлення автоматично зʼявляться тут.</div>';
+ };
+ const baseMetrics=window.updateMetrics;
+ if(typeof baseMetrics==='function')window.updateMetrics=function(){
+   const result=baseMetrics.apply(this,arguments);
+   const active=orders.filter(o=>['accepted','working','paused'].includes(o.status)||(o.status==='ready'&&o.payment==='paid'));
+   const unpaid=orders.filter(o=>['ready','completed'].includes(o.status)&&o.payment!=='paid');
+   if(document.getElementById('workedCount'))document.getElementById('workedCount').textContent=active.length;
+   if(document.getElementById('unpaidWorkedCount'))document.getElementById('unpaidWorkedCount').textContent=unpaid.length;
+   if(document.getElementById('workedNav'))document.getElementById('workedNav').textContent=active.length+unpaid.length;
+   return result;
+ };
+ try{window.renderWorked();window.updateMetrics?.()}catch(e){console.warn('WORKED groups:',e)}
+})();
+</script>
+
+
+<style id="tbp-manual-search-private-board-v1">
+/* Manual client search + private workspace polish. Isolated UI layer. */
+#manualModal .tbp-manual-client-field{position:relative}
+#manualModal #manualClient{position:absolute!important;width:1px!important;height:1px!important;opacity:0!important;pointer-events:none!important;clip-path:inset(50%)!important}
+.tbp-manual-searchbox{position:relative;display:flex;align-items:center;gap:10px;width:100%;min-height:54px;padding:0 48px 0 50px;border:1px solid rgba(240,209,140,.42);border-radius:14px;background:linear-gradient(135deg,rgba(7,47,35,.96),rgba(12,59,44,.94));box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 8px 22px rgba(0,0,0,.10)}
+.tbp-manual-searchbox:focus-within{border-color:#f0d18c;box-shadow:0 0 0 3px rgba(240,209,140,.09),0 10px 26px rgba(0,0,0,.13)}
+.tbp-manual-search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);width:23px;height:23px;color:#f4ce77;filter:drop-shadow(0 0 9px rgba(240,209,140,.22));pointer-events:none}
+.tbp-manual-searchbox input{width:100%;height:52px!important;padding:0!important;border:0!important;background:transparent!important;box-shadow:none!important;color:#fff7df!important;font-size:16px!important;font-weight:800!important;outline:none!important}
+.tbp-manual-searchbox input::placeholder{color:#9ebcaf!important;font-weight:650}
+.tbp-manual-search-clear{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:30px;height:30px;border:1px solid rgba(240,209,140,.23);border-radius:9px;background:rgba(240,209,140,.07);color:#ebcb87;font-size:16px;cursor:pointer}
+.tbp-manual-results{position:absolute;z-index:260;left:0;right:0;top:calc(100% + 7px);display:none;max-height:300px;overflow:auto;padding:7px;border:1px solid rgba(240,209,140,.36);border-radius:15px;background:#0a3428;box-shadow:0 24px 55px rgba(0,0,0,.36)}
+.tbp-manual-results.open{display:grid;gap:5px}
+.tbp-manual-result{display:grid;grid-template-columns:42px minmax(0,1fr) auto;align-items:center;gap:10px;width:100%;padding:10px 11px;border:1px solid transparent;border-radius:11px;background:transparent;color:#fff;text-align:left;cursor:pointer}
+.tbp-manual-result:hover,.tbp-manual-result:focus-visible{background:rgba(240,209,140,.08);border-color:rgba(240,209,140,.28);outline:none}
+.tbp-manual-result-avatar{width:40px;height:40px;display:grid;place-items:center;border:1px solid rgba(240,209,140,.26);border-radius:12px;background:linear-gradient(135deg,#1f6a50,#0a3428);color:#f4d58c;font-size:12px;font-weight:950}
+.tbp-manual-result strong{display:block;color:#fff8e5;font-size:14px;line-height:1.2}.tbp-manual-result small{display:block;margin-top:4px;color:#a9c5b8;font-size:11px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tbp-manual-kind{padding:5px 8px;border:1px solid rgba(106,226,163,.25);border-radius:999px;color:#98efbe;background:rgba(70,190,124,.08);font-size:9px;font-weight:950;letter-spacing:.07em;white-space:nowrap}.tbp-manual-kind.pseudo{color:#f3d38b;border-color:rgba(240,209,140,.28);background:rgba(240,209,140,.08)}
+.tbp-manual-newpseudo{border-top:1px solid rgba(255,255,255,.06);margin-top:3px;padding-top:8px}.tbp-manual-newpseudo .tbp-manual-result-avatar{font-size:20px}
+.tbp-manual-selected{display:flex;align-items:center;gap:9px;min-height:39px;margin-top:8px;padding:8px 10px;border:1px solid rgba(255,255,255,.07);border-radius:11px;background:rgba(4,34,26,.46);color:#c5dace;font-size:12px}.tbp-manual-selected b{color:#ffe3a4}.tbp-manual-selected .tbp-manual-kind{margin-left:auto}
+
+/* Private workspace as a clear admin-only board. */
+#workDrawer .tbp-private-workspace{position:relative;padding:24px 25px 22px!important;border:1px solid rgba(240,209,140,.52)!important;border-radius:22px!important;background:radial-gradient(circle at 90% 7%,rgba(240,209,140,.13),transparent 34%),linear-gradient(135deg,rgba(22,76,57,.98),rgba(6,43,32,.99))!important;box-shadow:0 18px 42px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.045)!important}
+#workDrawer .tbp-private-workspace::before{content:"ПРИВАТНО · НЕ ВИДНО КЛІЄНТУ";position:absolute;right:22px;top:22px;padding:6px 9px;border:1px solid rgba(240,209,140,.28);border-radius:999px;background:rgba(240,209,140,.07);color:#efd18b;font-size:9px;font-weight:950;letter-spacing:.10em}
+#workDrawer .tbp-private-head{padding-right:190px}
+#workDrawer .tbp-private-head .tbp-private-kicker{font-size:11px!important;color:#e7c57c!important}
+#workDrawer .tbp-private-head h4{margin:7px 0 8px!important;font-size:25px!important;color:#ffe4a2!important;letter-spacing:-.025em!important}
+#workDrawer .tbp-private-head p{display:block!important;max-width:800px;margin:0 0 20px!important;color:#bcd1c6!important;font-size:13px!important;line-height:1.55!important}
+#workDrawer .tbp-private-fields{display:grid!important;grid-template-columns:minmax(240px,1.2fr) minmax(190px,.8fr)!important;gap:12px!important}
+#workDrawer .tbp-private-fields .field{padding:14px 15px;border:1px solid rgba(240,209,140,.18);border-radius:15px;background:rgba(3,34,25,.48)}
+#workDrawer .tbp-private-fields .field label,#workDrawer .tbp-private-note label{font-size:12px!important;color:#d6e3dc!important;font-weight:900!important}
+#workDrawer #tbpPrivatePrice{min-height:62px!important;padding:7px 13px!important;border:0!important;background:transparent!important;color:#ffe09a!important;font-size:34px!important;line-height:1!important;font-weight:950!important;letter-spacing:-.035em!important;box-shadow:none!important}
+#workDrawer #tbpPrivatePrice::placeholder{color:rgba(240,209,140,.36)!important}
+#workDrawer #tbpPrivateCurrency{min-height:62px!important;border:0!important;background:transparent!important;color:#ffe7b2!important;font-size:20px!important;font-weight:900!important;box-shadow:none!important}
+#workDrawer .tbp-apply-private{min-height:44px!important;margin:12px 0 3px!important;color:#ffe0a0!important;border-color:rgba(240,209,140,.34)!important;background:rgba(240,209,140,.075)!important}
+#workDrawer .tbp-private-hint{font-size:11.5px!important;color:#9fbcae!important}
+#workDrawer .tbp-private-note{margin:18px 0 14px!important;padding:14px 15px;border:1px solid rgba(255,255,255,.08);border-radius:15px;background:rgba(3,34,25,.40)}
+#workDrawer #wNote{min-height:128px!important;border:0!important;background:transparent!important;color:#fff6df!important;font-size:16px!important;line-height:1.6!important;box-shadow:none!important}
+#workDrawer .tbp-private-workspace .tbp-private-deadline{margin:14px 0!important;border-color:rgba(240,209,140,.22)!important;background:rgba(3,34,25,.44)!important}
+#workDrawer .tbp-save-private-line{margin-top:13px!important}.tbp-private-income-note{display:flex;align-items:flex-start;gap:10px;margin-top:14px;padding:11px 13px;border:1px solid rgba(240,209,140,.19);border-radius:12px;background:rgba(240,209,140,.055);color:#c7d9d0;font-size:11.5px;line-height:1.5}.tbp-private-income-note b{color:#ffe1a0}
+@media(max-width:720px){#workDrawer .tbp-private-workspace{padding:18px 14px!important}#workDrawer .tbp-private-workspace::before{position:static;display:inline-flex;margin-bottom:12px}#workDrawer .tbp-private-head{padding-right:0}#workDrawer .tbp-private-head h4{font-size:22px!important}#workDrawer .tbp-private-fields{grid-template-columns:1fr!important}#workDrawer #tbpPrivatePrice{font-size:30px!important}.tbp-manual-results{position:fixed;left:12px;right:12px;top:auto;max-height:42vh}}
+</style>
+<script id="tbp-manual-search-private-board-v1-script">
+(()=>{
+ 'use strict';
+ const $=id=>document.getElementById(id);
+ const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const raw=v=>String(v??'').replace(/<[^>]*>/g,'').trim();
+ const bridge=window.PETRO_ADMIN_BRIDGE||{};
+ const rpc=bridge.rpc,loadSnapshot=bridge.loadSnapshot;
+ let chosenId='guest';
+ function avatar(name){return raw(name).split(/\s+/).filter(Boolean).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'+'}
+ function clientRows(q=''){
+   const needle=String(q||'').trim().toLowerCase();
+   return Object.values(clients).filter(c=>{
+     if(!needle)return true;
+     return [c.rawName,c.name,c.rawLogin,c.login,c.rawContact,c.contact].join(' ').toLowerCase().includes(needle);
+   }).sort((a,b)=>Number(a.isPseudo)-Number(b.isPseudo)||raw(a.name).localeCompare(raw(b.name),'uk')).slice(0,12);
+ }
+ function labelFor(c){return c?.isPseudo?'ПСЕВДО':'АКАУНТ'}
+ function ensureSearch(){
+   const select=$('manualClient');if(!select)return;
+   const field=select.closest('.field');if(!field)return;
+   field.classList.add('tbp-manual-client-field');
+   if($('manualClientSearch'))return;
+   select.insertAdjacentHTML('beforebegin',`<div class="tbp-manual-searchbox"><svg class="tbp-manual-search-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.5" stroke="currentColor" stroke-width="2"/><path d="m16 16 4.2 4.2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><input id="manualClientSearch" type="search" autocomplete="off" placeholder="Знайти клієнта за ПІБ…"><button type="button" class="tbp-manual-search-clear" id="manualClientSearchClear" aria-label="Очистити пошук">×</button></div><div class="tbp-manual-results" id="manualClientResults"></div><div class="tbp-manual-selected" id="manualClientSelected"><span>Вибрано:</span><b>Новий псевдоклієнт</b><span class="tbp-manual-kind pseudo">ПСЕВДО</span></div>`);
+   const input=$('manualClientSearch'),results=$('manualClientResults');
+   input.addEventListener('focus',()=>renderResults(input.value,true));
+   input.addEventListener('input',()=>renderResults(input.value,true));
+   input.addEventListener('keydown',e=>{if(e.key==='Escape')results.classList.remove('open')});
+   $('manualClientSearchClear').addEventListener('click',()=>{input.value='';chooseGuest('');input.focus();renderResults('',true)});
+   document.addEventListener('click',e=>{if(!field.contains(e.target))results.classList.remove('open')});
+ }
+ function renderResults(q,open=false){
+   const box=$('manualClientResults');if(!box)return;
+   const rows=clientRows(q);
+   box.innerHTML=rows.map(c=>`<button type="button" class="tbp-manual-result" data-manual-client="${esc(c.id)}"><span class="tbp-manual-result-avatar">${esc(avatar(c.name))}</span><span><strong>${esc(raw(c.name))}</strong><small>${esc(c.isPseudo?(raw(c.contact)||'Без кабінету'):(raw(c.login)||raw(c.contact)||'Акаунт'))}</small></span><span class="tbp-manual-kind ${c.isPseudo?'pseudo':''}">${labelFor(c)}</span></button>`).join('')+`<div class="tbp-manual-newpseudo"><button type="button" class="tbp-manual-result" data-manual-newpseudo="1"><span class="tbp-manual-result-avatar">＋</span><span><strong>Новий псевдоклієнт</strong><small>${q?`Створити для «${esc(q)}»`:'Без особистого кабінету'}</small></span><span class="tbp-manual-kind pseudo">ПСЕВДО</span></button></div>`;
+   box.querySelectorAll('[data-manual-client]').forEach(btn=>btn.addEventListener('click',()=>chooseClient(btn.dataset.manualClient)));
+   box.querySelector('[data-manual-newpseudo]')?.addEventListener('click',()=>chooseGuest(q));
+   box.classList.toggle('open',open);
+ }
+ function chooseClient(id){
+   const c=clients[id],select=$('manualClient');if(!c||!select)return;
+   chosenId=id;select.value=id;window.manualClientChanged?.();
+   $('manualClientSearch').value=raw(c.name);
+   $('manualClientResults').classList.remove('open');
+   $('manualClientSelected').innerHTML=`<span>Вибрано:</span><b>${esc(raw(c.name))}</b><span class="tbp-manual-kind ${c.isPseudo?'pseudo':''}">${labelFor(c)}</span>`;
+ }
+ function chooseGuest(seed=''){
+   const select=$('manualClient');if(!select)return;
+   chosenId='guest';select.value='guest';window.manualClientChanged?.();
+   if(seed&&$('manualGuestName')&&!$('manualGuestName').value)$('manualGuestName').value=seed;
+   $('manualClientSearch').value=seed||'';$('manualClientResults').classList.remove('open');
+   $('manualClientSelected').innerHTML='<span>Вибрано:</span><b>Новий псевдоклієнт</b><span class="tbp-manual-kind pseudo">ПСЕВДО</span>';
+ }
+ function resetSearch(){ensureSearch();chosenId='guest';const input=$('manualClientSearch');if(input)input.value='';chooseGuest('');renderResults('',false)}
+ const previousOpen=window.openManualOrder;
+ if(typeof previousOpen==='function')window.openManualOrder=function(){const r=previousOpen.apply(this,arguments);setTimeout(resetSearch,0);return r};
+
+ // Correct manual create routing: account -> user_id, existing pseudo -> pseudo_client_id, new pseudo -> guest data.
+ if(typeof rpc==='function'&&typeof loadSnapshot==='function')window.createManualOrderLocal=async function(){
+   const select=$('manualClient'),value=select?.value||chosenId||'guest';
+   const isGuest=value==='guest',isPseudo=value.startsWith('pseudo:'),pseudoId=isPseudo?value.slice(7):null;
+   const name=$('manualGuestName')?.value.trim()||'';
+   if(isGuest&&!name)return showToast('Вкажи імʼя або позначення нового псевдоклієнта');
+   if(!$('manualType')?.value.trim()||!$('manualTopic')?.value.trim())return showToast('Заповни тип роботи та тему');
+   const ccy=$('manualCurrency')?.value||'UAH';
+   const rate=ccy==='UAH'?1:Math.max(.000001,Number($('manualRate')?.value)||Number(FX_RATES?.[ccy])||1);
+   const btn=$('manualModal')?.querySelector('.modal-foot .btn.primary');if(btn){btn.disabled=true;btn.textContent='Створення…'}
+   try{
+     await rpc('admin_create_manual_order_v2',{
+       p_user_id:(!isGuest&&!isPseudo)?value:null,
+       p_pseudo_client_id:isPseudo?pseudoId:null,
+       p_guest_name:isGuest?name:null,
+       p_guest_contact:isGuest?($('manualGuestContact')?.value.trim()||null):null,
+       p_type:$('manualType').value.trim(),p_topic:$('manualTopic').value.trim(),p_details:$('manualDetails')?.value.trim()||'',
+       p_deadline:$('manualDeadline')?.value||null,p_status:$('manualStatus')?.value||'accepted',
+       p_price:Math.max(0,Number($('manualPrice')?.value)||0),p_currency:ccy,p_rate:rate
+     });
+     await loadSnapshot({silent:true});closeManualOrder();switchView(($('manualStatus')?.value||'accepted')==='accepted'?'worked':'orders');showToast('Замовлення створено');
+   }catch(err){showToast(bridge.friendly?.(err,'Не вдалося створити замовлення')||String(err?.message||err))}
+   finally{if(btn){btn.disabled=false;btn.textContent='Створити'}}
+ };
+
+ // Private board explanatory note. The data stays in private_* / admin_note / work_deadline fields.
+ const board=document.querySelector('#workDrawer .tbp-private-workspace');
+ if(board&&!board.querySelector('.tbp-private-income-note'))board.insertAdjacentHTML('beforeend','<div class="tbp-private-income-note"><span>✦</span><span><b>Моя оцінка — приватна.</b> Вона не показується клієнту й не входить у статистику. Поки клієнтська ціна не виставлена, ця оцінка використовується лише в показнику «Очікуваний дохід».</span></div>');
+ // Private-save code updates the in-memory order without a full snapshot reload. Refresh the dashboard metric after a confirmed private save.
+ const privateStatus=$('tbpPrivateStatus');
+ if(privateStatus)new MutationObserver(()=>{if(privateStatus.textContent.includes('✓'))try{window.updateMetrics?.()}catch(_){}}).observe(privateStatus,{childList:true,subtree:true,characterData:true});
+
+ // Expected income: public client price has priority; otherwise use private quote. Statistics remain untouched.
+ const previousMetrics=window.updateMetrics;
+ if(typeof previousMetrics==='function')window.updateMetrics=function(){
+   const result=previousMetrics.apply(this,arguments);
+   try{
+     const grouped={UAH:0,USD:0,EUR:0,PLN:0};
+     orders.filter(o=>['accepted','working','paused','ready'].includes(o.status)).forEach(o=>{
+       const publicPrice=Number(o.price)||0;
+       if(publicPrice>0){
+         const ccy=o.currency||'UAH';
+         grouped[ccy]=(grouped[ccy]||0)+Math.max(publicPrice-(Number(o.discount)||0)-(Number(o.bonusUsed)||0)/(Number(o.rate)||1),0);
+       }else{
+         const quote=Number(o.privateQuoteAmount)||0;if(quote<=0)return;
+         const ccy=o.privateQuoteCurrency||'UAH';grouped[ccy]=(grouped[ccy]||0)+quote;
+       }
+     });
+     const el=$('mExpected');if(el){el.innerHTML=typeof currencyMetric==='function'?currencyMetric(grouped):Object.entries(grouped).filter(([,v])=>v>0).map(([c,v])=>`<span>${esc(c)} ${esc(v)}</span>`).join(' ')}
+   }catch(e){console.warn('Expected income private quote:',e)}
+   return result;
+ };
+ try{window.updateMetrics?.()}catch(_){ }
 })();
 </script>
 
