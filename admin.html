@@ -485,7 +485,7 @@ img,svg,canvas{max-width:100%}
   <div class="drawer-body">
     <div class="order-summary"><div class="info-box"><span>Клієнт</span><strong id="wClient">—</strong></div><div class="info-box"><span>Дедлайн</span><strong id="wDeadline">—</strong></div><div class="info-box"><span>Робота</span><strong id="wStatusLabel">—</strong></div><div class="info-box"><span>Оплата</span><strong id="wPaymentLabel">—</strong></div></div>
     <section class="tbp-private-workspace" aria-label="Мій робочий простір">
- <div class="tbp-private-head"><span class="tbp-private-kicker">ЛИШЕ ДЛЯ ТЕБЕ</span><h4>Мій робочий простір</h4><p>Зберігай попередній розрахунок, нотатки й свій дедлайн незалежно від даних клієнта. Вони не змінюють оплату та бонуси.</p></div>
+ <div class="tbp-private-head"><span class="tbp-private-kicker">ЛИШЕ ДЛЯ ТЕБЕ</span><h4>Мій робочий простір</h4><p>Зберігай тут лише свою попередню оцінку та нотатки. Вони приватні й не змінюють дані клієнта, оплату чи бонуси.</p></div>
  <div class="tbp-private-fields"><div class="field"><label for="tbpPrivatePrice">Попередня ціна</label><input id="tbpPrivatePrice" type="number" min="0" step="0.01" inputmode="decimal" placeholder="Моя оцінка"></div><div class="field"><label for="tbpPrivateCurrency">Валюта оцінки</label><select id="tbpPrivateCurrency"><option value="UAH">UAH · ₴</option><option value="USD">USD · $</option><option value="EUR">EUR · €</option><option value="PLN">PLN · zł</option></select></div></div>
  <button id="tbpApplyPrivateQuote" class="btn secondary tbp-apply-private" type="button">Перенести оцінку в клієнтську ціну →</button><small class="tbp-private-hint">Лише підставить суму. Клієнт побачить її після «Зберегти для клієнта».</small><div class="field full tbp-private-note"><label for="wNote">Мої нотатки</label><textarea id="wNote" placeholder="Що планую, скільки орієнтовно коштуватиме, що потрібно уточнити…"></textarea></div>
  <section class="tbp-private-deadline"><div><strong>Мій робочий дедлайн</strong><small>Лише для тебе · не змінює дедлайн клієнта</small></div><div class="tbp-internal-date"><input id="wPrivateDeadline" type="date" aria-label="Мій внутрішній дедлайн"/><button id="tbpClearPrivateDeadline" type="button">Очистити ×</button></div></section>
@@ -1729,7 +1729,7 @@ window.supabase={createClient};
  recalcWork=refreshWork;
  const previousOpenWork=openWork;
  openWork=function(id){previousOpenWork(id);const o=currentWorkOrder();if(!o)return;
-  $('wPrivateDeadline').value=o.workDeadline||'';
+  $('wPrivateDeadline').value=o.deadline||o.workDeadline||'';
   $('wPaidAmount').value=o.payment==='paid'?Number(o.price-o.discount-o.bonusUsed/(o.rate||1)).toFixed(2):String(o.paidAmount||'');
   // Old accepted/completed statuses remain selected until explicitly changed.
   $('wStatus').value=o.status;
@@ -1792,7 +1792,7 @@ window.supabase={createClient};
   if($('wNote').value.length>12000){tbpShowResult(tbpPrivateStatus,'Нотатка завелика (максимум 12 000 символів).',true);return}
   const payload={p_order_id:o.id,p_note:$('wNote').value,p_quote_amount:amount,
    p_quote_currency:currency,p_quote_rate:currency==='UAH'?1:rateFor(currency),
-   p_work_deadline:$('wPrivateDeadline').value||null,p_clear_work_deadline:!$('wPrivateDeadline').value};
+   p_work_deadline:o.workDeadline||null,p_clear_work_deadline:false};
   tbpPrivateSaving=true;$('tbpSavePrivate').disabled=true;tbpShowResult(tbpPrivateStatus,'Зберігаємо…');
   try{const saved=await rpc('admin_save_private_order',payload);
    // Do not reload/open the drawer: unsaved client-visible edits must remain untouched.
@@ -1826,21 +1826,21 @@ window.supabase={createClient};
   const payload={p_order_id:o.id,p_status:status,p_progress:Number($('wProgress').value),
    p_price:Number($('wPrice').value),p_discount:Number($('wDiscount').value),
    p_currency:$('wCurrency').value,p_rate:$('wCurrency').value==='UAH'?1:Number($('wRate').value),
-   p_payment_status:$('wPayment').value,p_bonus_used:bonus,p_deadline:null,
+   p_payment_status:$('wPayment').value,p_bonus_used:bonus,p_deadline:$('wPrivateDeadline').value||null,p_clear_deadline:!$('wPrivateDeadline').value,
    p_client_message:$('wMessage').value,p_admin_note:null,p_paid_amount:partial.paid,
-   p_work_deadline:null,p_clear_work_deadline:false};
+   p_work_deadline:null,p_clear_work_deadline:true};
   if(payload.p_currency!=='UAH'&&!(payload.p_rate>0)){
    tbpShowResult(tbpPublicStatus,'Вкажи коректний курс валюти.',true);return}
   const save=async()=>{if(tbpClientSaving)return;tbpClientSaving=true;
    $('tbpSaveWork').disabled=true;tbpShowResult(tbpPublicStatus,'Зберігаємо умови для клієнта…');
-   try{const saved=await rpc('admin_update_order_v2',payload);
+   try{const saved=await rpc('admin_update_order_v3',payload);
     if(!saved?.id)throw Error('Сервер не підтвердив збереження');
     tbpShowResult(tbpPublicStatus,'✓ Умови для клієнта збережено.');
     // RPC success and snapshot refresh are different operations. Never report a saved
     // update as failed solely because background refresh was interrupted.
     try{await loadSnapshot({silent:true});}
     catch(err){tbpShowResult(tbpPublicStatus,'✓ Збережено в базі, але список не оновився. Натисни «Оновити список».');return}
-    if(status==='completed'){closeWork();switchView('worked')}
+    if(status==='completed'||status==='ready'){closeWork();switchView('worked');if($('wPayment').value!=='paid')setTimeout(()=>document.querySelector('#tbpWorkedTabs [data-tab="unpaid"]')?.click(),0)}
     else if(orders.some(row=>row.id===o.id))openWork(o.id);
     showToast('✓ Оновлення для клієнта збережено');
    }catch(err){tbpShowResult(tbpPublicStatus,'Не збережено: '+tbpErrorText(err),true)}
@@ -2426,6 +2426,55 @@ window.supabase={createClient};
    return result;
  };
  try{window.updateMetrics?.()}catch(_){ }
+})();
+</script>
+
+
+
+
+<style id="tbp-worked-tabs-single-deadline-v3">
+/* WORKED: table-style tabs + one shared deadline. Presentation only. */
+#view-worked .tbp-worked-groups{display:block!important}
+#view-worked .tbp-worked-group{display:none!important;padding:0!important;border:0!important}
+#view-worked .tbp-worked-group.tbp-tab-active{display:block!important}
+#view-worked .tbp-worked-group>.section-bar{display:none!important}
+.tbp-worked-tabbar{display:flex;align-items:center;gap:8px;margin:0 0 12px;padding:10px 12px;border:1px solid rgba(240,209,140,.16);border-radius:16px;background:rgba(5,43,32,.74);box-shadow:inset 0 1px 0 rgba(255,255,255,.03)}
+.tbp-worked-tab{display:inline-flex;align-items:center;gap:8px;min-height:38px;padding:8px 13px;border:1px solid rgba(255,255,255,.10);border-radius:999px;background:rgba(255,255,255,.025);color:#c8d9d1;font-size:12px;font-weight:900;cursor:pointer;transition:.18s ease}
+.tbp-worked-tab:hover{border-color:rgba(240,209,140,.30);color:#ffe6a9}.tbp-worked-tab.active{border-color:rgba(240,209,140,.50);background:rgba(240,209,140,.10);color:#ffe3a1;box-shadow:0 0 0 2px rgba(240,209,140,.05) inset}
+.tbp-worked-tab .tbp-tab-count{display:grid;place-items:center;min-width:23px;height:23px;padding:0 6px;border-radius:999px;background:rgba(255,255,255,.08);color:#f5dfab;font-size:10px;font-weight:950}.tbp-worked-tab[data-tab="unpaid"] .tbp-tab-count{background:rgba(255,124,114,.10);color:#ffb9b1}
+.tbp-worked-table{overflow:hidden;border:1px solid rgba(255,255,255,.09);border-radius:17px;background:rgba(4,39,29,.74)}
+.tbp-worked-head,.tbp-worked-row{display:grid;grid-template-columns:145px minmax(185px,.95fr) minmax(280px,1.55fr) 225px 160px 120px 44px;align-items:center;gap:14px}
+.tbp-worked-head{min-height:48px;padding:0 16px;background:rgba(255,255,255,.045);border-bottom:1px solid rgba(255,255,255,.07);color:#d9e6df;font-size:10px;font-weight:950;letter-spacing:.06em;text-transform:uppercase}
+.tbp-worked-row{position:relative;min-height:88px;padding:13px 16px;border-bottom:1px solid rgba(255,255,255,.055);background:linear-gradient(90deg,rgba(8,49,37,.72),rgba(5,39,29,.72));cursor:pointer;transition:.16s ease}.tbp-worked-row:last-child{border-bottom:0}.tbp-worked-row:hover{background:linear-gradient(90deg,rgba(18,68,51,.82),rgba(7,46,35,.82));box-shadow:inset 3px 0 0 rgba(240,209,140,.55)}
+.tbp-worked-order strong,.tbp-worked-client strong,.tbp-worked-job strong{display:block;color:#fff8e8;font-size:13px;line-height:1.25}.tbp-worked-order small,.tbp-worked-client small,.tbp-worked-job small,.tbp-worked-deadline small{display:block;margin-top:4px;color:#a9c2b6;font-size:10px;line-height:1.35}.tbp-worked-order .status{margin-top:6px!important;font-size:9px!important}.tbp-worked-job small{max-width:560px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.tbp-worked-note{display:block;margin-top:6px;max-width:560px;color:#d6c38f;font-size:9.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tbp-worked-deadline strong{display:block;color:#f7d989;font-size:12px}.tbp-deadline-done{display:inline-flex;align-items:center;gap:6px;margin-top:7px;padding:5px 8px;border-radius:999px;border:1px solid rgba(103,226,164,.22);background:rgba(103,226,164,.08);color:#9ceec0;font-size:9.5px;font-weight:900}.tbp-deadline-done:before{content:"✓"}.tbp-worked-deadline .tbp-deadline-meter{margin-top:7px!important;padding:7px 8px!important;border-radius:9px!important}.tbp-worked-deadline .tbp-deadline-source{display:none!important}.tbp-worked-deadline .tbp-deadline-label{font-size:9.5px!important}.tbp-worked-deadline .tbp-deadline-days{min-width:29px!important;height:25px!important;font-size:10px!important}.tbp-worked-deadline .tbp-deadline-track{height:3px!important;margin-top:5px!important}
+.tbp-worked-pay{display:flex;flex-direction:column;align-items:flex-start;gap:7px}.tbp-worked-pay .status{font-size:9.5px!important}.tbp-worked-progress{display:flex;align-items:center;gap:7px;width:100%}.tbp-worked-progress i{display:block;flex:1;height:5px;border-radius:999px;background:rgba(255,255,255,.09);overflow:hidden}.tbp-worked-progress i:after{content:"";display:block;width:var(--p);height:100%;border-radius:inherit;background:linear-gradient(90deg,#d6b565,#68dea4)}.tbp-worked-progress b{color:#d7e7df;font-size:9px}.tbp-worked-amount{color:#ffe09a;font-size:14px;font-weight:950;text-align:right}.tbp-worked-action{width:36px;height:36px;border:1px solid rgba(240,209,140,.18);border-radius:10px;background:rgba(240,209,140,.055);color:#e7c676;cursor:pointer;font-size:15px}.tbp-worked-action:hover{border-color:rgba(240,209,140,.45);background:rgba(240,209,140,.11)}
+/* Shared deadline is client-visible, so it lives outside the private board. */
+#workDrawer .tbp-private-workspace>.tbp-private-deadline{display:none!important}#workDrawer .tbp-shared-deadline{grid-column:1/-1!important;margin:2px 0 14px!important;padding:15px 16px!important;border:1px solid rgba(111,221,168,.28)!important;border-radius:15px!important;background:linear-gradient(115deg,rgba(11,63,46,.60),rgba(6,47,36,.70))!important}#workDrawer .tbp-shared-deadline strong{font-size:16px!important;color:#ffe0a0!important}#workDrawer .tbp-shared-deadline small{font-size:11.5px!important;color:#b4cec1!important}.tbp-shared-deadline .tbp-internal-date{display:flex;gap:8px;align-items:center}.tbp-shared-deadline input{min-height:43px!important}.tbp-shared-deadline button{min-height:43px!important}
+@media(max-width:1180px){.tbp-worked-head,.tbp-worked-row{grid-template-columns:130px minmax(170px,.9fr) minmax(260px,1.45fr) 210px 145px 105px 40px;gap:10px}.tbp-worked-row{padding:12px}}
+@media(max-width:900px){.tbp-worked-head{display:none}.tbp-worked-row{grid-template-columns:1fr 1fr;gap:10px 12px}.tbp-worked-order{grid-column:1}.tbp-worked-client{grid-column:2}.tbp-worked-job{grid-column:1/-1}.tbp-worked-deadline{grid-column:1/-1}.tbp-worked-pay{grid-column:1}.tbp-worked-amount{grid-column:2;align-self:end}.tbp-worked-action{position:absolute;right:10px;top:10px}.tbp-worked-table{border-radius:14px}}
+@media(max-width:560px){.tbp-worked-tabbar{overflow:auto}.tbp-worked-tab{white-space:nowrap}.tbp-worked-row{grid-template-columns:1fr}.tbp-worked-order,.tbp-worked-client,.tbp-worked-job,.tbp-worked-deadline,.tbp-worked-pay,.tbp-worked-amount{grid-column:1}.tbp-worked-amount{text-align:left}.tbp-worked-client{padding-right:42px}.tbp-shared-deadline .tbp-internal-date{width:100%;flex-wrap:wrap}.tbp-shared-deadline input{flex:1;min-width:180px}}
+</style>
+<script id="tbp-worked-tabs-single-deadline-v3-script">
+(()=>{
+ 'use strict';
+ const $=id=>document.getElementById(id),esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ let currentTab='active';const done=new Set(['ready','completed']);
+ function parseDate(v){const s=String(v||'').trim();let m=s.match(/^(\d{4})-(\d{2})-(\d{2})$/);if(m)return new Date(+m[1],+m[2]-1,+m[3]);m=s.match(/^(\d{2})\.(\d{2})\.(\d{4})$/);if(m)return new Date(+m[3],+m[2]-1,+m[1]);return null}
+ function sharedDeadline(o){return String(o?.deadline||o?.workDeadline||'').trim()}
+ function sortKey(o){const d=parseDate(sharedDeadline(o));return d?d.getTime():Number.MAX_SAFE_INTEGER}
+ function dayWord(n){const a=Math.abs(n),m10=a%10,m100=a%100;if(m10===1&&m100!==11)return 'день';if(m10>=2&&m10<=4&&(m100<12||m100>14))return 'дні';return 'днів'}
+ function deadlineState(o){if(done.has(o.status))return '<span class="tbp-deadline-done">Виконано</span>';const d=parseDate(sharedDeadline(o));if(!d)return '<small>Не встановлено</small>';const now=new Date();now.setHours(0,0,0,0);d.setHours(0,0,0,0);const days=Math.round((d-now)/86400000);let cls='is-safe',label,badge,fill;if(days<0){cls='is-overdue';label=`Прострочено на ${Math.abs(days)} ${dayWord(days)}`;badge=`−${Math.abs(days)}`;fill=100}else if(days===0){cls='is-today';label='Сьогодні';badge='!';fill=100}else{if(days<=3)cls='is-urgent';else if(days<=10)cls='is-soon';label=`Залишилось ${days} ${dayWord(days)}`;badge=String(days);fill=Math.max(16,Math.min(96,Math.round(100-(Math.min(days,30)/30)*78)))}return `<div class="tbp-deadline-meter ${cls}"><div class="tbp-deadline-line"><div class="tbp-deadline-copy"><strong class="tbp-deadline-label">${label}</strong></div><span class="tbp-deadline-days">${badge}</span></div><div class="tbp-deadline-track"><span class="tbp-deadline-fill" style="--tbp-deadline-fill:${fill}%"></span></div></div>`}
+ function totalFor(o){return Math.max(0,Number(o.price||0)-Number(o.discount||0)-Number(o.bonusUsed||0)/(Number(o.rate)||1))}
+ function row(o,unpaid=false){const total=totalFor(o),paid=o.payment==='paid'?total:o.payment==='partial'?Number(o.paidAmount)||0:0,remain=Math.max(0,total-paid),dl=sharedDeadline(o);return `<article class="tbp-worked-row" tabindex="0" role="button" onclick="openWork('${o.id}')" onkeydown="if(event.key==='Enter')openWork('${o.id}')"><div class="tbp-worked-order"><strong>${esc(o.number)}</strong>${statusHTML(o.status)}</div><div class="tbp-worked-client"><strong>${esc(clientName(o))}</strong><small>${esc(clientLogin(o)||'Без кабінету')}</small></div><div class="tbp-worked-job"><strong>${esc(o.type)}</strong><small>${esc(o.topic||'—')}</small>${o.note?`<span class="tbp-worked-note">МОЇ НОТАТКИ · ${esc(o.note)}</span>`:''}</div><div class="tbp-worked-deadline"><strong>${esc(dl||'—')}</strong>${deadlineState(o)}</div><div class="tbp-worked-pay">${payHTML(o.payment)}<div class="tbp-worked-progress"><i style="--p:${Math.max(0,Math.min(100,Number(o.progress)||0))}%"></i><b>${Math.round(Number(o.progress)||0)}%</b></div></div><div class="tbp-worked-amount">${fmtMoney(unpaid?remain:total,o.currency||'UAH')}</div><button class="tbp-worked-action" type="button" aria-label="Відкрити" onclick="event.stopPropagation();openWork('${o.id}')">⚙</button></article>`}
+ function tableHTML(rows,unpaid){if(!rows.length)return `<div class="empty"><strong>${unpaid?'Немає неоплачених робіт':'Активних робіт немає'}</strong>${unpaid?'Готові або завершені неоплачені замовлення зʼявляться тут.':'Прийняті роботи зʼявляться тут.'}</div>`;return `<div class="tbp-worked-table"><div class="tbp-worked-head"><span>№ / статус</span><span>Клієнт</span><span>Робота</span><span>Дедлайн</span><span>Оплата / прогрес</span><span>Сума</span><span></span></div>${rows.map(o=>row(o,unpaid)).join('')}</div>`}
+ function ensureTabs(){const groups=document.querySelector('#view-worked .tbp-worked-groups');if(!groups||$('tbpWorkedTabs'))return;groups.insertAdjacentHTML('beforebegin','<div class="tbp-worked-tabbar" id="tbpWorkedTabs"><button class="tbp-worked-tab active" type="button" data-tab="active">В роботі <span class="tbp-tab-count" id="tbpTabActiveCount">0</span></button><button class="tbp-worked-tab" type="button" data-tab="unpaid">Не оплачені <span class="tbp-tab-count" id="tbpTabUnpaidCount">0</span></button></div>');$('tbpWorkedTabs').addEventListener('click',e=>{const b=e.target.closest('[data-tab]');if(!b)return;currentTab=b.dataset.tab;applyTab()})}
+ function applyTab(){document.querySelectorAll('#tbpWorkedTabs .tbp-worked-tab').forEach(b=>b.classList.toggle('active',b.dataset.tab===currentTab));document.querySelector('.tbp-worked-active-group')?.classList.toggle('tbp-tab-active',currentTab==='active');document.querySelector('.tbp-worked-unpaid-group')?.classList.toggle('tbp-tab-active',currentTab==='unpaid')}
+ window.renderWorked=function(){ensureTabs();const active=orders.filter(o=>['accepted','working','paused'].includes(o.status)).sort((a,b)=>sortKey(a)-sortKey(b)),unpaid=orders.filter(o=>['ready','completed'].includes(o.status)&&o.payment!=='paid').sort((a,b)=>sortKey(a)-sortKey(b));if($('workedCount'))$('workedCount').textContent=active.length;if($('unpaidWorkedCount'))$('unpaidWorkedCount').textContent=unpaid.length;if($('tbpTabActiveCount'))$('tbpTabActiveCount').textContent=active.length;if($('tbpTabUnpaidCount'))$('tbpTabUnpaidCount').textContent=unpaid.length;if($('workedCards'))$('workedCards').innerHTML=tableHTML(active,false);if($('unpaidCards'))$('unpaidCards').innerHTML=tableHTML(unpaid,true);applyTab()};
+ const baseMetrics=window.updateMetrics;if(typeof baseMetrics==='function')window.updateMetrics=function(){const r=baseMetrics.apply(this,arguments),active=orders.filter(o=>['accepted','working','paused'].includes(o.status)),unpaid=orders.filter(o=>['ready','completed'].includes(o.status)&&o.payment!=='paid');if($('workedNav'))$('workedNav').textContent=active.length+unpaid.length;if($('tbpTabActiveCount'))$('tbpTabActiveCount').textContent=active.length;if($('tbpTabUnpaidCount'))$('tbpTabUnpaidCount').textContent=unpaid.length;return r};
+ function ensureSharedDeadlineUI(){const field=$('wPrivateDeadline');if(!field)return;const block=field.closest('.tbp-private-deadline');if(!block)return;block.classList.add('tbp-shared-deadline');const strong=block.querySelector('strong'),small=block.querySelector('small');if(strong)strong.textContent='Дедлайн замовлення';if(small)small.textContent='Один спільний дедлайн · цю саму дату бачить клієнт';field.setAttribute('aria-label','Дедлайн замовлення');const clientTitle=document.querySelector('#workDrawer .tbp-client-section-title');if(clientTitle&&block.parentElement!==clientTitle.parentElement)clientTitle.insertAdjacentElement('afterend',block)}
+ const previousOpen=window.openWork;if(typeof previousOpen==='function')window.openWork=function(id){const r=previousOpen.apply(this,arguments),o=orders.find(x=>x.id===id);ensureSharedDeadlineUI();if(o&&$('wPrivateDeadline'))$('wPrivateDeadline').value=sharedDeadline(o);if(o&&$('wDeadline'))$('wDeadline').textContent=sharedDeadline(o)||'—';return r};
+ ensureTabs();ensureSharedDeadlineUI();try{window.renderWorked();window.updateMetrics?.()}catch(e){console.warn('WORKED tabs/single deadline:',e)}
 })();
 </script>
 
