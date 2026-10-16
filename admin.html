@@ -2891,5 +2891,81 @@ window.supabase={createClient};
 })();
 </script>
 
+
+
+<script id="tbp-finance-sync-v1">
+(()=>{
+  'use strict';
+  function allOrders(){
+    return Array.isArray(window.orders)?window.orders:(typeof orders!=='undefined'&&Array.isArray(orders)?orders:[]);
+  }
+  function dueAmount(o){
+    const status=String(o?.status||'');
+    const payment=String(o?.payment||o?.paymentStatus||'unpaid');
+    if(status==='draft'||status==='cancelled'||payment==='paid'||payment==='refunded') return null;
+    const publicPrice=Number(o?.price)||0;
+    let total=0,currency='UAH',canSubtractPartial=false;
+    if(publicPrice>0){
+      currency=String(o?.currency||'UAH');
+      const rate=Number(o?.rate)||1;
+      total=Math.max(0,publicPrice-(Number(o?.discount)||0)-(Number(o?.bonusUsed)||0)/rate);
+      canSubtractPartial=true;
+    }else{
+      const quote=Number(o?.privateQuoteAmount)||0;
+      if(quote<=0)return null;
+      currency=String(o?.privateQuoteCurrency||'UAH');
+      total=Math.max(0,quote);
+    }
+    const paid=(payment==='partial'&&canSubtractPartial)?Math.max(0,Number(o?.paidAmount)||0):0;
+    const remaining=Math.max(0,total-paid);
+    return remaining>0?{amount:remaining,currency}:null;
+  }
+  function groupedDue(){
+    const g={UAH:0,USD:0,EUR:0,PLN:0};
+    for(const o of allOrders()){
+      const d=dueAmount(o);if(!d)continue;
+      if(!(d.currency in g))g[d.currency]=0;
+      g[d.currency]+=d.amount;
+    }
+    return g;
+  }
+  function renderCurrencyLines(g){
+    if(typeof currencyLines==='function')return currencyLines(g);
+    const sym={UAH:'₴',USD:'$',EUR:'€',PLN:'zł'};
+    return Object.entries(g).filter(([,v])=>v>0).map(([c,v])=>`<div class="tbp-finance-currency-row"><span>${c}</span><strong>${Number(v).toLocaleString('uk-UA',{maximumFractionDigits:2})} ${sym[c]||c}</strong></div>`).join('')||'<div class="amount">0 ₴</div>';
+  }
+  function renderDueList(){
+    const root=document.getElementById('financeDue');if(!root)return;
+    const rows=allOrders().map(o=>({o,d:dueAmount(o)})).filter(x=>x.d);
+    root.innerHTML=rows.length?rows.map(({o,d})=>{
+      const deadline=o?.deadline||'—';
+      let meta='';
+      try{meta=(deadline!=='—'&&typeof deadlineMeta==='function')?` · ${deadlineMeta(deadline).text}`:''}catch(_){ }
+      const moneyText=typeof fmtMoney==='function'?fmtMoney(d.amount,d.currency):`${d.amount} ${d.currency}`;
+      return `<div class="security-item"><div class="grow"><strong>${o.number} · ${typeof clientName==='function'?clientName(o):(o.guestName||'Клієнт')}</strong><p>${o.type||'Робота'} · ${deadline}${meta}</p></div><span class="money gold">${moneyText}</span></div>`;
+    }).join(''):'<div class="empty-mini">Немає актуальних сум до оплати</div>';
+  }
+  const previous=typeof window.renderFinance==='function'?window.renderFinance:(typeof renderFinance==='function'?renderFinance:null);
+  function patchedRenderFinance(){
+    let r;
+    if(previous)r=previous.apply(this,arguments);
+    try{
+      const cards=document.querySelectorAll('#view-finance .finance-card');
+      const g=groupedDue();
+      const dueOrders=allOrders().filter(o=>dueAmount(o));
+      const bonusTotal=dueOrders.reduce((sum,o)=>sum+Math.max(0,Number(o?.bonusUsed)||0),0);
+      if(cards[0])cards[0].innerHTML=`<div class="label">До оплати</div><div class="tbp-finance-currency-list">${renderCurrencyLines(g)}</div><div class="sub">усі фактичні залишки до отримання</div><div class="sub gold" style="margin-top:6px">Використано бонусів: ${Math.round(bonusTotal)} б.</div>`;
+      renderDueList();
+    }catch(err){console.warn('Finance sync:',err)}
+    return r;
+  }
+  window.renderFinance=patchedRenderFinance;
+  try{renderFinance=patchedRenderFinance}catch(_){ }
+  window.tbpFinanceDueGroups=groupedDue;
+  window.tbpFinanceDueAmount=dueAmount;
+  try{patchedRenderFinance()}catch(_){ }
+})();
+</script>
+
 </body>
 </html>
