@@ -360,7 +360,14 @@ img,svg,canvas{max-width:100%}
   .tbp-finance-currency-row strong{font-size:20px}
 }
 </style>
-</head>
+<style id="tbp-account-only-admin-simplify">
+#guestNameField,#guestContactField,.tbp-convert-fields,.tbp-convert-action,#tbpPseudoConvert,[data-tbp-filter="pseudo"]{display:none!important}
+.tbp-pseudo-head p{display:none!important}
+.tbp-verified-telegram-bar{padding:14px 15px;border-radius:14px;background:linear-gradient(125deg,rgba(10,46,36,.75),rgba(17,66,48,.63));border:1px solid rgba(224,193,123,.27);margin:8px 0 14px;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}
+.tbp-tg-name{font-size:12px;font-weight:800;color:#e5c989;margin-bottom:5px}.tbp-tg-hint{display:block;color:#bed8ca;font-size:12px;line-height:1.4;margin:3px 0}.tbp-tg-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.tbp-tg-actions .btn{font-size:12px;white-space:normal;text-align:center}
+.tbp-send-bot-overlay{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(1,17,13,.76);backdrop-filter:blur(9px)}.tbp-send-bot-overlay.open{display:flex}.tbp-send-bot-card{width:min(100%,475px);display:flex;flex-direction:column;gap:10px;border:1px solid rgba(217,185,115,.42);border-radius:19px;background:#123c2f;color:#f7f3e7;padding:22px;box-shadow:0 24px 70px #00180f88}.tbp-send-bot-card strong{font-size:17px}.tbp-send-bot-card span{font-size:12px;color:#d7bc83}.tbp-send-bot-card textarea{width:100%;min-height:120px;padding:12px;background:#0c2b23;color:#fff;border:1px solid #54745b;border-radius:12px;resize:vertical}.tbp-send-bot-buttons{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}.tbp-send-bot-card small{font-size:12px;color:#e9c981}
+@media(max-width:520px){.tbp-send-bot-card{padding:16px}.tbp-tg-actions{flex-direction:column}.tbp-tg-actions .btn{width:100%;justify-content:center}}
+</style></head>
 <body>
 <div class="app">
   <aside class="sidebar" id="sidebar">
@@ -424,7 +431,7 @@ img,svg,canvas{max-width:100%}
 
       <section class="view" id="view-clients">
         <div class="page-head"><div><div class="eyebrow">Clients</div><h1>Клієнти</h1><p>Профіль, замовлення, реферали, доступ і технічна історія користувача.</p></div><div class="head-actions"><button class="btn primary" onclick="openAddClient()">+ Додати клієнта</button></div></div>
-        <div class="tbp-client-toolbar"><div class="tbp-client-heading"><strong id="tbpClientCount">Завантаження клієнтів…</strong><span id="tbpClientAdded">Період: усі дати</span></div><div class="filter-group tbp-client-filters" id="tbpClientFilters" role="group" aria-label="Фільтр клієнтів"><button class="chip active" data-tbp-filter="all" type="button">Всі</button><button class="chip" data-tbp-filter="new" type="button">Нові</button><button class="chip" data-tbp-filter="account" type="button">Кабінети</button><button class="chip" data-tbp-filter="pseudo" type="button">Псевдоклієнти</button><button class="chip" data-tbp-filter="START" type="button">START</button><button class="chip" data-tbp-filter="PLUS" type="button">PLUS</button><button class="chip" data-tbp-filter="ADVANCED" type="button">ADVANCED</button><button class="chip" data-tbp-filter="ELITE" type="button">ELITE</button></div><div class="tbp-client-controls"><div class="field"><label for="tbpClientPeriod">Дата реєстрації</label><select id="tbpClientPeriod"><option value="all">За весь час</option><option value="today">Сьогодні</option><option value="7">Останні 7 днів</option><option value="30">Останні 30 днів</option><option value="month">Цей місяць</option><option value="custom">Свій період</option></select></div><div class="mini-search"><input id="clientSearch" placeholder="Пошук: імʼя, логін, код" aria-label="Пошук клієнтів" /></div></div><div class="tbp-client-dates" id="tbpClientDates" hidden><label>Від <input type="date" id="tbpClientFrom" /></label><label>До <input type="date" id="tbpClientTo" /></label></div></div>
+        <div class="tbp-client-toolbar"><div class="tbp-client-heading"><strong id="tbpClientCount">Завантаження клієнтів…</strong><span id="tbpClientAdded">Період: усі дати</span></div><div class="filter-group tbp-client-filters" id="tbpClientFilters" role="group" aria-label="Фільтр клієнтів"><button class="chip active" data-tbp-filter="all" type="button">Всі</button><button class="chip" data-tbp-filter="new" type="button">Нові</button><button class="chip" data-tbp-filter="account" type="button">Кабінети</button><button class="chip" data-tbp-filter="START" type="button">START</button><button class="chip" data-tbp-filter="PLUS" type="button">PLUS</button><button class="chip" data-tbp-filter="ADVANCED" type="button">ADVANCED</button><button class="chip" data-tbp-filter="ELITE" type="button">ELITE</button></div><div class="tbp-client-controls"><div class="field"><label for="tbpClientPeriod">Дата реєстрації</label><select id="tbpClientPeriod"><option value="all">За весь час</option><option value="today">Сьогодні</option><option value="7">Останні 7 днів</option><option value="30">Останні 30 днів</option><option value="month">Цей місяць</option><option value="custom">Свій період</option></select></div><div class="mini-search"><input id="clientSearch" placeholder="Пошук: імʼя, логін, код" aria-label="Пошук клієнтів" /></div></div><div class="tbp-client-dates" id="tbpClientDates" hidden><label>Від <input type="date" id="tbpClientFrom" /></label><label>До <input type="date" id="tbpClientTo" /></label></div></div>
         <div class="clients-grid" id="clientsGrid"></div>
       </section>
 
@@ -519,7 +526,7 @@ img,svg,canvas{max-width:100%}
 </aside></div>
 
 <!-- MANUAL ORDER MODAL -->
-<div class="modal-overlay" id="manualModal"><div class="modal manual-modal"><div class="modal-head"><h3>Створити замовлення вручну</h3><p>Можеш вибрати існуючого клієнта або створити запис без особистого кабінету.</p></div><div class="modal-body"><div class="fields"><div class="field full"><label>Клієнт</label><select id="manualClient" onchange="manualClientChanged()"></select></div><div class="field" id="guestNameField" style="display:none"><label>Імʼя / позначення клієнта</label><input id="manualGuestName" placeholder="Наприклад: Олена · Telegram"/></div><div class="field" id="guestContactField" style="display:none"><label>Контакт</label><input id="manualGuestContact" placeholder="@telegram / номер"/></div><div class="field"><label>Тип роботи</label><input id="manualType" placeholder="Курсова / реферат / практика..."/></div><div class="field"><label>Дедлайн</label><input id="manualDeadline" type="date"/></div><div class="field full"><label>Тема</label><input id="manualTopic"/></div><div class="field full"><label>Деталі</label><textarea id="manualDetails"></textarea></div><div class="field"><label>Статус після створення</label><select id="manualStatus"><option value="accepted">Прийнято</option><option value="submitted">Нова заявка</option></select></div><div class="field"><label>Орієнтовна ціна</label><input id="manualPrice" type="number" value="0"/></div></div></div><div class="modal-foot"><button class="btn secondary" onclick="closeManualOrder()">Скасувати</button><button class="btn primary" onclick="createManualOrderLocal()">Створити</button></div></div></div>
+<div class="modal-overlay" id="manualModal"><div class="modal manual-modal"><div class="modal-head"><h3>Створити замовлення вручну</h3><p>Нові роботи створюються лише для клієнтів із власним кабінетом.</p></div><div class="modal-body"><div class="fields"><div class="field full"><label>Клієнт</label><select id="manualClient" onchange="manualClientChanged()"></select></div><div class="field" id="guestNameField" style="display:none"><label>Імʼя / позначення клієнта</label><input id="manualGuestName" placeholder="Наприклад: Олена · Telegram"/></div><div class="field" id="guestContactField" style="display:none"><label>Контакт</label><input id="manualGuestContact" placeholder="@telegram / номер"/></div><div class="field"><label>Тип роботи</label><input id="manualType" placeholder="Курсова / реферат / практика..."/></div><div class="field"><label>Дедлайн</label><input id="manualDeadline" type="date"/></div><div class="field full"><label>Тема</label><input id="manualTopic"/></div><div class="field full"><label>Деталі</label><textarea id="manualDetails"></textarea></div><div class="field"><label>Статус після створення</label><select id="manualStatus"><option value="accepted">Прийнято</option><option value="submitted">Нова заявка</option></select></div><div class="field"><label>Орієнтовна ціна</label><input id="manualPrice" type="number" value="0"/></div></div></div><div class="modal-foot"><button class="btn secondary" onclick="closeManualOrder()">Скасувати</button><button class="btn primary" onclick="createManualOrderLocal()">Створити</button></div></div></div>
 
 
 <!-- ADD CLIENT MODAL -->
@@ -1597,11 +1604,11 @@ window.supabase={createClient};
  function renderPremiumClients(search){
   const grid=$('clientsGrid');if(!grid)return;
   const q=String(search??$('clientSearch')?.value??'').trim().toLowerCase();
-  const all=Object.values(clients),periodRows=all.filter(c=>timeMatch(c,period)),base=clientTier==='new'?all.filter(c=>timeMatch(c,period==='all'?'30':period)):periodRows;
+  const all=Object.values(clients).filter(c=>!c.isPseudo),periodRows=all.filter(c=>timeMatch(c,period)),base=clientTier==='new'?all.filter(c=>timeMatch(c,period==='all'?'30':period)):periodRows;
   const typeMatch=c=>clientTier==='account'?!c.isPseudo:clientTier==='pseudo'?!!c.isPseudo:(clientTier==='all'||clientTier==='new'||String(c.level||'').toUpperCase()===clientTier);
   const rows=base.filter(c=>typeMatch(c)&&[c.name,c.login,c.ref,c.contact].join(' ').toLowerCase().includes(q)).sort((a,b)=>String(b.createdAt||'').localeCompare(String(a.createdAt||'')));
   const accountCount=all.filter(c=>!c.isPseudo).length,pseudoCount=all.filter(c=>c.isPseudo).length;
-  const total=$('tbpClientCount'),stats=$('tbpClientAdded');if(total)total.textContent=`Всього: ${all.length} · Кабінети: ${accountCount} · Псевдо: ${pseudoCount}`;
+  const total=$('tbpClientCount'),stats=$('tbpClientAdded');if(total)total.textContent=`Кабінетів: ${accountCount}`;
   if(stats)stats.textContent=`За вибраний період: ${periodRows.length}${clientTier==='new'&&period==='all'?' · Нові = останні 30 днів':''}`;
   grid.innerHTML=rows.length?rows.map(c=>{
     const mine=orders.filter(o=>o.client===c.id),active=mine.filter(o=>['submitted','accepted','working','paused','ready'].includes(o.status)).length;
@@ -1889,7 +1896,7 @@ window.supabase={createClient};
  }
  const realOpenClient=window.openClient;
  window.openClient=function(id,tab='profile'){const c=clients[id];if(c?.isPseudo)return openPseudoClient(id);return realOpenClient(id,tab)};
- function addPseudoBanner(drawer,o){if(!drawer||!o?.client?.startsWith('pseudo:'))return;drawer.querySelectorAll('.tbp-pseudo-order-banner').forEach(n=>n.remove());const c=clients[o.client];if(!c)return;const node=document.createElement('div');node.className='tbp-pseudo-order-banner';node.innerHTML=`<strong>Псевдоклієнт · без кабінету</strong><p>${c.name}${c.contact?' · '+c.contact:''}. Історія його гостьових замовлень уже групується в окремій картці.</p><button type="button" class="btn small green">Відкрити картку / створити кабінет</button>`;node.querySelector('button').onclick=()=>openPseudoClient(o.client);const body=drawer.querySelector('.drawer-body');if(body)body.insertBefore(node,body.firstChild)}
+ function addPseudoBanner(drawer,o){if(!drawer)return;drawer.querySelectorAll('.tbp-pseudo-order-banner').forEach(n=>n.remove());if(!o?.client?.startsWith('pseudo:'))return;const c=clients[o.client];if(!c)return;const node=document.createElement('div');node.className='tbp-pseudo-order-banner';node.innerHTML=`<strong>Замовлення ще не прив’язано до кабінету</strong><p>${c.name}${c.contact?' · '+c.contact:''}. Історія його гостьових замовлень уже групується в окремій картці.</p><button type="button" class="btn small green">Відкрити картку / створити кабінет</button>`;node.querySelector('button').onclick=()=>openPseudoClient(o.client);const body=drawer.querySelector('.drawer-body');if(body)body.insertBefore(node,body.firstChild)}
  const baseOrder=window.openOrder;window.openOrder=function(id){baseOrder(id);const o=orders.find(x=>x.id===id);addPseudoBanner(document.getElementById('orderDrawer'),o)};
  const baseWork=window.openWork;window.openWork=function(id){baseWork(id);const o=orders.find(x=>x.id===id);addPseudoBanner(document.getElementById('workDrawer'),o)};
  const search=document.getElementById('globalSearch');if(search){let engaged=false;const unlock=()=>{engaged=true;search.readOnly=false};search.addEventListener('pointerdown',unlock,{once:true});search.addEventListener('keydown',unlock,{once:true});search.addEventListener('focus',()=>{search.readOnly=false});search.value='';[80,300,800,1500].forEach(ms=>setTimeout(()=>{if(!engaged){search.value='';search.dispatchEvent(new Event('input',{bubbles:true}))}},ms));window.addEventListener('pageshow',()=>{if(!engaged)search.value=''})}
@@ -2654,6 +2661,166 @@ window.supabase={createClient};
  }
  quick.addEventListener('click',quickUpdate);
  // Save-to-client still runs the original validation, confirmation and admin_update_order_v2 RPC.
+})();
+</script>
+
+<style id="tbp-compact-live-telegram-20261030">
+.tbp-verified-telegram-bar.tbp-contact-mini{
+  padding:10px!important;margin:0 0 12px!important;border-radius:13px!important;
+  background:rgba(6,43,32,.44)!important;border:1px solid rgba(223,196,130,.23)!important;
+  box-shadow:none!important;
+}
+.tbp-contact-mini .tbp-tg-actions{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px!important;margin:0!important;align-items:stretch}
+.tbp-contact-mini .tbp-tg-actions .btn{
+  display:flex!important;align-items:center!important;justify-content:center!important;
+  width:100%!important;min-width:0!important;min-height:42px!important;padding:10px 12px!important;
+  border-radius:10px!important;font-weight:800!important;font-size:12.5px!important;
+  letter-spacing:.01em!important;white-space:normal!important;text-align:center!important;line-height:1.25!important;
+  text-decoration:none!important;
+}
+.tbp-contact-mini .tbp-tg-actions .btn:disabled{opacity:.47;cursor:not-allowed}
+.tbp-contact-mini .tbp-tg-actions .tbp-direct-chat,.tbp-contact-mini .tbp-tg-actions .tbp-invite-chat{
+  background:linear-gradient(120deg,#efd69a,#dbb971)!important;color:#15362a!important;border:1px solid rgba(255,238,179,.32)!important;
+}
+.tbp-contact-mini .tbp-tg-actions .tbp-write-bot{
+  color:#f7e3b3!important;background:rgba(226,194,124,.08)!important;border:1px solid rgba(235,204,135,.35)!important;
+}
+@media(max-width:390px){.tbp-contact-mini .tbp-tg-actions{gap:7px!important}.tbp-contact-mini .tbp-tg-actions .btn{padding:10px 5px!important;font-size:11.5px!important}}
+@media(max-width:330px){.tbp-contact-mini .tbp-tg-actions{grid-template-columns:1fr!important}}
+</style>
+<script id="tbp-account-only-telegram-contacts-20261030">
+(function(){'use strict';
+  const $=id=>document.getElementById(id);
+  const bridge=window.PETRO_ADMIN_BRIDGE;
+  const tgCache=new Map();let ready=null,lastFetched=0;
+  const safeUrl=v=>/^[A-Za-z][A-Za-z0-9_]{4,31}$/.test(String(v||''))?'https://t.me/'+v:null;
+  const getClientId=o=>String(o?.client||o?.userId||'');
+  async function fetchVerified(){
+    // Always resolve current Telegram information server-side (getChat), rather than
+    // relying on the username that was stored when the account was linked.
+    const sdk=window.PETRO_ADMIN_SUPABASE;
+    if(!sdk?.functions?.invoke)throw Error('SIGN_IN_FIRST');
+    const {data,error}=await sdk.functions.invoke('admin-send-to-client',{body:{action:'sync_contacts'}});
+    if(error)throw error;
+    if(!data?.ok||!Array.isArray(data.contacts))throw Error(data?.error||'TELEGRAM_SYNC_FAILED');
+    tgCache.clear();
+    data.contacts.forEach(info=>tgCache.set(String(info.userId),info));
+    lastFetched=Date.now();
+  }
+  async function ensureVerified(force=false){
+    if(ready)return ready;
+    if(!force&&lastFetched&&Date.now()-lastFetched<25000)return;
+    ready=fetchVerified().catch(async error=>{
+      console.warn('Telegram refresh failed:',error?.message||error);
+      // Fallback only supplies verified linked IDs; never claim an old username
+      // is still public when the Telegram API could not refresh it.
+      if(bridge?.rpc){try{
+        const rows=await bridge.rpc('admin_get_telegram_contacts');
+        tgCache.clear();(Array.isArray(rows)?rows:[]).forEach(info=>tgCache.set(String(info.userId),{
+          userId:info.userId,telegramUserId:info.telegramUserId,username:null,fresh:false
+        }));
+      }catch(_){/* auth may still be initializing */}}
+      lastFetched=0;
+    }).finally(()=>ready=null);
+    return ready;
+  }
+  async function sendBotText(o,text){
+    const sdk=window.PETRO_ADMIN_SUPABASE;
+    if(!sdk?.functions?.invoke)throw Error('Увійдіть в адмінку повторно.');
+    const {data,error}=await sdk.functions.invoke('admin-send-to-client',{body:{order_id:o.id,text}});
+    if(error)throw error;
+    if(!data?.ok)throw Error(data?.message||data?.error||'Не вдалося надіслати');
+    return data;
+  }
+  async function inviteChat(o,button){
+    const original=button.textContent;
+    button.disabled=true;button.textContent='Надсилання…';
+    try{
+      await sendBotText(o,'Вітаю! Напишіть мені, будь ласка, в особистий Telegram, щоб обговорити деталі вашого замовлення.');
+      if(typeof showToast==='function')showToast('Запрошення в особистий чат надіслано');
+    }catch(e){
+      if(typeof showToast==='function')showToast('Не надіслано: '+(e?.message||'Помилка зв’язку'));
+      else alert('Не надіслано: '+(e?.message||'Помилка'));
+    }finally{button.disabled=false;button.textContent=original;}
+  }
+  function paint(orderId,drawer){
+    const o=orders.find(x=>String(x.id)===String(orderId));if(!o||!drawer)return;
+    if(drawer.id==='workDrawer'&&String(window.currentWork??currentWork)!==String(orderId))return;
+    if(drawer.id==='orderDrawer'&&String(window.currentOrder??currentOrder)!==String(orderId))return;
+    drawer.querySelectorAll('.tbp-verified-telegram-bar').forEach(el=>el.remove());
+    const target=drawer.id==='workDrawer'?($('tbpSimpleOrderPanel')||drawer.querySelector('.drawer-body')):drawer.querySelector('.drawer-body');
+    if(!target||!getClientId(o)||getClientId(o).startsWith('pseudo:'))return;
+    const info=tgCache.get(getClientId(o));
+    // If the account is not linked, do not render an irrelevant contact panel.
+    // While refreshing, keep only the functional bot action visible.
+    if(!info?.telegramUserId)return;
+    const handle=String(info?.username||'').replace(/^@/,'');
+    const link=info?.fresh?safeUrl(handle):null;
+    const panel=document.createElement('div');panel.className='tbp-verified-telegram-bar tbp-contact-mini';
+    const row=document.createElement('div');row.className='tbp-tg-actions';
+    if(link){
+      const direct=document.createElement('a');direct.className='btn small primary tbp-direct-chat';
+      direct.href=link;direct.target='_blank';direct.rel='noopener noreferrer';
+      direct.textContent='↗ Особистий чат';direct.title='Відкрити @'+handle;
+      row.append(direct);
+    }else{
+      const invite=document.createElement('button');invite.type='button';invite.className='btn small primary tbp-invite-chat';
+      invite.textContent='↗ Запросити в чат';invite.title='Надіслати клієнту запрошення написати Петру особисто';
+      invite.disabled=!info?.telegramUserId;
+      invite.onclick=()=>inviteChat(o,invite);row.append(invite);
+    }
+    const viaBot=document.createElement('button');viaBot.type='button';viaBot.className='btn small secondary tbp-write-bot';
+    viaBot.textContent='✉ Через бота';viaBot.disabled=!info?.telegramUserId;
+    viaBot.onclick=()=>showBotDialog(o);row.append(viaBot);
+    panel.append(row);target.prepend(panel);
+  }
+  let msgDialog;
+  function showBotDialog(o,presetText=""){
+    if(!msgDialog){
+      msgDialog=document.createElement('div');msgDialog.className='tbp-send-bot-overlay';msgDialog.innerHTML='<div class="tbp-send-bot-card" role="dialog" aria-modal="true" aria-label="Повідомлення клієнту"><strong>Написати клієнту через бота</strong><span id="tbpSendBotOrder"></span><textarea id="tbpSendBotText" maxlength="1800" rows="5" placeholder="Напиши повідомлення…"></textarea><div class="tbp-send-bot-buttons"><button type="button" class="btn secondary" id="tbpSendBotCancel">Скасувати</button><button type="button" class="btn primary" id="tbpSendBotSubmit">Надіслати</button></div><small id="tbpSendBotInfo" role="status"></small></div>';
+      document.body.append(msgDialog);$('tbpSendBotCancel').onclick=()=>msgDialog.classList.remove('open');
+    }
+    $('tbpSendBotOrder').textContent='Замовлення '+o.number;
+    $('tbpSendBotInfo').textContent='';$('tbpSendBotText').value=presetText;msgDialog.classList.add('open');$('tbpSendBotText').focus();
+    $('tbpSendBotSubmit').onclick=async()=>{
+      const text=$('tbpSendBotText').value.trim();if(!text){$('tbpSendBotInfo').textContent='Напиши текст повідомлення.';return;}
+      const send=$('tbpSendBotSubmit');send.disabled=true;$('tbpSendBotInfo').textContent='Надсилання…';
+      try{await sendBotText(o,text);
+        msgDialog.classList.remove('open');if(typeof showToast==='function')showToast('Повідомлення надіслано клієнту');
+      }catch(e){$('tbpSendBotInfo').textContent='Не доставлено. '+(/failed to fetch|network/i.test(String(e?.message||''))?'З’єднання із сервером не встановлене. Перезавантаж сторінку й повтори спробу.':(e?.message||'Спробуй пізніше'));}finally{send.disabled=false}
+    }
+  }
+  const oldWork=window.openWork;
+  if(typeof oldWork==='function')window.openWork=function(id){const v=oldWork.apply(this,arguments);paint(id,$('workDrawer'));ensureVerified().then(()=>paint(id,$('workDrawer')));return v};
+  const oldOrder=window.openOrder;
+  if(typeof oldOrder==='function')window.openOrder=function(id){const v=oldOrder.apply(this,arguments);paint(id,$('orderDrawer'));ensureVerified().then(()=>paint(id,$('orderDrawer')));return v};
+  // Historical pseudo cards remain readable; no creation/conversion in the simplified flow.
+  const oldManual=window.createManualOrderLocal;
+  window.createManualOrderLocal=async function(){
+    const client=$('manualClient')?.value||'';
+    if(!client||client==='guest'||client.startsWith('pseudo:')||!clients[client]||clients[client].isPseudo){if(typeof showToast==='function')showToast('Вибери клієнта з зареєстрованим кабінетом');return;}
+    if(!$('manualType')?.value.trim()||!$('manualTopic')?.value.trim()){if(typeof showToast==='function')showToast('Заповни тип і тему роботи');return;}
+    const ccy=$('manualCurrency')?.value||'UAH';const rate=ccy==='UAH'?1:Number($('manualRate')?.value)||1;
+    try{await bridge.rpc('admin_create_manual_order_v2',{
+      p_user_id:client,p_pseudo_client_id:null,p_guest_name:null,p_guest_contact:null,
+      p_type:$('manualType').value.trim(),p_topic:$('manualTopic').value.trim(),p_details:$('manualDetails')?.value.trim()||'',
+      p_deadline:$('manualDeadline')?.value||null,p_status:$('manualStatus')?.value||'accepted',
+      p_price:Math.max(0,Number($('manualPrice')?.value)||0),p_currency:ccy,p_rate:Math.max(.000001,rate),p_create_pseudo:false
+    });await bridge.loadSnapshot();window.closeManualOrder?.();if(typeof showToast==='function')showToast('Замовлення створено для кабінету клієнта');}
+    catch(e){if(typeof showToast==='function')showToast(e?.message||'Не вдалося створити замовлення')}
+  };
+  function restrictManual(){
+    const selector=$('manualClient');if(!selector)return;
+    const old=selector.value; [...selector.options].forEach(op=>{if(op.value==='guest'||op.value.startsWith('pseudo:')||clients[op.value]?.isPseudo)op.remove()});
+    if(!selector.value||selector.value==='guest')selector.value=[...selector.options].find(op=>op.value&&clients[op.value]&&!clients[op.value]?.isPseudo)?.value||'';
+    $('guestNameField')?.setAttribute('style','display:none!important');$('guestContactField')?.setAttribute('style','display:none!important');
+  }
+  const baseManual=window.openManualOrder;
+  if(typeof baseManual==='function')window.openManualOrder=function(){const r=baseManual.apply(this,arguments);restrictManual();return r};
+  const obs=new MutationObserver(()=>{if($('manualOrderModal')?.classList.contains('show'))restrictManual()});
+  obs.observe(document.body,{childList:true,subtree:true});
+  document.addEventListener('DOMContentLoaded',()=>{ensureVerified();restrictManual()});
+  if(document.readyState!=='loading'){ensureVerified();restrictManual()}
 })();
 </script>
 </body>
