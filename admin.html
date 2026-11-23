@@ -393,6 +393,119 @@ img,svg,canvas{max-width:100%}
 @media(max-width:750px){#tbpReceiptPaper .tbp-rc-compact-list{padding:0 18px 5px}#tbpReceiptPaper .tbp-rc-compact-order{gap:8px;padding:11px 0}#tbpReceiptPaper .tbp-rc-compact-due strong{font-size:18px}}
 @media(max-width:390px){#tbpReceiptPaper .tbp-rc-compact-list{padding:0 14px 5px}#tbpReceiptPaper .tbp-rc-compact-cost{font-size:12px}#tbpReceiptPaper .tbp-rc-compact-due{font-size:12px}#tbpReceiptPaper .tbp-rc-compact-due strong{font-size:17px}}
 </style>
+
+<style id="tbp-receipt-savings-legibility-20261123">
+/* Limited presentation enhancement only: pricing and saving logic is untouched. */
+#tbpReceiptPaper .tbp-rc-compact-info>strong{font-size:13px;line-height:1.46}
+#tbpReceiptPaper .tbp-rc-compact-topic{font-size:12px;line-height:1.5;color:#d4e5d9}
+#tbpReceiptPaper .tbp-rc-compact-original{font-size:11.5px;line-height:1.48;color:#bfcebe}
+#tbpReceiptPaper .tbp-rc-compact-reductions{font-size:11.5px;line-height:1.48;color:#e0e6d8;font-weight:650}
+#tbpReceiptPaper .tbp-rc-order-saving{display:inline-flex;align-items:center;gap:6px;align-self:flex-start;width:fit-content;max-width:100%;padding:4px 9px;border:1px solid rgba(236,205,135,.42);border-radius:8px;color:#ffe2a4;background:rgba(220,173,85,.11);font-weight:850;font-size:11.5px;line-height:1.4;margin-top:2px}
+#tbpReceiptPaper .tbp-rc-order-saving>span{color:#f6d492;font-size:12px}
+#tbpReceiptPaper .tbp-rc-compact-currency{gap:9px;padding:11px 0 17px}
+#tbpReceiptPaper .tbp-rc-compact-currency-top{gap:4px}
+#tbpReceiptPaper .tbp-rc-compact-currency-top>span{font-size:13px;color:#f5dba8}
+#tbpReceiptPaper .tbp-rc-compact-currency-top small{font-size:11.5px;color:#cedfce;line-height:1.5}
+#tbpReceiptPaper .tbp-rc-compact-summary-title{font-size:12px}
+#tbpReceiptPaper .tbp-rc-discount-highlight{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:3px 0 2px;padding:11px 13px;border:1px solid rgba(244,208,141,.46);border-radius:13px;background:linear-gradient(112deg,rgba(234,192,117,.18),rgba(36,111,76,.18));box-shadow:inset 0 1px 0 rgba(255,230,180,.06)}
+#tbpReceiptPaper .tbp-rc-discount-label{min-width:0;display:inline-flex;align-items:center;gap:9px;color:#ffe4b1}
+#tbpReceiptPaper .tbp-rc-discount-star{display:inline-grid;place-items:center;flex:0 0 30px;width:30px;height:30px;border-radius:10px;background:rgba(245,210,141,.18);color:#ffe0a0;font-size:18px}
+#tbpReceiptPaper .tbp-rc-discount-label>span:last-child{display:grid;gap:2px}
+#tbpReceiptPaper .tbp-rc-discount-label strong{font-size:13px;font-weight:900;line-height:1.25}
+#tbpReceiptPaper .tbp-rc-discount-label small{font-size:11px;color:#d9e3d1;line-height:1.3}
+#tbpReceiptPaper .tbp-rc-discount-amount{color:#ffe0a0;font-size:18px;font-weight:950;white-space:nowrap;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+#tbpReceiptPaper .tbp-rc-other-adjustments{font-size:11.5px;line-height:1.5;color:#d5e4d7}
+#tbpReceiptPaper .tbp-rc-compact-due{padding-top:2px}
+#tbpReceiptPaper .tbp-rc-foot{font-size:11px;color:#b8d1c1}
+#tbpReceiptPaper .tbp-rc-kicker{font-size:11px}
+#tbpReceiptPaper .tbp-rc-status{font-size:12px}
+#tbpReceiptPaper .tbp-rc-line .tbp-rc-sub{font-size:11px;color:#bcd3c5}
+#tbpReceiptOverlay .tbp-pick-order-body small{font-size:12px;line-height:1.48}
+#tbpReceiptOverlay .tbp-pick-order-body b{font-size:12.5px}
+#tbpReceiptOverlay .tbp-pick-list>p{font-size:12px}
+#tbpReceiptOverlay .tbp-receipt-hint{font-size:12px}
+/* Keep existing order layouts and dimensions; raise tiny labels by approximately one point. */
+#view-orders .tbp-all-meta{font-size:12px;color:#c4ddcc}
+#view-orders .tbp-work-rich .tbp-wr-dates small{font-size:12px;color:#c6dccc}
+#view-orders .tbp-work-rich .tbp-wr-topic{font-size:14px}
+.work-card .topic{font-size:11.5px;line-height:1.52}
+.work-card .deadline{font-size:10px}
+#workDrawer .tbp-brief-kicker{font-size:11px}
+#workDrawer .tbp-brief-note small{font-size:11.5px}
+#view-orders .tbp-all-due{font-size:11px}
+@media(max-width:420px){
+ #tbpReceiptPaper .tbp-rc-discount-highlight{padding:10px 9px;gap:8px}
+ #tbpReceiptPaper .tbp-rc-discount-amount{font-size:16px}
+ #tbpReceiptPaper .tbp-rc-discount-label strong{font-size:12px}
+ #tbpReceiptPaper .tbp-rc-discount-star{width:26px;height:26px;flex-basis:26px}
+ #tbpReceiptPaper .tbp-rc-compact-order{grid-template-columns:minmax(0,1fr) auto;gap:7px}
+ #tbpReceiptPaper .tbp-rc-compact-topic{font-size:11.5px}
+ #tbpReceiptPaper .tbp-rc-compact-cost{font-size:12.5px}
+}
+</style>
+<style id="tbp-minimal-discounts-20261123">
+/* Only two receipt discount labels change; computation and other UI remain untouched. */
+#tbpReceiptPaper .tbp-rc-order-saving{
+ display:inline-flex!important;align-items:baseline!important;gap:5px!important;
+ align-self:flex-start!important;width:auto!important;max-width:100%!important;
+ padding:0!important;margin:2px 0 0!important;border:0!important;
+ border-radius:0!important;background:transparent!important;box-shadow:none!important;
+ color:#ead5a5!important;font-size:11.5px!important;line-height:1.48!important;
+ font-weight:600!important;
+}
+#tbpReceiptPaper .tbp-rc-order-saving>span{
+ font-size:11.5px!important;color:#e7c583!important;
+}
+#tbpReceiptPaper .tbp-rc-compact-currency-top .tbp-rc-compact-total-discount{
+ display:block;color:#dfd4b7;font-size:11.5px;line-height:1.5;font-weight:600;
+}
+</style>
+
+<style id="tbp-compact-currency-summary-20261123">
+/* Each currency is one horizontal financial row, with an aligned prominent amount. */
+#tbpReceiptPaper .tbp-rc-compact-summary{gap:3px!important;padding:10px 0 8px!important}
+#tbpReceiptPaper .tbp-rc-compact-summary-title{margin:0 0 4px!important;font-size:12px}
+#tbpReceiptPaper .tbp-rc-compact-currency.tbp-rc-totals-row{
+ display:grid!important;grid-template-columns:minmax(0,1fr) max-content!important;
+ align-items:center!important;column-gap:14px!important;row-gap:3px!important;
+ padding:12px 0!important;margin:0!important;border-bottom:1px solid rgba(236,204,141,.24)!important;
+ background:transparent!important;min-width:0;
+}
+#tbpReceiptPaper .tbp-rc-compact-currency.tbp-rc-totals-row:last-child{border-bottom:0!important}
+#tbpReceiptPaper .tbp-rc-totals-description{min-width:0;display:grid;gap:4px}
+#tbpReceiptPaper .tbp-rc-totals-description>strong{
+ color:#f9db9d;font-size:13px;font-weight:900;line-height:1.35;overflow-wrap:anywhere
+}
+#tbpReceiptPaper .tbp-rc-totals-description>strong>span{color:#d7d8c0;font-size:11.5px;font-weight:750}
+#tbpReceiptPaper .tbp-rc-totals-meta{
+ display:flex;align-items:center;flex-wrap:wrap;gap:3px 11px;
+ color:#c6d9ca;font-size:11.5px;line-height:1.45
+}
+#tbpReceiptPaper .tbp-rc-totals-meta>span{white-space:normal}
+#tbpReceiptPaper .tbp-rc-totals-meta .tbp-rc-inline-saving{color:#f3d499;font-weight:700}
+#tbpReceiptPaper .tbp-rc-inline-saving>span{font-size:11px;margin-right:2px}
+#tbpReceiptPaper .tbp-rc-compact-currency.tbp-rc-totals-row .tbp-rc-compact-due{
+ display:flex!important;flex-direction:column!important;align-items:flex-end!important;
+ gap:3px!important;min-width:0;padding:0!important;margin:0!important;
+ color:#e3ebe0!important;text-align:right!important;font-size:11px!important;line-height:1.1
+}
+#tbpReceiptPaper .tbp-rc-totals-row .tbp-rc-compact-due>span{font-size:11px!important;white-space:nowrap;color:#cddfce;font-weight:750}
+#tbpReceiptPaper .tbp-rc-totals-row .tbp-rc-compact-due>strong{
+ color:#ffe09e!important;font-size:23px!important;line-height:1.08!important;
+ font-weight:950!important;white-space:nowrap!important;font-variant-numeric:tabular-nums
+}
+#workDrawer .tbp-draft-feedback{font-size:11.5px!important;line-height:1.4!important;padding-top:3px;min-height:17px}
+@media(max-width:540px){
+ #tbpReceiptPaper .tbp-rc-totals-row .tbp-rc-compact-due>strong{font-size:19px!important}
+ #tbpReceiptPaper .tbp-rc-totals-meta{font-size:11px;gap:2px 7px}
+ #tbpReceiptPaper .tbp-rc-totals-description>strong{font-size:12.5px}
+ #tbpReceiptPaper .tbp-rc-compact-currency.tbp-rc-totals-row{column-gap:7px!important;padding:11px 0!important}
+}
+@media(max-width:355px){
+ #tbpReceiptPaper .tbp-rc-totals-row .tbp-rc-compact-due>strong{font-size:17px!important}
+ #tbpReceiptPaper .tbp-rc-totals-meta{font-size:10.5px}
+}
+</style>
 </head>
 <body>
 <div class="app">
@@ -616,7 +729,7 @@ function renderClients(filter=''){const q=filter.toLowerCase();document.getEleme
 document.getElementById('clientSearch').oninput=e=>renderClients(e.target.value);
 function renderFinance(){const due=orders.filter(o=>['accepted','working','paused','ready'].includes(o.status)&&o.payment!=='paid');document.getElementById('financeDue').innerHTML=due.map(o=>`<div class="security-item"><div class="grow"><strong>${o.number} · ${clientName(o)}</strong><p>${o.type} · ${o.deadline}</p></div><span class="money gold">${money(Math.max(o.price-o.discount-o.bonusUsed/(Number(o.rate)||1),0))}</span></div>`).join('')}
 function openClient(id,tab='profile'){currentClient=id;const c=clients[id];if(!c)return;drawerTitle.textContent=c.name;drawerSubtitle.textContent='Клієнт · '+c.login;drawerAvatar.textContent=initials(c.name);cLogin.textContent=c.login;cLevel.textContent=c.level;cRef.textContent=c.ref;cBalance.textContent=c.balance+' бонусів';cNameInput.value=c.name;cLoginInput.value=c.login;cContactInput.value=c.contact;cLevelInput.value=c.level;cRefInput.value=c.ref;rCode.textContent=c.ref;const co=orders.filter(o=>o.client===id),active=co.filter(o=>['submitted','accepted','working','paused','ready'].includes(o.status)),hist=co.filter(o=>['completed','cancelled'].includes(o.status));clientActiveOrders.innerHTML=orderMiniList(active);clientHistoryOrders.innerHTML=orderMiniList(hist);const refs=(c.referrals||[]).map(x=>clients[x]).filter(Boolean);rTotal.textContent=refs.length;rSuccess.textContent=refs.filter(r=>orders.some(o=>o.client===r.id&&o.status==='completed'&&o.payment==='paid')).length;rEarned.textContent=money(refs.reduce((sum,r)=>{const first=orders.find(o=>o.client===r.id&&o.status==='completed'&&o.payment==='paid');return sum+(first?Math.round((first.price-first.discount-first.bonusUsed)*.1):0)},0));referralList.innerHTML=refs.length?refs.map(r=>`<div class="security-item" style="cursor:pointer" onclick="openClient('${r.id}','profile')"><div class="mini-avatar">${initials(r.name)}</div><div class="grow"><strong>${r.name}</strong><p>${r.login} · ${r.level}</p></div><span class="gold">Відкрити →</span></div>`).join(''):`<div class="empty"><strong>Рефералів немає</strong>Запрошені користувачі зʼявляться тут.</div>`;clientActivity.innerHTML=(c.events||[]).map(e=>`<div class="activity"><div class="activity-icon">•</div><div><strong>${e[0]}</strong><p>${e[1]}</p></div><span class="time">${e[2]}</span></div>`).join('');document.getElementById('clientDrawer').classList.add('open');activateClientTab(tab)}
-function orderMiniList(list){return list.length?list.map(o=>`<div class="security-item"><div class="grow"><strong>${o.number} · ${o.type}</strong><p>${o.topic}</p></div>${statusHTML(o.status)}<button class="btn small secondary" onclick="openOrder('${o.id}')">Відкрити</button></div>`).join(''):`<div class="empty"><strong>Немає записів</strong></div>`}
+function orderMiniList(list){return list.length?list.map(o=>`<div class="security-item tbp-client-order-item" data-tbp-profile-order="${o.id}" role="button" tabindex="0" aria-label="Відкрити замовлення ${o.number}"><div class="grow"><strong>${o.number} · ${o.type}</strong><p>${o.topic}</p></div>${statusHTML(o.status)}<button type="button" class="btn small secondary" data-tbp-open-order="${o.id}">Відкрити</button></div>`).join(''):`<div class="empty"><strong>Немає записів</strong></div>`}
 function activateClientTab(tab){document.querySelectorAll('#clientTabs .tab').forEach(t=>t.classList.toggle('active',t.dataset.tab===tab));document.querySelectorAll('#clientDrawer .tabpane').forEach(p=>p.classList.toggle('active',p.dataset.pane===tab))}document.querySelectorAll('#clientTabs .tab').forEach(t=>t.onclick=()=>activateClientTab(t.dataset.tab));function closeClient(){clientDrawer.classList.remove('open')}
 function saveClientLocal(){const c=clients[currentClient];c.name=cNameInput.value.trim()||c.name;c.login=cLoginInput.value.trim()||c.login;c.contact=cContactInput.value.trim();c.level=cLevelInput.value;c.ref=cRefInput.value.trim()||c.ref;renderClients(clientSearch.value);renderOrders();renderDashboard();openClient(currentClient,'profile');showToast('Профіль оновлено')}
 function openOrder(id){currentOrder=id;const o=orders.find(x=>x.id===id);if(!o)return;oTitle.textContent=o.number;oSubtitle.textContent='Замовлення · '+statusMap[o.status];oClient.textContent=clientName(o)+' · '+clientLogin(o);oType.textContent=o.type;oDate.textContent=o.date;oDeadline.textContent=o.deadline;oTopic.value=o.topic;oDetails.value=o.details;oContact.value=o.contact||o.guestContact||'';oFiles.value=o.files+' файл(и)';decisionBar.style.display=o.status==='submitted'?'flex':'none';orderHistory.innerHTML=`<div class="activity"><div class="activity-icon">+</div><div><strong>Заявку створено</strong><p>${o.date}</p></div><span class="time">${o.status==='submitted'?'очікує рішення':statusMap[o.status]}</span></div>`;orderDrawer.classList.add('open')}function closeOrder(){orderDrawer.classList.remove('open')}
@@ -1916,7 +2029,7 @@ window.supabase={createClient};
   <button type="button" class="iconbtn" id="tbpPseudoClose" aria-label="Закрити">×</button></div>
   <div class="tbp-pseudo-body">
    <div class="tbp-pseudo-summary"><div><span>Контакт</span><strong>${esc(c.rawContact||'—')}</strong></div><div><span>Робіт</span><strong>${count}</strong></div><div><span>Додано</span><strong>${esc(c.joined||'—')}</strong></div></div>
-   <div class="tbp-pseudo-orders">${mine.length?mine.map(o=>`<div class="tbp-pseudo-order"><div><strong>${esc(o.number)} · ${esc(o.rawType||o.type)}</strong><small>${esc(o.rawTopic||o.topic)}</small></div><span class="status ${esc(o.status)}">${esc(statusMap[o.status]||o.status)}</span></div>`).join(''):'<div class="empty-mini">Робіт поки немає</div>'}</div>
+   <div class="tbp-pseudo-orders">${mine.length?mine.map(o=>`<div class="tbp-pseudo-order" data-tbp-profile-order="${esc(o.id)}" role="button" tabindex="0" aria-label="Відкрити замовлення ${esc(o.number)}"><div><strong>${esc(o.number)} · ${esc(o.rawType||o.type)}</strong><small>${esc(o.rawTopic||o.topic)}</small></div><span class="status ${esc(o.status)}">${esc(statusMap[o.status]||o.status)}</span></div>`).join(''):'<div class="empty-mini">Робіт поки немає</div>'}</div>
    <div class="tbp-pseudo-actions"><button type="button" class="btn secondary" id="tbpPseudoNewOrder">+ Додати роботу</button></div>
    <details class="tbp-convert-box"><summary>Активувати кабінет <span aria-hidden="true">⌄</span></summary>
     <div class="tbp-pseudo-modes"><label><input type="radio" name="tbpPseudoMode" value="history" checked> Перенести історію</label><label><input type="radio" name="tbpPseudoMode" value="fresh"> Новий кабінет без історії</label></div>
@@ -2587,13 +2700,13 @@ window.supabase={createClient};
  // Move existing live inputs and buttons; their original event listeners and Supabase RPCs are retained.
  const ui=document.createElement('section');ui.id='tbpSimpleOrderPanel';ui.className='tbp-simple-order';ui.setAttribute('aria-label','Управління замовленням');
  ui.innerHTML=`<div class="tbp-simple-intro"><strong id="tbpSimpleClient">Клієнт</strong><span id="tbpSimpleContext">Дані замовлення</span></div>
- <div class="tbp-simple-card"><div class="tbp-simple-head"><h3>Дедлайн і ціна</h3><small>Одна форма · два способи збереження</small></div>
+ <div class="tbp-simple-card"><div class="tbp-simple-head"><h3>Дедлайн і ціна</h3><small>Приватні зміни зберігаються автоматично</small></div>
   <div class="tbp-simple-fields"><div><div class="field" id="tbpSimpleDateSlot"><label for="wPrivateDeadline">Дедлайн</label></div><div class="tbp-simple-datum" id="tbpSimplePublishedDeadline"></div></div>
   <div><div class="tbp-simple-price-field"><div class="field" id="tbpSimplePriceSlot"><label for="wPrice">Базова ціна</label></div><div class="field" id="tbpSimpleCurrencySlot"><label for="wCurrency">Валюта</label></div></div><div class="tbp-simple-datum" id="tbpSimplePublishedPrice"></div></div></div>
  </div>
  <div class="tbp-simple-card"><div class="tbp-simple-head"><h3>Виконання</h3><small>Етап і прогрес</small></div>
  <div class="tbp-simple-fields"><div id="tbpSimpleStageSlot"></div><div class="tbp-simple-progress-bar"><div id="tbpSimpleProgressSlot" class="field"></div><button id="tbpQuickProgress" type="button" title="Оновити етап і прогрес у клієнта" aria-label="Оновити етап і прогрес у клієнта">↻</button></div></div>
- <div class="tbp-simple-help">Кнопка ↻ оновлює тільки етап та прогрес у клієнта, без публікації чернетки ціни чи дедлайну.</div><div class="tbp-simple-datum" id="tbpProgressResult" role="status" aria-live="polite"></div>
+ <div class="tbp-simple-help">До натискання «Зберегти для клієнта» всі зміни залишаються приватними.</div><div class="tbp-simple-datum" id="tbpProgressResult" role="status" aria-live="polite"></div>
  </div>
  <div class="tbp-simple-card"><div class="tbp-simple-head"><h3>Оплата</h3><span id="tbpSimplePaymentBadgeSlot"></span></div><div class="tbp-simple-payment" id="tbpSimplePaymentSlot"></div>
  <div class="tbp-simple-finance"><span>До оплати</span><strong id="tbpSimpleTotal">—</strong></div>
@@ -2933,6 +3046,8 @@ window.supabase={createClient};
     price:d.price==null?o.price:Number(d.price),discount:d.discount==null?o.discount:Number(d.discount),
     currency:d.currency||o.currency,rate:d.rate==null?o.rate:Number(d.rate),
     payment:d.payment||o.payment,paidAmount:d.paidAmount==null?o.paidAmount:Number(d.paidAmount),
+    bonusUsed:d.bonusUsed==null?o.bonusUsed:Number(d.bonusUsed),
+    message:d.clientMessage===undefined?o.message:String(d.clientMessage),
     workDeadline:d.workDeadline??o.workDeadline};
  };
  function fmt(v,ccy){return typeof fmtMoney==='function'?fmtMoney(num(v),ccy||'UAH'):(num(v).toFixed(2)+' '+(ccy||'UAH'));}
@@ -3114,6 +3229,11 @@ window.supabase={createClient};
    $('wProgress').value=String(Math.round(num(x.progress)));
    $('wPayment').value=x.payment;
    $('wPaidAmount').value=String(x.paidAmount||0);
+   $('wMessage').value=String(x.message||'');
+   if(Object.prototype.hasOwnProperty.call(data,'bonusUsed')){
+     $('wBonus').value=String(Math.max(0,Number(data.bonusUsed)||0));
+     $('wBonusEnabled').checked=!!data.bonusEnabled || Number(data.bonusUsed)>0;
+   }
    discountField.value=String(x.discount||0);
    finalInput.value=String(Math.max(0,num(x.price)-num(x.discount)));
    $('wProgress').dispatchEvent(new Event('input',{bubbles:true}));
@@ -3137,19 +3257,140 @@ window.supabase={createClient};
    return {status,progress:Math.max(0,Math.min(100,Math.round(num($('wProgress').value)))),price,discount:Math.max(0,price-net),currency:c,rate,payment,paidAmount:payment==='paid'?net:partial,workDeadline:$('wPrivateDeadline').value||''};
  }
  function result(text,error=false){const el=$('tbpPublicStatus');el.textContent=text;el.hidden=!text;el.classList.toggle('error',error)}
- // Replace the private button: detached old listeners must never invoke the former quote-only RPC.
- const oldPrivate=$('tbpSavePrivate');const privateButton=oldPrivate.cloneNode(true);
- oldPrivate.replaceWith(privateButton);
- privateButton.addEventListener('click',async()=>{
-   const o=orders.find(x=>x.id===currentWork);if(!o||savingPrivate)return;
-   let data;try{data=payload()}catch(err){result(err.message,true);return}
-   savingPrivate=true;privateButton.disabled=true;result('Зберігаємо внутрішні зміни…');
-   try{const saved=await bridge.rpc('admin_save_workflow_with_note',{p_order_id:o.id,p_workspace:data,p_closed:(data.payment==='paid'||o.payment==='paid')?true:!!read(o).closed,p_reset:false,p_admin_note:$('wNote').value});
-     o.adminWorkspace={data:saved.workspace,closed:!!saved.closed};o.note=$('wNote').value;
-     result('✓ Збережено для себе. У кабінеті клієнта нічого не змінилося.');
-     refreshAll();window.openWork(o.id);showToast('✓ Збережено для себе');
-   }catch(err){result('Помилка збереження: '+(err.message||'невідомо'),true)}finally{savingPrivate=false;privateButton.disabled=false}
- });
+
+// Autosave is ADMIN-ONLY: it writes admin_order_workspace and admin_note.
+// Public customer order data remains untouched until the explicit publish button.
+const oldPrivate=$('tbpSavePrivate'),privateButton=oldPrivate.cloneNode(true);
+oldPrivate.replaceWith(privateButton);
+privateButton.hidden=true; // existing control no longer appears in the UI
+const draftIndicator=$('tbpPrivateStatus');
+const noteGroup=$('tbpBriefNoteSlot')?.closest('.tbp-brief-note');
+if(draftIndicator&&noteGroup){draftIndicator.classList.add('tbp-draft-feedback');noteGroup.appendChild(draftIndicator)}
+const draftStates=new Map();
+let draftPaused=false;
+const draftFields=new Set(['wNote','wMessage','wPrice','tbpFinalToPay','wStatus','wProgress',
+  'wPayment','wPaidAmount','wPrivateDeadline','wBonus','wBonusEnabled',
+  'wCurrency','wRate','wDiscount']);
+function setDraftStatus(text,error=false){
+  const el=$('tbpPrivateStatus');if(!el)return;
+  el.textContent=text;el.hidden=!text;el.classList.toggle('error',error);
+}
+function captureDraft(){
+  const o=orders.find(x=>x.id===String(currentWork));
+  if(!o||!$('workDrawer').classList.contains('open'))return null;
+  const data=payload();
+  // This is a preview only; clientMessage and bonuses publish in the final RPC.
+  data.bonusUsed=$('wBonusEnabled')?.checked?num($('wBonus').value):0;
+  data.bonusEnabled=!!$('wBonusEnabled')?.checked;
+  data.clientMessage=String($('wMessage')?.value||'');
+  const note=String($('wNote')?.value||'');
+  if(note.length>12000||JSON.stringify(data).length>15000)throw Error('Занадто великий текст для автозбереження');
+  return {id:o.id,data,note,key:JSON.stringify({data,note})};
+}
+function stateFor(id){
+  if(!draftStates.has(id))draftStates.set(id,{latest:null,timer:0,running:null,lastSaved:null,error:null});
+  return draftStates.get(id);
+}
+async function drainDraft(id){
+  const st=stateFor(id);
+  if(st.timer){clearTimeout(st.timer);st.timer=0;}
+  if(st.running){
+    await st.running;
+    if(st.latest)return drainDraft(id);
+    if(st.error)throw st.error;
+    return;
+  }
+  if(!st.latest){if(st.error)throw st.error;return;}
+  st.running=(async()=>{
+    while(st.latest){
+      const shot=st.latest;st.latest=null;
+      if(currentWork===shot.id)setDraftStatus('Збереження…');
+      try{
+        const saved=await bridge.rpc('admin_save_workflow_with_note',{
+          p_order_id:shot.id,p_workspace:shot.data,p_closed:null,p_reset:false,p_admin_note:shot.note
+        });
+        if(!saved?.ok||!saved?.workspace)throw Error('Сервер не підтвердив збереження чернетки');
+        const row=orders.find(x=>x.id===shot.id);
+        if(row){row.adminWorkspace={data:saved.workspace,closed:!!saved.closed};row.note=shot.note;}
+        st.lastSaved=shot.key;st.error=null;
+        if(currentWork===shot.id&&!st.latest)setDraftStatus('✓ Автоматично збережено · лише для мене');
+      }catch(e){
+        st.error=e;
+        // Do not retry in a tight loop. Keep the unsaved snapshot for the next edit/retry.
+        if(!st.latest)st.latest=shot;
+        if(currentWork===shot.id)setDraftStatus('Не збережено: '+(e?.message||'Помилка з’єднання'),true);
+        throw e;
+      }
+    }
+  })();
+  try{await st.running;}finally{st.running=null;}
+}
+function scheduleDraft(immediate=false){
+  if(draftPaused)return Promise.resolve();
+  let shot;
+  try{shot=captureDraft();}catch(e){setDraftStatus(e.message,true);return Promise.reject(e)}
+  if(!shot)return Promise.resolve();
+  const st=stateFor(shot.id);
+  if(shot.key===st.lastSaved&&!st.error&&!st.latest)return st.running||Promise.resolve();
+  st.latest=shot;st.error=null;
+  if(st.timer){clearTimeout(st.timer);st.timer=0;}
+  setDraftStatus('Незбережені зміни…');
+  if(immediate)return drainDraft(shot.id);
+  st.timer=setTimeout(()=>{st.timer=0;drainDraft(shot.id).catch(()=>{})},650);
+  return Promise.resolve();
+}
+async function flushDraft(id=String(currentWork)){
+  const st=draftStates.get(id);
+  if(!st)return;
+  if(st.timer){clearTimeout(st.timer);st.timer=0;}
+  await drainDraft(id);
+}
+// Keep draft updates serialized per order. Typing never reloads or closes the editor.
+const watched=$('workDrawer');
+for(const eventName of ['input','change']){
+  watched.addEventListener(eventName,e=>{
+    if(!e.isTrusted || !draftFields.has(e.target?.id) || draftPaused)return;
+    scheduleDraft().catch(()=>{});
+  });
+}
+watched.addEventListener('click',e=>{
+  if(!e.isTrusted||draftPaused)return;
+  if(e.target.closest('[data-tbp-work],[data-tbp-payment],[data-tbp-bonus]')){
+    setTimeout(()=>scheduleDraft().catch(()=>{}),0);
+  }
+});
+// Switching orders saves the pending snapshot without mixing client IDs.
+const openPrevious=window.openWork;
+window.openWork=function(id){
+  const prior=String(currentWork||'');
+  if(prior&&prior!==String(id))flushDraft(prior).catch(()=>{});
+  const r=openPrevious.apply(this,arguments);
+  const st=draftStates.get(String(id));
+  if(st?.latest && st.latest.id===String(id)){
+    const d=st.latest.data;
+    $('wStatus').value=d.status;$('wProgress').value=String(d.progress);
+    $('wPrice').value=String(d.price);$('tbpFinalToPay').value=String(Math.max(0,d.price-d.discount));
+    $('wCurrency').value=d.currency;$('wRate').value=String(d.rate);
+    $('wPayment').value=d.payment;$('wPaidAmount').value=String(d.paidAmount);
+    $('wPrivateDeadline').value=d.workDeadline;$('wNote').value=st.latest.note;
+    $('wBonus').value=String(d.bonusUsed||0);$('wBonusEnabled').checked=!!d.bonusEnabled;
+    $('wMessage').value=String(d.clientMessage||'');setPriceInfo();
+  }
+  setDraftStatus(st?.error?'Збереження ще не підтверджене': 'Автозбереження увімкнено',!!st?.error);
+  return r;
+};
+// A manual close flushes pending work without silently discarding typed notes.
+const closePrevious=window.closeWork;
+window.closeWork=function(){
+  const id=String(currentWork||'');
+  const st=draftStates.get(id);
+  if(!draftPaused && st && (st.latest||st.running)){
+    flushDraft(id).catch(()=>{}); // snapshot was already captured; close need not wait
+  }
+  return closePrevious.apply(this,arguments);
+};
+// The old save button is hidden, but it remains callable as a retry fallback.
+privateButton.addEventListener('click',()=>scheduleDraft(true).catch(()=>{}));
  // Replace public action with an atomic UI workflow (one payment RPC, then clear private overlay).
  const oldPublic=$('tbpSaveWork');const publicButton=oldPublic.cloneNode(true);publicButton.removeAttribute('onclick');oldPublic.replaceWith(publicButton);
  publicButton.addEventListener('click',async()=>{
@@ -3166,11 +3407,16 @@ window.supabase={createClient};
      p_client_message:$('wMessage').value,p_admin_note:null,p_paid_amount:d.payment==='paid'?actualNet:d.paidAmount,
      p_work_deadline:null,p_clear_work_deadline:false};
    const save=async()=>{savingPublic=true;publicButton.disabled=true;result('Публікуємо для клієнта…');
-     try{const saved=await bridge.rpc('admin_publish_order_workflow',{p_payload:rpcPayload});if(!saved?.id)throw Error('Збереження не підтверджене');
+     try{
+       await flushDraft(o.id);
+       draftPaused=true;
+       const saved=await bridge.rpc('admin_publish_order_workflow',{p_payload:rpcPayload});if(!saved?.id)throw Error('Збереження не підтверджене');
+       draftStates.delete(o.id);
        await bridge.loadSnapshot({silent:true});result('✓ Дані клієнта оновлено.');
        if(orders.some(x=>x.id===o.id))window.openWork(o.id);
        showToast('✓ Збережено для клієнта');
-     }catch(err){result('Помилка: '+(err.message||'невідомо'),true)}finally{savingPublic=false;publicButton.disabled=false}
+     }catch(err){result('Помилка: '+(err.message||'невідомо'),true)}
+     finally{draftPaused=false;savingPublic=false;publicButton.disabled=false}
    };
    if(d.status==='completed'&&o.status!=='completed')openConfirm('Завершити замовлення для клієнта?','Завершення буде видно клієнту й може нарахувати бонуси після оплати.',save);
    else save();
@@ -3181,7 +3427,7 @@ window.supabase={createClient};
    const closed=!read(o).closed;
    const doClose=async()=>{
      closing=true;closeBtn.disabled=true;
-     try{let data=payload();
+     try{await flushDraft(o.id);let data=captureDraft()?.data||payload();
        const saved=await bridge.rpc('admin_save_workflow',{p_order_id:o.id,p_workspace:data,p_closed:closed,p_reset:false});
        o.adminWorkspace={data:saved.workspace,closed:!!saved.closed};
        closeWork();refreshAll();showToast(closed?(data.payment==='paid'?'Роботу закрито та перенесено в архів':'Роботу закрито та перенесено в неоплачені'):'Роботу повернено в процес');
@@ -3729,7 +3975,7 @@ window.supabase={createClient};
  // Add the work summary at the very top, ahead of the unchanged deadline/price/progress form.
  const panel=$('tbpSimpleOrderPanel');
  if(panel){
-  const head=document.createElement('section');head.className='tbp-brief-card';head.id='tbpWorkBrief';head.innerHTML=`<div><div class="tbp-brief-kicker">Інформація про роботу</div><div class="tbp-brief-topic" id="tbpBriefTopic">—</div></div><div class="tbp-brief-extras" id="tbpBriefExtras"></div><div class="tbp-brief-note"><label for="wNote">Моя приватна замітка</label><div id="tbpBriefNoteSlot"></div><small>Доступна лише адміністратору. Зберігається кнопкою «Зберегти для себе».</small></div><div class="tbp-manual-id-editor" id="tbpManualIdEditor" hidden><label>Прив'язати до псевдоклієнта<select id="tbpWorkPseudoSelect"></select></label><button class="btn secondary" id="tbpSavePseudoLink" type="button">Прив'язати</button></div><div class="tbp-brief-delete"><button type="button" id="tbpTrashWorkBtn" aria-label="Перемістити замовлення у видалені" title="Видалити на 30 днів">Кошик</button></div>`;
+  const head=document.createElement('section');head.className='tbp-brief-card';head.id='tbpWorkBrief';head.innerHTML=`<div><div class="tbp-brief-kicker">Інформація про роботу</div><div class="tbp-brief-topic" id="tbpBriefTopic">—</div></div><div class="tbp-brief-extras" id="tbpBriefExtras"></div><div class="tbp-brief-note"><label for="wNote">Моя приватна замітка</label><div id="tbpBriefNoteSlot"></div><small>Доступна лише адміністратору. Зберігається автоматично. Бачиш лише ти.</small></div><div class="tbp-manual-id-editor" id="tbpManualIdEditor" hidden><label>Прив'язати до псевдоклієнта<select id="tbpWorkPseudoSelect"></select></label><button class="btn secondary" id="tbpSavePseudoLink" type="button">Прив'язати</button></div><div class="tbp-brief-delete"><button type="button" id="tbpTrashWorkBtn" aria-label="Перемістити замовлення у видалені" title="Видалити на 30 днів">Кошик</button></div>`;
   const after=panel.querySelector('.tbp-simple-intro');after?.insertAdjacentElement('afterend',head);
   const note=$('wNote');if(note)$('tbpBriefNoteSlot').appendChild(note);
   $('tbpTrashWorkBtn').addEventListener('click',()=>moveToTrash(String(currentWork)));
@@ -3944,11 +4190,11 @@ input::placeholder,textarea::placeholder{opacity:1!important;color:#b2cab9!impor
   const round=x=>Math.round((Number(x)||0)*100)/100;
   const rows=visible.map(o=>{
     const reductions=[];
-    if(o.discount>.005)reductions.push('Знижка −'+money(o.discount,o.currency));
     if(o.bonus>.005)reductions.push('Бонуси −'+money(o.bonus,o.currency));
     if(o.paid>.005)reductions.push('Сплачено −'+money(o.paid,o.currency));
+    const saved=o.discount>.005?`<span class="tbp-rc-order-saving"><span aria-hidden="true">✦</span> Знижка −${esc(money(o.discount,o.currency))}</span>`:'';
     const reduced=reductions.length?'<span class="tbp-rc-compact-reductions">'+esc(reductions.join(' · '))+'</span>':'';
-    return `<div class="tbp-rc-compact-order"><div class="tbp-rc-compact-info"><strong>№ ${esc(o.number)} · ${esc(o.rawType||o.type||'Робота')}</strong><span class="tbp-rc-compact-topic">${esc((o.rawTopic||o.topic||'').slice(0,135))}</span><span class="tbp-rc-compact-original">Ціна ${esc(money(o.gross,o.currency))}${!['ready','completed'].includes(o.status)?' · Попередній розрахунок':''}</span>${reduced}</div><strong class="tbp-rc-compact-cost">${esc(money(o.due,o.currency))}</strong></div>`;
+    return `<div class="tbp-rc-compact-order"><div class="tbp-rc-compact-info"><strong>№ ${esc(o.number)} · ${esc(o.rawType||o.type||'Робота')}</strong><span class="tbp-rc-compact-topic">${esc((o.rawTopic||o.topic||'').slice(0,135))}</span><span class="tbp-rc-compact-original">Ціна ${esc(money(o.gross,o.currency))}${!['ready','completed'].includes(o.status)?' · Попередній розрахунок':''}</span>${saved}${reduced}</div><strong class="tbp-rc-compact-cost">${esc(money(o.due,o.currency))}</strong></div>`;
   }).join('');
   const currencyNames={UAH:'Гривні',USD:'Долари',EUR:'Євро',PLN:'Злоті'};
   const totals=[...byCurrency].map(([currency,arr])=>{
@@ -3958,10 +4204,10 @@ input::placeholder,textarea::placeholder{opacity:1!important;color:#b2cab9!impor
     const paid=round(arr.reduce((sum,o)=>sum+o.paid,0));
     const due=round(arr.reduce((sum,o)=>sum+o.due,0));
     const adjustments=[];
-    if(discount>.005)adjustments.push('Знижка −'+money(discount,currency));
     if(bonus>.005)adjustments.push('Бонуси −'+money(bonus,currency));
     if(paid>.005)adjustments.push('Вже сплачено −'+money(paid,currency));
-    return `<div class="tbp-rc-compact-currency"><div class="tbp-rc-compact-currency-top"><span>${esc(currencyNames[currency]||currency)} · ${arr.length} роб.</span><small>Базова сума ${esc(money(gross,currency))}</small>${adjustments.length?`<small>${esc(adjustments.join(' · '))}</small>`:''}</div><div class="tbp-rc-compact-due"><span>До оплати</span><strong>${esc(money(due,currency))}</strong></div></div>`;
+    const savings=discount>.005?`<span class="tbp-rc-inline-saving"><span aria-hidden="true">✦</span> Знижка −${esc(money(discount,currency))}</span>`:'';
+    return `<div class="tbp-rc-compact-currency tbp-rc-totals-row"><div class="tbp-rc-totals-description"><strong>${esc(currencyNames[currency]||currency)} <span>· ${arr.length} роб.</span></strong><div class="tbp-rc-totals-meta"><span>Базова сума ${esc(money(gross,currency))}</span>${savings}${adjustments.length?`<span>${esc(adjustments.join(' · '))}</span>`:''}</div></div><div class="tbp-rc-compact-due"><span>До оплати</span><strong>${esc(money(due,currency))}</strong></div></div>`;
   }).join('');
   paper.innerHTML=`<div class="tbp-rc-head"><div class="tbp-rc-brand">TEXT <span>· BY PETRO</span></div><div class="tbp-rc-kicker">Розрахунок до оплати</div><div class="tbp-rc-number">${esc(name)}</div><div class="tbp-rc-chip">${visible.length} ${visible.length===1?'робота':'робіт у чеку'}</div></div>${visible.length?`<section class="tbp-rc-compact-list"><div class="tbp-rc-compact-rows">${rows}</div><div class="tbp-rc-compact-summary"><div class="tbp-rc-compact-summary-title">Підсумок</div>${totals}</div></section>`:'<div class="tbp-rc-lines tbp-rc-empty">Зараз немає замовлень із сумою до оплати.</div>'}<div class="tbp-rc-foot">Інформаційний розрахунок · не фіскальний чек</div>`;
   const side=frame.querySelector('.tbp-pick-list');if(side){side.innerHTML=`<h3>Додати до чека</h3><p>Активні роботи</p>${optional.length?optional.map(o=>`<label class="tbp-pick-order"><input type="checkbox" data-extra-order="${esc(o.id)}" ${selected.has(String(o.id))?'checked':''}><span class="tbp-pick-order-body"><b>№ ${esc(o.number)} · ${esc(o.rawType||o.type||'Робота')}</b><small>${esc((o.rawTopic||o.topic||'').slice(0,140))}</small><small>${esc(({'accepted':'Очікує початку','working':'У процесі','paused':'Призупинено','submitted':'Нова заявка'}[o.status])||o.status)}</small><em>${esc(money(o.due,o.currency))}</em></span></label>`).join(''):'<div class="tbp-pick-empty">Інших незавершених робіт із неоплаченою сумою немає.</div>'}`;
@@ -4371,6 +4617,310 @@ input::placeholder,textarea::placeholder{opacity:1!important;color:#b2cab9!impor
    event.stopImmediatePropagation();
  },true);
  document.addEventListener('keydown',()=>{previous=null;},true);
+})();
+</script>
+
+<style id="tbp-finance-verified-and-scroll-style">
+/* A bounded, independently scrollable work list; the rest of the page stays compact. */
+#view-orders #workedCards.tbp-work-list-v4{
+  max-height:clamp(330px,60dvh,630px)!important;
+  min-height:0;overflow-x:hidden!important;overflow-y:auto!important;
+  overscroll-behavior-y:contain;scrollbar-width:thin;scrollbar-color:rgba(222,183,115,.56) transparent;
+  padding:2px 5px 8px 2px!important;
+}
+#view-orders #workedCards .tbp-all-table-shell{width:100%;min-width:0}
+#view-orders #workedCards::-webkit-scrollbar,#view-finance #financeDue::-webkit-scrollbar,#tbpStatsInFinance #stStructure::-webkit-scrollbar{width:7px}
+#view-orders #workedCards::-webkit-scrollbar-thumb,#view-finance #financeDue::-webkit-scrollbar-thumb,#tbpStatsInFinance #stStructure::-webkit-scrollbar-thumb{border-radius:8px;background:rgba(221,185,113,.52)}
+#view-finance #financeDue,#tbpStatsInFinance #stStructure{
+  max-height:min(55dvh,490px);overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;
+  scrollbar-color:rgba(222,183,115,.48) transparent;padding-right:5px
+}
+#tbpStatsInFinance .tbp-alltime-summary{margin:17px 0 22px;padding:17px 19px;border-radius:17px;border:1px solid rgba(234,196,120,.31);background:linear-gradient(140deg,rgba(16,63,46,.97),rgba(6,42,32,.96))}
+#tbpStatsInFinance .tbp-alltime-title{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:6px;margin-bottom:13px;color:#ffe0a2;font-size:14px;font-weight:900}
+#tbpStatsInFinance .tbp-alltime-title small{color:#d2e2d5;font-weight:650;font-size:11px}
+#tbpStatsInFinance .tbp-alltime-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+#tbpStatsInFinance .tbp-alltime-item{min-width:0;border-radius:12px;padding:12px 13px;background:rgba(0,23,17,.26);border:1px solid rgba(255,235,191,.13)}
+#tbpStatsInFinance .tbp-alltime-item>span{display:block;color:#c6d9cd;font-size:11px;font-weight:700;margin-bottom:6px}
+#tbpStatsInFinance .tbp-alltime-item>strong{display:block;color:#fff1c9;font-size:16px;font-weight:900;line-height:1.42;overflow-wrap:anywhere}
+#tbpStatsInFinance .tbp-alltime-item>strong.tbp-currency-total{font-size:14px}
+#tbpStatsInFinance .tbp-alltime-item .tbp-currency-total span{display:block;margin:2px 0}
+#tbpStatsInFinance .tbp-income-chart-block{margin:5px 0 13px}
+#tbpStatsInFinance .tbp-income-chart-block>h4{color:#f6d89c;margin:4px 0 7px;font-size:12px}
+#tbpStatsInFinance #stRevenue{font-size:clamp(15px,2vw,24px);line-height:1.45}
+#view-finance .finance-card:nth-child(2) .tbp-finance-currency-list{margin-top:8px}
+#view-finance .tbp-finance-currency-row,#tbpStatsInFinance .tbp-alltime-item{font-variant-numeric:tabular-nums}
+@media(max-width:900px){#tbpStatsInFinance .tbp-alltime-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){
+ #view-orders #workedCards.tbp-work-list-v4{max-height:min(60dvh,510px)!important;padding-right:4px!important}
+ #view-finance #financeDue,#tbpStatsInFinance #stStructure{max-height:min(48dvh,430px)}
+ #tbpStatsInFinance .tbp-alltime-summary{padding:13px}
+ #tbpStatsInFinance .tbp-alltime-grid{gap:8px}
+ #tbpStatsInFinance .tbp-alltime-item{padding:10px 9px}
+ #tbpStatsInFinance .tbp-alltime-item>strong{font-size:14px}
+ #tbpStatsInFinance .tbp-alltime-item>strong.tbp-currency-total{font-size:12px}
+}
+</style>
+<script id="tbp-final-order-finance-fix">
+(()=>{'use strict';
+ /* All financial numbers are derived from published orders only.
+    Private workspace notes/drafts, standalone manual income and old demo metrics
+    MUST NOT be used as order payment evidence. */
+ const $=id=>document.getElementById(id);
+ const htmlSafe=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const currencies=['UAH','USD','EUR','PLN'];
+ const safeNumber=v=>{const n=Number(v);return Number.isFinite(n)&&n>0?n:0};
+ const rounded=n=>Math.round((n+Number.EPSILON)*100)/100;
+ const sym={UAH:'₴',USD:'$',EUR:'€',PLN:'zł'};
+ const money=(n,c)=>new Intl.NumberFormat('uk-UA',{maximumFractionDigits:2}).format(rounded(n))+' '+(sym[c]||c);
+ const newTotals=()=>({UAH:0,USD:0,EUR:0,PLN:0});
+ const renderAmounts=(totals,{empty='0 ₴',className=''}={})=>{
+   const curr=currencies.filter(c=>Math.abs(totals[c]||0)>.005);
+   return curr.length?curr.map(c=>'<span class="'+className+'">'+money(totals[c],c)+'</span>').join('<span style="display:block;height:3px"></span>'):'<span>'+empty+'</span>';
+ };
+ const isoDate=v=>{const s=String(v||'');return /^\d{4}-\d{2}-\d{2}/.test(s)?s.slice(0,10):null};
+ const startOf=o=>isoDate(o.createdAt)||isoDate(o.updatedAt)||isoDate(o.paidAt);
+ const paymentDate=o=>isoDate(o.paidAt)||isoDate(o.updatedAt)||startOf(o);
+ const isRelevant=o=>o && !['draft','cancelled'].includes(String(o.status||'')) && !o.deletedAt;
+ function lines(){
+   return orders.filter(isRelevant).map(o=>{
+     const currency=currencies.includes(o.currency)?o.currency:'UAH';
+     const gross=safeNumber(o.price),discount=Math.min(gross,safeNumber(o.discount));
+     const rate=currency==='UAH'?1:(safeNumber(o.rate)||1);
+     const bonus=Math.min(Math.max(0,gross-discount),safeNumber(o.bonusUsed)/rate);
+     const net=rounded(Math.max(0,gross-discount-bonus));
+     const paid=o.payment==='paid'?net:o.payment==='partial'?Math.min(net,safeNumber(o.paidAmount)):0;
+     return {order:o,currency,net,paid:rounded(paid),due:rounded(Math.max(0,net-paid)),created:startOf(o),paymentDate:paymentDate(o)};
+   });
+ }
+ const sum=(list,property)=>{const result=newTotals();list.forEach(r=>{result[r.currency]=rounded(result[r.currency]+safeNumber(r[property]))});return result};
+ const paidRows=rows=>rows.filter(r=>r.paid>.005);
+ const dueRows=rows=>rows.filter(r=>r.due>.005 && !['submitted'].includes(r.order.status));
+ const periodMatch=iso=>iso && (typeof inPeriodISO==='function'?inPeriodISO(iso):true);
+ const selectedPaid=rows=>paidRows(rows).filter(r=>periodMatch(r.paymentDate));
+ const showCurrency=group=>{const cs=currencies.filter(c=>Math.abs(group[c])>.005);return cs.length?cs.map(c=>'<div class="tbp-finance-currency-row"><span>'+c+'</span><strong>'+money(group[c],c)+'</strong></div>').join(''):'<div class="tbp-finance-currency-row"><span>UAH</span><strong>0 ₴</strong></div>'};
+ const currHtml=totals=>currencies.filter(c=>(totals[c]||0)>.005).map(c=>'<span>'+money(totals[c],c)+'</span>').join('')||'<span>0 ₴</span>';
+ const earliest=rows=>rows.map(r=>r.created).filter(Boolean).sort()[0]||null;
+ const fmtDate=v=>v?v.slice(8,10)+'.'+v.slice(5,7)+'.'+v.slice(0,4):'першого збереженого замовлення';
+ const dateOfPayment=o=>paymentDate(o);
+ function renderMetrics(){
+   const rows=lines();
+   const active=rows.map(r=>r.order);
+   const n=active.filter(o=>o.status==='submitted').length;
+   const accepted=active.filter(o=>o.status==='accepted').length;
+   const working=active.filter(o=>['working','paused','ready'].includes(o.status)).length;
+   if($('mNew'))$('mNew').textContent=n;
+   if($('mAccepted'))$('mAccepted').textContent=accepted;
+   if($('mWorked'))$('mWorked').textContent=working;
+   const clientMetric=document.querySelector('#view-dashboard .metric-grid .metric:nth-child(4)');
+   if(clientMetric){
+     const label=clientMetric.querySelector('.label'),value=clientMetric.querySelector('.value'),delta=clientMetric.querySelector('.delta');
+     if(label)label.textContent='Клієнти';
+     if(value)value.textContent=String(Object.keys(clients).length);
+     if(delta)delta.textContent='Зареєстровані та псевдоклієнти в базі';
+   }
+   if($('mExpected'))$('mExpected').innerHTML=renderAmounts(sum(dueRows(rows),'due'));
+   if($('mPaid'))$('mPaid').innerHTML=renderAmounts(sum(paidRows(rows),'paid'));
+   const paidLabel=$('mPaid')?.parentElement?.querySelector('.delta');
+   if(paidLabel)paidLabel.textContent='Отримано за весь час · з '+fmtDate(earliest(rows));
+   const expectedLabel=$('mExpected')?.parentElement?.querySelector('.delta');
+   if(expectedLabel)expectedLabel.textContent='Несплачений залишок активних замовлень';
+   if(typeof newOrdersNav!=='undefined'&&newOrdersNav){newOrdersNav.textContent=n;newOrdersNav.style.display=n?'':'none'}
+   if(typeof workedNav!=='undefined'&&workedNav)workedNav.textContent=accepted+working;
+   if(typeof newCount!=='undefined'&&newCount)newCount.textContent=n;
+   if(typeof workedCount!=='undefined'&&workedCount)workedCount.textContent=accepted+working;
+   if(typeof notifyBadge!=='undefined'&&notifyBadge){notifyBadge.textContent=n;notifyBadge.style.display=n?'grid':'none'}
+ }
+ function graphPoints(list){
+   const map=new Map();
+   for(const r of list){const iso=r.paymentDate;if(!iso)continue;
+     const k=financePeriod.mode==='year'?iso.slice(0,7):(financePeriod.mode==='months'?iso.slice(0,7):iso);
+     map.set(k,rounded((map.get(k)||0)+r.paid));
+   }
+   if(financePeriod.mode==='year')return Array.from({length:12},(_,i)=>{const key=String(financePeriod.year)+'-'+String(i+1).padStart(2,'0');return {label:MONTHS_UK[i].slice(0,3),value:map.get(key)||0}});
+   return [...map.entries()].sort((a,b)=>a[0].localeCompare(b[0])).map(([date,value])=>({label:date.length===7?date.slice(5,7)+'.'+date.slice(2,4):date.slice(8,10)+'.'+date.slice(5,7),value}));
+ }
+ function chartsByCurrency(paidRowsForPeriod,height=170){
+   const active=currencies.filter(c=>paidRowsForPeriod.some(r=>r.currency===c));
+   if(!active.length)return '<div class="lc-empty">За вибраний період підтверджених оплат немає</div>';
+   return active.map(c=>'<div class="tbp-income-chart-block"><h4>Отримані оплати · '+c+'</h4>'+lineChart(graphPoints(paidRowsForPeriod.filter(r=>r.currency===c)),{height})+'</div>').join('');
+ }
+ function renderFinanceVerified(){
+   const rows=lines();const paidPeriod=selectedPaid(rows);
+   const cards=document.querySelectorAll('#view-finance .finance-card');
+   const due=dueRows(rows);
+   if(cards[0])cards[0].innerHTML='<div class="label">До оплати</div><div class="tbp-finance-currency-list">'+showCurrency(sum(due,'due'))+'</div><div class="sub">Залишок за поточними замовленнями</div>';
+   if(cards[1])cards[1].innerHTML='<div class="label">Фактично отримано</div><div class="tbp-finance-currency-list">'+showCurrency(sum(paidPeriod,'paid'))+'</div><div class="sub">Лише підтверджені оплати за вибраний період</div>';
+   const el=$('financeDue');if(el){
+     el.innerHTML=due.map(r=>'<div class="security-item"><div class="grow"><strong>'+htmlSafe(r.order.number+' · '+clientName(r.order))+'</strong><p>'+htmlSafe(r.order.rawType||r.order.type||'Робота')+'</p></div><span class="money gold">'+money(r.due,r.currency)+'</span></div>').join('')||'<div class="empty-mini">Усі актуальні роботи оплачені</div>';
+   }
+   const spark=document.querySelector('#view-finance .sparkline');if(spark)spark.innerHTML=chartsByCurrency(paidPeriod,170);
+ }
+ function ensureLifetime(){
+   const root=$('tbpStatsInFinance')||$('view-statistics');if(!root)return null;
+   let bar=$('tbpAllTimeFromOrders');if(bar)return bar;
+   bar=document.createElement('section');bar.id='tbpAllTimeFromOrders';bar.className='tbp-alltime-summary';
+   const grid=root.querySelector('.metric-grid');if(grid)grid.insertAdjacentElement('afterend',bar);else root.appendChild(bar);
+   return bar;
+ }
+ function updateStatisticsVerified(){
+   const rows=lines();const paidPeriod=selectedPaid(rows);
+   const createdPeriod=rows.filter(r=>r.created&&periodMatch(r.created));
+   const done=createdPeriod.filter(r=>['ready','completed'].includes(r.order.status));
+   if($('stOrders'))$('stOrders').textContent=createdPeriod.length;
+   if($('stDone'))$('stDone').textContent=done.length;
+   if($('stDonePct'))$('stDonePct').textContent=createdPeriod.length?Math.round(100*done.length/createdPeriod.length)+'%':'0%';
+   if($('stRevenue'))$('stRevenue').innerHTML=renderAmounts(sum(paidPeriod,'paid'));
+   if($('stClients'))$('stClients').textContent=Object.values(clients).filter(c=>{const iso=isoDate(c.createdAt)||((typeof joinedISO==='function')?joinedISO(c):null);return iso && periodMatch(iso)}).length;
+   const byType={};createdPeriod.forEach(r=>{const kind=r.order.rawType||r.order.type||'Інше';byType[kind]=(byType[kind]||0)+1});
+   const sorted=Object.entries(byType).sort((a,b)=>b[1]-a[1]);
+   if($('stStructure'))$('stStructure').innerHTML=sorted.length?sorted.map(([kind,count],i)=>'<div class="activity"><div class="activity-icon">'+(i+1)+'</div><div><strong>'+htmlSafe(kind)+'</strong><p>'+count+' роб.</p></div><span class="time">'+Math.round(count/createdPeriod.length*100)+'%</span></div>').join(''):'<div class="empty-mini">Замовлень за період немає</div>';
+   if($('stChart'))$('stChart').innerHTML=chartsByCurrency(paidPeriod,200);
+   const chartTitle=$('stChart')?.closest('.card')?.querySelector('.card-head h3');if(chartTitle)chartTitle.textContent='Фактично отримані оплати';
+   const chartNote=$('stChart')?.closest('.card')?.querySelector('.card-head p');if(chartNote)chartNote.textContent='За датою оплати · валюти розділено';
+   const bar=ensureLifetime();if(bar){const first=earliest(rows);const lifetimePaid=sum(paidRows(rows),'paid'),lifetimeDue=sum(dueRows(rows),'due');
+     const n=rows.length,completed=rows.filter(r=>['ready','completed'].includes(r.order.status)).length;
+     bar.innerHTML='<div class="tbp-alltime-title">Загальна статистика <small>Від '+fmtDate(first)+' · лише замовлення в базі</small></div><div class="tbp-alltime-grid">'+
+      '<div class="tbp-alltime-item"><span>Всього замовлень</span><strong>'+n+'</strong></div>'+
+      '<div class="tbp-alltime-item"><span>Готові / завершені</span><strong>'+completed+'</strong></div>'+
+      '<div class="tbp-alltime-item"><span>Оплачено за весь час</span><strong class="tbp-currency-total">'+currHtml(lifetimePaid)+'</strong></div>'+
+      '<div class="tbp-alltime-item"><span>Залишок до оплати</span><strong class="tbp-currency-total">'+currHtml(lifetimeDue)+'</strong></div></div>';
+   }
+ }
+ function patchOne(name,after){const orig=window[name];if(typeof orig!=='function')return;
+  window[name]=function(...args){const result=orig.apply(this,args);after();return result};
+ }
+ patchOne('updateMetrics',renderMetrics);
+ patchOne('renderDashboard',()=>{
+   const latest=orders.filter(isRelevant).sort((a,b)=>String(b.updatedAt||b.createdAt||'').localeCompare(String(a.updatedAt||a.createdAt||''))).slice(0,4);
+   if($('dashActivity'))$('dashActivity').innerHTML=latest.length?latest.map(o=>
+     '<div class="activity"><div class="activity-icon">'+(o.status==='submitted'?'+':o.status==='completed'?'✓':'→')+'</div><div><strong>'+htmlSafe(o.number||'—')+' · '+htmlSafe(o.rawType||o.type||'Робота')+'</strong><p>'+htmlSafe(clientName(o))+' · '+htmlSafe(statusMap[o.status]||o.status)+'</p></div><span class="time">'+htmlSafe(o.date||((o.createdAt||'').slice(0,10)))+'</span></div>').join(''):'<div class="empty-mini">Активність з’явиться після першого замовлення</div>';
+   const eyebrow=document.querySelector('#view-dashboard .page-head .eyebrow');
+   if(eyebrow)eyebrow.textContent='Поточний стан · від '+fmtDate(earliest(lines()));
+ });
+ patchOne('renderFinance',renderFinanceVerified);
+ patchOne('renderFinanceExtras',renderFinanceVerified); // prior modules overwrite finance card after renderFinance
+ patchOne('renderStatistics',updateStatisticsVerified);
+ // Avoid displaying stale demo values even before authentication/snapshot.
+ for(const [id,value] of [['mExpected','0 ₴'],['mPaid','0 ₴'],['stRevenue','0 ₴']]){if($(id))$(id).textContent=value}
+ renderMetrics();renderFinanceVerified();updateStatisticsVerified();
+})();
+</script>
+
+<style id="tbp-profile-order-click-v1">
+/* Preserve the existing cards. Only add a quiet interactive hover/focus state. */
+#tbpPseudoOverlay .tbp-pseudo-order[data-tbp-profile-order],
+#clientDrawer .tbp-client-order-item[data-tbp-profile-order]{cursor:pointer;transition:background-color .16s ease,border-color .16s ease;touch-action:manipulation}
+#tbpPseudoOverlay .tbp-pseudo-order[data-tbp-profile-order]:hover,
+#clientDrawer .tbp-client-order-item[data-tbp-profile-order]:hover{background:rgba(255,255,255,.065);border-color:rgba(238,205,145,.26)}
+#tbpPseudoOverlay .tbp-pseudo-order[data-tbp-profile-order]:focus-visible,
+#clientDrawer .tbp-client-order-item[data-tbp-profile-order]:focus-visible{outline:2px solid #eac781;outline-offset:2px}
+#clientDrawer .tbp-client-order-item[data-tbp-profile-order]{border-radius:11px;min-width:0}
+#clientDrawer .tbp-client-order-item .grow{min-width:0}
+#clientDrawer .tbp-client-order-item .grow p{overflow-wrap:anywhere}
+@media(max-width:600px){
+  #tbpPseudoOverlay .tbp-pseudo-order[data-tbp-profile-order]{gap:8px}
+  #clientDrawer .tbp-client-order-item[data-tbp-profile-order]{gap:8px;flex-wrap:wrap}
+  #clientDrawer .tbp-client-order-item .grow{flex:1 1 160px}
+  #clientDrawer .tbp-client-order-item .btn{flex:0 0 auto}
+}
+</style>
+<script id="tbp-profile-order-click-v1">
+(()=>{'use strict';
+  const listSelector='#tbpPseudoOverlay .tbp-pseudo-orders [data-tbp-profile-order], #clientDrawer #clientActiveOrders [data-tbp-profile-order], #clientDrawer #clientHistoryOrders [data-tbp-profile-order]';
+  let pending=false;
+  function openProfileOrder(row){
+    if(!row||pending)return;
+    const id=String(row.dataset.tbpProfileOrder||'');
+    const record=typeof orders!=='undefined'&&Array.isArray(orders)?orders.find(o=>String(o.id)===id):null;
+    if(!record)return;
+    const next=record.status==='submitted'||record.status==='draft'?window.openOrder:window.openWork;
+    if(typeof next!=='function')return;
+    pending=true;
+    try{
+      if(row.closest('#tbpPseudoOverlay'))window.closePseudoClient?.();
+      if(row.closest('#clientDrawer'))window.closeClient?.();
+      next(id);  // exact same editing panel as the Work tab
+    }finally{pending=false}
+  }
+  document.addEventListener('click',e=>{
+    const row=e.target.closest?.(listSelector);
+    if(!row)return;
+    e.preventDefault();e.stopPropagation();openProfileOrder(row);
+  },true);
+  document.addEventListener('keydown',e=>{
+    if(e.key!=='Enter'&&e.key!==' ')return;
+    const row=e.target.closest?.(listSelector);
+    if(!row)return;
+    e.preventDefault();e.stopPropagation();openProfileOrder(row);
+  },true);
+})();
+</script>
+
+
+<style id="tbp-autosave-and-modal-lock-style">
+/* A single intentional client-publication action. */
+#tbpSimpleSaveFooter{grid-template-columns:1fr!important;justify-items:center!important;gap:9px!important}
+#tbpSimpleSavePrivateSlot{display:none!important}
+#tbpSimpleSavePublicSlot{grid-column:1!important;width:min(100%,390px)!important;justify-self:center!important}
+#tbpSimpleSavePublicSlot #tbpSaveWork{width:100%!important;margin:auto!important}
+#tbpSimpleSaveFooter .tbp-simple-feedback{grid-column:1!important;width:100%;text-align:center}
+#tbpSimpleReopenSlot{grid-column:1!important;width:min(100%,390px)!important;justify-self:center}
+#tbpSavePrivate{display:none!important}
+#workDrawer .tbp-save-private-line{display:none!important}
+#tbpQuickProgress{display:none!important}
+#workDrawer .tbp-simple-progress-bar{grid-template-columns:minmax(0,1fr)!important}
+#workDrawer .tbp-pseudo-order-banner,#orderDrawer .tbp-pseudo-order-banner{display:none!important}
+#tbpPrivateStatus{display:block!important;font-size:11.5px;color:#bde8c6!important;line-height:1.45}
+#tbpPrivateStatus.error{color:#ffc3b8!important}
+html.tbp-scroll-locked{overflow:hidden!important;overscroll-behavior:none!important}
+html.tbp-scroll-locked body{position:fixed!important;overflow:hidden!important;width:100%!important;left:0!important;right:0!important;overscroll-behavior:none!important}
+#workDrawer .drawer,#orderDrawer .drawer,#clientDrawer .drawer,
+.tbp-pseudo-modal,.tbp-unlinked-dialog,.tbp-receipt-frame,.modal,
+#tbpPurgeDialog .tbp-purge-modal {overscroll-behavior-y:contain}
+#workDrawer .drawer,#orderDrawer .drawer,#clientDrawer .drawer {overflow-y:auto;-webkit-overflow-scrolling:touch}
+@media(max-width:600px){
+ #tbpSimpleSavePublicSlot,#tbpSimpleReopenSlot{width:100%!important}
+ #tbpPrivateStatus{font-size:11px}
+}
+</style>
+<script id="tbp-lock-background-on-modal-open">
+(()=>{'use strict';
+ const overlays=[
+   '.drawer-overlay.open','.modal-overlay.open',
+   '#tbpPseudoOverlay.open','#tbpUnlinkedOverlay.open',
+   '#tbpReceiptOverlay.open','#tbpIncomeOverlay.open',
+   '#tbpNewPseudoDialog.open','#tbpPurgeDialog:not([hidden])',
+   '#tbpConfirmDialog.open','#tbpConfirmOverlay.open'
+ ];
+ const active=()=>overlays.some(selector=>[...document.querySelectorAll(selector)].some(el=>{
+   const style=getComputedStyle(el);
+   return !el.hidden&&style.display!=='none'&&style.visibility!=='hidden';
+ }));
+ let locked=false,top=0,left=0,raf=0;
+ function sync(){
+   raf=0;const now=active();
+   if(now===locked)return;
+   if(now){
+     top=window.scrollY||document.documentElement.scrollTop||0;
+     left=window.scrollX||0;
+     locked=true;
+     document.documentElement.classList.add('tbp-scroll-locked');
+     document.body.style.setProperty('top',-top+'px');
+     document.body.style.setProperty('height','100dvh');
+   }else{
+     locked=false;
+     document.documentElement.classList.remove('tbp-scroll-locked');
+     document.body.style.removeProperty('top');
+     document.body.style.removeProperty('height');
+     window.scrollTo(left,top);
+   }
+ }
+ const schedule=()=>{if(!raf)raf=requestAnimationFrame(sync)};
+ const observer=new MutationObserver(schedule);
+ observer.observe(document.body,{subtree:true,childList:true,attributes:true,attributeFilter:['class','style','hidden']});
+ window.addEventListener('pageshow',schedule);
+ document.addEventListener('DOMContentLoaded',schedule);
+ schedule();
 })();
 </script>
 
