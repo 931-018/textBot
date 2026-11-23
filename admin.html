@@ -4924,5 +4924,247 @@ html.tbp-scroll-locked body{position:fixed!important;overflow:hidden!important;w
 })();
 </script>
 
+
+<style id="tbp-ready-unpaid-analytics-style-20261123">
+/* Matching heights and alignment for real-time finance cards. */
+#view-finance>.finance-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:12px!important;align-items:stretch;margin-bottom:0}
+#view-finance>.finance-grid>.finance-card{
+ display:flex;flex-direction:column;gap:0;min-height:182px;
+ padding:20px 18px 17px!important;border-radius:19px;
+ border:1px solid rgba(231,195,120,.28)!important;
+ background:linear-gradient(145deg,#153e30,#0a3025)!important;
+ box-shadow:inset 0 1px 0 rgba(255,238,197,.035);
+ transition:border-color .18s ease,background-color .18s ease;
+}
+#view-finance>.finance-grid>.finance-card:nth-child(1){order:1}
+#view-finance>.finance-grid>.finance-card:nth-child(5){order:2}
+#view-finance>.finance-grid>.finance-card:nth-child(2){order:3}
+#view-finance>.finance-grid>.finance-card:nth-child(3){order:4}
+#view-finance>.finance-grid>.finance-card:nth-child(4){order:5}
+#view-finance>.finance-grid>.finance-card>.label{min-height:30px;display:flex;align-items:flex-start;color:#d4e2d7!important;font-size:11.5px!important;line-height:1.4;letter-spacing:.035em}
+#view-finance>.finance-grid>.finance-card>.amount{margin:8px 0 0;line-height:1.2}
+#view-finance>.finance-grid>.finance-card>.tbp-finance-currency-list{margin:6px 0 4px;gap:5px}
+#view-finance>.finance-grid>.finance-card .tbp-finance-currency-row{padding:2px 0;align-items:baseline;gap:8px}
+#view-finance>.finance-grid>.finance-card .tbp-finance-currency-row strong{font-size:clamp(19px,1.9vw,27px);overflow-wrap:normal;white-space:nowrap}
+#view-finance>.finance-grid>.finance-card>.sub{margin-top:auto!important;padding-top:12px;line-height:1.45;font-size:11px!important;color:#c9ded1!important}
+#view-finance>.finance-grid>.finance-card.tbp-ready-finance{border-color:rgba(233,195,112,.49)!important;background:linear-gradient(145deg,#1b4d39,#0c3428)!important}
+#view-finance>.finance-grid>.finance-card.tbp-ready-finance .tbp-finance-currency-row strong{color:#ffe1a2}
+#view-dashboard .metric-grid>.tbp-ready-metric{cursor:default;border-color:rgba(234,193,110,.45);background:linear-gradient(145deg,rgba(33,98,72,.94),rgba(10,48,35,.96))}
+#view-dashboard .metric-grid>.tbp-ready-metric:hover{transform:none}
+#view-dashboard .metric-grid>.tbp-ready-metric .label{color:#f4d69a}
+#view-dashboard .metric-grid>.tbp-ready-metric .value{font-size:clamp(16px,1.6vw,25px);line-height:1.35;min-height:28px;overflow-wrap:anywhere;letter-spacing:-.025em}
+#view-dashboard .metric-grid>.tbp-ready-metric .delta{display:block!important;color:#d1e2d5!important;font-size:11px;line-height:1.4;margin-top:6px}
+#tbpStatsInFinance>.metric-grid>.tbp-ready-stat-metric{border-color:rgba(238,201,133,.34);cursor:default}
+#tbpStatsInFinance>.metric-grid>.tbp-ready-stat-metric:hover{transform:none}
+#tbpStatsInFinance>.metric-grid>.tbp-ready-stat-metric .value{font-size:clamp(16px,1.8vw,24px);line-height:1.42;overflow-wrap:anywhere}
+#tbpStatsInFinance>.metric-grid>.tbp-ready-stat-metric .delta{display:block!important;font-size:11px;color:#d2e2d5!important;line-height:1.4}
+#tbpStatsInFinance .tbp-ready-alltime>strong{color:#f2d79a}
+.tbp-ready-amounts{display:flex;flex-wrap:wrap;gap:4px 12px;align-items:baseline;font-variant-numeric:tabular-nums}
+.tbp-ready-amounts>span{white-space:nowrap}
+.tbp-ready-amounts.stacked{display:grid;gap:4px}
+.tbp-ready-amounts.stacked>span{display:block}
+/* Keep the original four statistical cards and add the fifth at a visually balanced size. */
+#tbpStatsInFinance>.metric-grid{display:grid!important;grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:11px;align-items:stretch}
+#tbpStatsInFinance>.metric-grid>.metric{min-height:120px;display:flex;flex-direction:column;justify-content:flex-start;padding:15px 13px!important}
+#tbpStatsInFinance>.metric-grid>.metric .label{min-height:27px;line-height:1.35}
+#tbpStatsInFinance>.metric-grid>.metric .value{margin:6px 0 0;min-width:0;overflow-wrap:anywhere}
+#tbpStatsInFinance>.metric-grid>.metric .delta{margin-top:auto;padding-top:7px}
+#tbpStatsInFinance .tbp-alltime-grid{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:9px}
+#tbpStatsInFinance .tbp-alltime-item{display:flex;flex-direction:column;justify-content:space-between;min-height:78px}
+#tbpStatsInFinance .tbp-alltime-item>strong{margin-top:auto}
+/* Align the separate-income actions as a proper right-hand cluster. */
+#view-finance .tbp-misc-head{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px 22px;align-items:center;justify-content:stretch;margin-bottom:14px}
+#view-finance .tbp-misc-head>div:first-child{min-width:0}
+#view-finance .tbp-misc-head h3{margin:0 0 4px}
+#view-finance .tbp-misc-head p{line-height:1.45}
+#view-finance .tbp-misc-actions{display:flex;align-items:center;justify-content:flex-end;gap:9px;flex-wrap:wrap;min-width:0}
+#view-finance .tbp-misc-actions .btn{margin:0;white-space:nowrap;min-height:42px;display:inline-flex;align-items:center;justify-content:center}
+#view-finance .tbp-misc-total{font-size:13px;letter-spacing:.01em;white-space:normal}
+@media (max-width:1550px){
+ #view-finance>.finance-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+ #view-finance>.finance-grid>.finance-card:nth-child(1),
+ #view-finance>.finance-grid>.finance-card:nth-child(2),
+ #view-finance>.finance-grid>.finance-card:nth-child(5){grid-column:span 2}
+ #view-finance>.finance-grid>.finance-card:nth-child(3),
+ #view-finance>.finance-grid>.finance-card:nth-child(4){grid-column:span 3}
+ #tbpStatsInFinance>.metric-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+ #tbpStatsInFinance>.metric-grid>.metric:nth-child(1),
+ #tbpStatsInFinance>.metric-grid>.metric:nth-child(2),
+ #tbpStatsInFinance>.metric-grid>.metric:nth-child(3){grid-column:span 2}
+ #tbpStatsInFinance>.metric-grid>.metric:nth-child(4),
+ #tbpStatsInFinance>.metric-grid>.metric:nth-child(5){grid-column:span 3}
+ #tbpStatsInFinance .tbp-alltime-grid{grid-template-columns:repeat(6,minmax(0,1fr))!important}
+ #tbpStatsInFinance .tbp-alltime-grid>.tbp-alltime-item:nth-child(-n+3){grid-column:span 2}
+ #tbpStatsInFinance .tbp-alltime-grid>.tbp-alltime-item:nth-child(n+4){grid-column:span 3}
+}
+@media (max-width:820px){
+ #view-finance>.finance-grid,#tbpStatsInFinance>.metric-grid,#tbpStatsInFinance .tbp-alltime-grid{grid-template-columns:repeat(2,minmax(0,1fr))!important;gap:9px!important}
+ #view-finance>.finance-grid>.finance-card,
+ #tbpStatsInFinance>.metric-grid>.metric,
+ #tbpStatsInFinance .tbp-alltime-grid>.tbp-alltime-item{grid-column:auto!important}
+ #view-finance>.finance-grid>.finance-card:nth-child(4),
+ #tbpStatsInFinance>.metric-grid>.metric:nth-child(5),
+ #tbpStatsInFinance .tbp-alltime-grid>.tbp-alltime-item:nth-child(5){grid-column:1/-1!important}
+ #view-finance>.finance-grid>.finance-card{min-height:155px;padding:13px 12px!important}
+ #view-finance>.finance-grid>.finance-card>.label{min-height:26px;font-size:10.5px!important}
+ #view-finance>.finance-grid>.finance-card .tbp-finance-currency-row strong{font-size:clamp(17px,3vw,22px)}
+ #view-finance>.finance-grid>.finance-card>.sub{font-size:10.5px!important;padding-top:9px}
+ #view-finance .tbp-misc-head{grid-template-columns:minmax(0,1fr)}
+ #view-finance .tbp-misc-actions{justify-content:flex-start}
+ #view-finance .tbp-misc-actions .btn{flex:1 1 150px;white-space:normal;text-align:center}
+ #tbpStatsInFinance>.metric-grid>.metric{min-height:112px;padding:12px!important}
+}
+@media(max-width:450px){
+ #view-dashboard .metric-grid>.tbp-ready-metric{grid-column:1/-1}
+ #view-dashboard .metric-grid>.tbp-ready-metric .value{font-size:20px}
+ #tbpStatsInFinance>.metric-grid>.tbp-ready-stat-metric .value{font-size:18px}
+ #view-finance>.finance-grid>.finance-card .tbp-finance-currency-row{display:flex;align-items:baseline;justify-content:space-between;gap:6px}
+ #view-finance>.finance-grid>.finance-card .tbp-finance-currency-row strong{font-size:17px;text-overflow:clip}
+ #tbpStatsInFinance>.metric-grid>.metric .label{font-size:10px}
+}
+@media(max-width:345px){
+ #view-finance>.finance-grid,#tbpStatsInFinance>.metric-grid,#tbpStatsInFinance .tbp-alltime-grid{grid-template-columns:1fr!important}
+ #view-finance>.finance-grid>.finance-card,#tbpStatsInFinance>.metric-grid>.metric,#tbpStatsInFinance .tbp-alltime-grid>.tbp-alltime-item{grid-column:1/-1!important}
+}
+</style>
+<script id="tbp-ready-unpaid-analytics-20261123">
+(()=>{'use strict';
+ const $=id=>document.getElementById(id);
+ const currencies=['UAH','USD','EUR','PLN'];
+ const symbols={UAH:'₴',USD:'$',EUR:'€',PLN:'zł'};
+ const validNumber=v=>{const n=Number(v);return Number.isFinite(n)?Math.max(0,n):0};
+ const round=n=>Math.round((n+Number.EPSILON)*100)/100;
+ const format=(value,c)=>new Intl.NumberFormat('uk-UA',{maximumFractionDigits:2}).format(round(value))+' '+(symbols[c]||c);
+ const escape=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ // Same published-order formula as the finance module, without private workspace drafts.
+ function currentReadyUnpaid(){
+   const totals=Object.fromEntries(currencies.map(c=>[c,0]));
+   let count=0;
+   for(const o of (typeof orders!=='undefined' && Array.isArray(orders)?orders:[])){
+     if(!o||!['ready','completed'].includes(String(o.status||'')) || o.deletedAt || !['unpaid','partial'].includes(String(o.payment||'')))continue;
+     const currency=currencies.includes(o.currency)?o.currency:'UAH';
+     const gross=validNumber(o.price);
+     const discount=Math.min(gross,validNumber(o.discount));
+     const rate=currency==='UAH'?1:(validNumber(o.rate)||1);
+     const bonus=Math.min(Math.max(0,gross-discount),validNumber(o.bonusUsed)/rate);
+     const net=round(Math.max(0,gross-discount-bonus));
+     const paid=o.payment==='partial'?Math.min(net,validNumber(o.paidAmount)):0;
+     const due=round(Math.max(0,net-paid));
+     if(due<=.005)continue;
+     totals[currency]=round(totals[currency]+due);count++;
+   }
+   return {totals,count};
+ }
+ function valuesHTML(result,{stacked=false}={}){
+   const shown=currencies.filter(c=>result.totals[c]>.005);
+   return '<span class="tbp-ready-amounts'+(stacked?' stacked':'')+'">'+
+     (shown.length?shown.map(c=>'<span>'+escape(format(result.totals[c],c))+'</span>').join(''):'<span>0 ₴</span>')+'</span>';
+ }
+ function createWidgets(){
+   const dashboard=document.querySelector('#view-dashboard .metric-grid');
+   if(dashboard&&!$('tbpReadyDashboard')){
+     const card=document.createElement('div');card.id='tbpReadyDashboard';card.className='metric tbp-ready-metric';
+     card.innerHTML='<div class="label">Неоплачені</div><div class="value" id="tbpReadyDashValue">—</div><div class="delta" id="tbpReadyDashCount">Підрахунок замовлень…</div>';
+     dashboard.appendChild(card);
+   }
+   const finance=document.querySelector('#view-finance>.finance-grid');
+   if(finance&&!$('tbpReadyFinance')){
+     const card=document.createElement('div');card.id='tbpReadyFinance';card.className='finance-card tbp-ready-finance';
+     card.innerHTML='<div class="label">Неоплачені</div><div class="tbp-finance-currency-list" id="tbpReadyFinanceValues">—</div><div class="sub" id="tbpReadyFinanceCount">Підрахунок замовлень…</div>';
+     // Added at the end so older finance-card indexes for the four existing KPIs remain unchanged.
+     finance.appendChild(card);
+   }
+   const stats=document.querySelector('#tbpStatsInFinance>.metric-grid');
+   if(stats&&!$('tbpReadyStatistics')){
+     const card=document.createElement('div');card.id='tbpReadyStatistics';card.className='metric tbp-ready-stat-metric';
+     card.innerHTML='<div class="label">Неоплачені</div><div class="value" id="tbpReadyStatsValue">—</div><div class="delta" id="tbpReadyStatsCount">Поточний залишок · усі дати</div>';
+     stats.appendChild(card);
+   }
+   const misc=$('tbpMiscIncomeSection')?.querySelector('.tbp-misc-head');
+   if(misc&&!misc.querySelector('.tbp-misc-actions')){
+     const actions=document.createElement('div');actions.className='tbp-misc-actions';
+     [...misc.children].filter(el=>el.matches('button')).forEach(btn=>actions.appendChild(btn));
+     misc.appendChild(actions);
+   }
+ }
+ function readyFinRows(result){
+   const shown=currencies.filter(c=>result.totals[c]>.005);
+   return shown.length?shown.map(c=>'<div class="tbp-finance-currency-row"><span>'+c+'</span><strong>'+escape(format(result.totals[c],c))+'</strong></div>').join('')
+       :'<div class="tbp-finance-currency-row"><span>UAH</span><strong>0 ₴</strong></div>';
+ }
+ function update(){
+   createWidgets();
+   const result=currentReadyUnpaid();
+   if($('tbpReadyDashValue'))$('tbpReadyDashValue').innerHTML=valuesHTML(result);
+   if($('tbpReadyDashCount'))$('tbpReadyDashCount').textContent=result.count+' '+(result.count===1?'готова робота':result.count>=2&&result.count<=4?'готові роботи':'готових робіт')+' · ще до оплати';
+   if($('tbpReadyFinanceValues'))$('tbpReadyFinanceValues').innerHTML=readyFinRows(result);
+   if($('tbpReadyFinanceCount'))$('tbpReadyFinanceCount').textContent=result.count+' '+(result.count===1?'робота':result.count>=2&&result.count<=4?'роботи':'робіт')+' · готові або завершені, залишок до оплати';
+   if($('tbpReadyStatsValue'))$('tbpReadyStatsValue').innerHTML=valuesHTML(result);
+   if($('tbpReadyStatsCount'))$('tbpReadyStatsCount').textContent=result.count+' готових / завершених · поточний стан';
+   // The previous analytics renderer rebuilds this grid every time the period changes.
+   const grid=document.querySelector('#tbpAllTimeFromOrders .tbp-alltime-grid');
+   if(grid){
+     let cell=$('tbpReadyAllTime');
+     if(!cell){cell=document.createElement('div');cell.className='tbp-alltime-item tbp-ready-alltime';cell.id='tbpReadyAllTime';grid.appendChild(cell)}
+     cell.innerHTML='<span>Неоплачені</span><strong class="tbp-currency-total">'+valuesHTML(result,{stacked:true})+'</strong>';
+   }
+ }
+ function wrapRender(name){
+   const original=window[name];if(typeof original!=='function')return;
+   window[name]=function(...args){const ret=original.apply(this,args);update();return ret};
+ }
+ // Refresh only UI and never write a status, payment, quote, or snapshot into the DB.
+ for(const name of ['updateMetrics','renderDashboard','renderFinance','renderFinanceExtras','renderStatistics'])wrapRender(name);
+ update();
+})();
+</script>
+
+
+<style id="tbp-deep-emerald-restored-20261123">
+/* Purely visual restoration of the richer emerald palette; no markup or app logic changes. */
+:root{
+  --bg:#073528;
+  --bg2:#0b4734;
+  --bg3:#06291f;
+}
+html,body{
+  background:radial-gradient(ellipse at 22% 0%,rgba(15,118,78,.16),transparent 49%),
+    linear-gradient(145deg,#062e25 0%,#083b2c 46%,#062a22 100%)!important;
+  color:#f7fff9!important;
+}
+.main{
+  background:radial-gradient(ellipse at 15% 0%,rgba(17,112,73,.24),transparent 43%),
+    linear-gradient(160deg,#0a4936 0%,#083728 55%,#062c23 100%)!important;
+  opacity:1!important;
+  filter:none!important;
+}
+.sidebar{
+  background:linear-gradient(180deg,#062c22 0%,#041e19 100%)!important;
+}
+.topbar{
+  background:rgba(5,42,32,.96)!important;
+  border-bottom-color:rgba(232,200,133,.19)!important;
+}
+.metric,.finance-card,
+#view-finance>.finance-grid>.finance-card,
+#view-finance>.finance-grid>.finance-card.tbp-ready-finance,
+#view-dashboard .metric-grid>.tbp-ready-metric{
+  background:linear-gradient(150deg,#114836 0%,#092f25 84%)!important;
+  border-color:rgba(234,196,120,.25)!important;
+}
+#view-dashboard .card,
+#view-finance .tbp-misc-section,
+.table-card,.table-card.emphasis{
+  background:linear-gradient(145deg,#0c3e2f 0%,#082d25 100%)!important;
+}
+.tbp-pseudo-card{
+  background:radial-gradient(circle at 88% 10%,rgba(29,114,79,.18),transparent 41%),
+    linear-gradient(155deg,#0b3d2e 0%,#082b23 100%)!important;
+}
+/* Preserve warm gold accents and high-contrast copy. */
+.metric .label,.finance-card .label{color:#d2e4d9!important}
+.metric .delta,.finance-card .sub{color:#c7dacd!important}
+</style>
+
 </body>
 </html>
