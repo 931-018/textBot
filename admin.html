@@ -367,7 +367,33 @@ img,svg,canvas{max-width:100%}
 .tbp-tg-name{font-size:12px;font-weight:800;color:#e5c989;margin-bottom:5px}.tbp-tg-hint{display:block;color:#bed8ca;font-size:12px;line-height:1.4;margin:3px 0}.tbp-tg-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:10px}.tbp-tg-actions .btn{font-size:12px;white-space:normal;text-align:center}
 .tbp-send-bot-overlay{position:fixed;inset:0;z-index:99999;display:none;align-items:center;justify-content:center;padding:20px;background:rgba(1,17,13,.76);backdrop-filter:blur(9px)}.tbp-send-bot-overlay.open{display:flex}.tbp-send-bot-card{width:min(100%,475px);display:flex;flex-direction:column;gap:10px;border:1px solid rgba(217,185,115,.42);border-radius:19px;background:#123c2f;color:#f7f3e7;padding:22px;box-shadow:0 24px 70px #00180f88}.tbp-send-bot-card strong{font-size:17px}.tbp-send-bot-card span{font-size:12px;color:#d7bc83}.tbp-send-bot-card textarea{width:100%;min-height:120px;padding:12px;background:#0c2b23;color:#fff;border:1px solid #54745b;border-radius:12px;resize:vertical}.tbp-send-bot-buttons{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap}.tbp-send-bot-card small{font-size:12px;color:#e9c981}
 @media(max-width:520px){.tbp-send-bot-card{padding:16px}.tbp-tg-actions{flex-direction:column}.tbp-tg-actions .btn{width:100%;justify-content:center}}
-</style></head>
+</style>
+<style id="tbp-compact-receipt-20261123">
+/* All selected orders share one continuous list; currency breakdown lives exclusively in the footer. */
+#tbpReceiptPaper .tbp-rc-compact-list{padding:0 24px 5px}
+#tbpReceiptPaper .tbp-rc-compact-rows{display:block;padding:8px 0 4px}
+#tbpReceiptPaper .tbp-rc-compact-order{display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:start;gap:12px;border-bottom:1px solid rgba(218,185,117,.19);padding:12px 0}
+#tbpReceiptPaper .tbp-rc-compact-order:last-child{border-bottom:0}
+#tbpReceiptPaper .tbp-rc-compact-info{min-width:0;display:flex;flex-direction:column;gap:3px;overflow-wrap:anywhere}
+#tbpReceiptPaper .tbp-rc-compact-info>strong{font-weight:850;font-size:12px;color:#fff2d3;line-height:1.4}
+#tbpReceiptPaper .tbp-rc-compact-topic{color:#c9dace;font-size:11px;line-height:1.42}
+#tbpReceiptPaper .tbp-rc-compact-original{color:#acc6b7;font-size:10px;line-height:1.4}
+#tbpReceiptPaper .tbp-rc-compact-reductions{color:#efd192;font-size:10px;line-height:1.45;font-weight:750}
+#tbpReceiptPaper .tbp-rc-compact-cost{color:#ffe1a1;font-size:14px;font-weight:950;white-space:nowrap;font-variant-numeric:tabular-nums;padding-top:1px}
+#tbpReceiptPaper .tbp-rc-compact-summary{border-top:1px solid rgba(226,191,120,.42);padding:13px 0 13px;display:grid;gap:10px}
+#tbpReceiptPaper .tbp-rc-compact-summary-title{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#c1d5c8;font-weight:850;margin-bottom:1px}
+#tbpReceiptPaper .tbp-rc-compact-currency{display:grid;gap:5px;border-bottom:1px solid rgba(226,191,120,.2);padding:6px 0 13px}
+#tbpReceiptPaper .tbp-rc-compact-currency:last-child{border-bottom:0;padding-bottom:1px}
+#tbpReceiptPaper .tbp-rc-compact-currency-top{display:grid;gap:2px;color:#c9d9cb;font-size:10px}
+#tbpReceiptPaper .tbp-rc-compact-currency-top>span{color:#e6c991;font-weight:900;font-size:12px}
+#tbpReceiptPaper .tbp-rc-compact-currency-top small{color:#c6d8c9;font-size:10px;line-height:1.4}
+#tbpReceiptPaper .tbp-rc-compact-due{display:flex;align-items:baseline;justify-content:space-between;gap:13px;font-size:14px;font-weight:850;color:#f3f3e4}
+#tbpReceiptPaper .tbp-rc-compact-due strong{color:#ffe19b;font-size:20px;font-weight:950;letter-spacing:-.02em;font-variant-numeric:tabular-nums;white-space:nowrap}
+#tbpReceiptOverlay .tbp-pick-list>p{margin:3px 0 12px;color:#c5dccc;font-size:11px;font-weight:750}
+@media(max-width:750px){#tbpReceiptPaper .tbp-rc-compact-list{padding:0 18px 5px}#tbpReceiptPaper .tbp-rc-compact-order{gap:8px;padding:11px 0}#tbpReceiptPaper .tbp-rc-compact-due strong{font-size:18px}}
+@media(max-width:390px){#tbpReceiptPaper .tbp-rc-compact-list{padding:0 14px 5px}#tbpReceiptPaper .tbp-rc-compact-cost{font-size:12px}#tbpReceiptPaper .tbp-rc-compact-due{font-size:12px}#tbpReceiptPaper .tbp-rc-compact-due strong{font-size:17px}}
+</style>
+</head>
 <body>
 <div class="app">
   <aside class="sidebar" id="sidebar">
@@ -525,7 +551,7 @@ img,svg,canvas{max-width:100%}
 </aside></div>
 
 <!-- MANUAL ORDER MODAL -->
-<div class="modal-overlay" id="manualModal"><div class="modal manual-modal"><div class="modal-head"><h3>Створити замовлення вручну</h3><p>Нові роботи створюються лише для клієнтів із власним кабінетом.</p></div><div class="modal-body"><div class="fields"><div class="field full"><label>Клієнт</label><select id="manualClient" onchange="manualClientChanged()"></select></div><div class="field" id="guestNameField" style="display:none"><label>Імʼя / позначення клієнта</label><input id="manualGuestName" placeholder="Наприклад: Олена · Telegram"/></div><div class="field" id="guestContactField" style="display:none"><label>Контакт</label><input id="manualGuestContact" placeholder="@telegram / номер"/></div><div class="field"><label>Тип роботи</label><input id="manualType" placeholder="Курсова / реферат / практика..."/></div><div class="field"><label>Дедлайн</label><input id="manualDeadline" type="date"/></div><div class="field full"><label>Тема</label><input id="manualTopic"/></div><div class="field full"><label>Деталі</label><textarea id="manualDetails"></textarea></div><div class="field"><label>Статус після створення</label><select id="manualStatus"><option value="accepted">Прийнято</option><option value="submitted">Нова заявка</option></select></div><div class="field"><label>Орієнтовна ціна</label><input id="manualPrice" type="number" value="0"/></div></div></div><div class="modal-foot"><button class="btn secondary" onclick="closeManualOrder()">Скасувати</button><button class="btn primary" onclick="createManualOrderLocal()">Створити</button></div></div></div>
+<div class="modal-overlay" id="manualModal"><div class="modal manual-modal"><div class="modal-head"><h3>Створити замовлення вручну</h3><p>Нові роботи створюються лише для клієнтів із власним кабінетом.</p></div><div class="modal-body"><div class="fields"><div class="field full"><label>Клієнт</label><select id="manualClient" onchange="manualClientChanged()"></select></div><div class="field" id="guestNameField" style="display:none"><label>Імʼя / позначення клієнта</label><input id="manualGuestName" placeholder="Наприклад: Олена · Telegram"/></div><div class="field" id="guestContactField" style="display:none"><label>Контакт</label><input id="manualGuestContact" placeholder="@telegram / номер"/></div><div class="field"><label>Тип роботи</label><input id="manualType" placeholder="Курсова / реферат / практика..."/></div><div class="field"><label>Дедлайн</label><input id="manualDeadline" type="date"/></div><div class="field full"><label>Тема</label><input id="manualTopic" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/></div><div class="field full"><label>Деталі</label><textarea id="manualDetails"></textarea></div><div class="field"><label>Статус після створення</label><select id="manualStatus"><option value="accepted">Прийнято</option><option value="submitted">Нова заявка</option></select></div><div class="field"><label>Орієнтовна ціна</label><input id="manualPrice" type="number" value="0"/></div></div></div><div class="modal-foot"><button class="btn secondary" onclick="closeManualOrder()">Скасувати</button><button class="btn primary" onclick="createManualOrderLocal()">Створити</button></div></div></div>
 
 
 <!-- ADD CLIENT MODAL -->
@@ -3410,7 +3436,7 @@ window.supabase={createClient};
   <label class="wide" id="tbpNewPseudoContactWrap">Контакт нового клієнта<input id="tbpUnlinkedContact" maxlength="250" autocomplete="off" placeholder="@telegram · телефон (необов'язково)"></label>
   <label>Тип роботи *<input id="tbpUnlinkedType" maxlength="150" required list="tbpUnlinkedTypes" placeholder="Магістерська робота"><datalist id="tbpUnlinkedTypes"><option value="Курсова робота"><option value="Магістерська робота"><option value="Дипломна робота"><option value="Практична робота"><option value="Реферат"></datalist></label>
   <label>Дедлайн<input id="tbpUnlinkedDeadline" type="date"></label>
-  <label class="wide">Тема / завдання<input id="tbpUnlinkedTopic" maxlength="400" placeholder="Коротка назва роботи"></label>
+  <label class="wide">Тема / завдання<input id="tbpUnlinkedTopic" maxlength="400" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" placeholder="Коротка назва роботи"></label>
   <label>Базова ціна *<input id="tbpUnlinkedPrice" type="number" min="0" step="0.01" required inputmode="decimal" value="0"></label>
   <label>До оплати (зі знижкою) *<input id="tbpUnlinkedPayable" type="number" min="0" step="0.01" required inputmode="decimal" value="0"></label>
   <label>Валюта<select id="tbpUnlinkedCurrency"><option value="UAH">UAH · ₴</option><option value="USD">USD · $</option><option value="EUR">EUR · €</option><option value="PLN">PLN · zł</option></select></label>
@@ -3830,9 +3856,11 @@ input::placeholder,textarea::placeholder{opacity:1!important;color:#b2cab9!impor
 #tbpReceiptOverlay .tbp-receipt-dual .tbp-rc-group-row>div{min-width:0;overflow-wrap:anywhere}
 #tbpReceiptOverlay .tbp-receipt-dual .tbp-rc-group-row strong{white-space:nowrap;color:#ffe0a3}
 #tbpReceiptOverlay .tbp-receipt-dual .tbp-rc-group-row small{display:block;margin-top:3px;color:#c2d4c6;font-size:11px}
+#tbpReceiptOverlay .tbp-receipt-dual .tbp-rc-group-row .tbp-rc-order-meta{color:#e7d7b0;font-size:11px;line-height:1.45}
 #tbpReceiptOverlay .tbp-receipt-dual .tbp-rc-group-totals{padding:13px 0 4px;border-top:1px solid #d8b67680}
 #tbpReceiptOverlay .tbp-receipt-dual .tbp-rc-group-totals div{display:flex;justify-content:space-between;align-items:baseline;gap:11px;margin-top:8px;font-size:12px}
 #tbpReceiptOverlay .tbp-receipt-dual .tbp-rc-group-totals div:last-child{font-size:17px;color:#ffde94;font-weight:900}
+#tbpReceiptOverlay .tbp-receipt-dual .tbp-rc-group-totals div:nth-last-child(2){color:#f2f6ea;font-weight:800}
 #tbpReceiptOverlay .tbp-rc-summary-group{padding:16px 25px 18px;border-top:1px dashed #e9d5a34b}
 #tbpReceiptOverlay .tbp-rc-summary-group h3{font-size:13px;color:#e7d09a;margin:8px 0 10px}
 #tbpReceiptOverlay .tbp-rc-empty{padding:15px 0;color:#d7e5d8;font-size:12px;line-height:1.55}
@@ -3897,9 +3925,10 @@ input::placeholder,textarea::placeholder{opacity:1!important;color:#b2cab9!impor
  const money=(v,c)=>new Intl.NumberFormat('uk-UA',{maximumFractionDigits:2}).format(Math.round(v*100)/100)+' '+({UAH:'₴',USD:'$',EUR:'€',PLN:'zł'}[c]||c);
  const num=x=>Number.isFinite(Number(x))?Math.max(0,Number(x)):0;
  function priceOf(o){const currency=['UAH','USD','EUR','PLN'].includes(o.currency)?o.currency:'UAH';const rate=currency==='UAH'?1:num(o.rate)||1;
-  const gross=num(o.price),discount=Math.min(gross,num(o.discount)),bonus=Math.min(gross-discount,num(o.bonusUsed)/rate);
+  const gross=num(o.price),discount=Math.min(gross,num(o.discount)),bonus=Math.min(Math.max(0,gross-discount),num(o.bonusUsed)/rate);
+  const subtotal=Math.max(0,Math.round((gross-discount)*100)/100);
   const net=Math.max(0,Math.round((gross-discount-bonus)*100)/100),paid=o.payment==='paid'?net:o.payment==='partial'?Math.min(net,num(o.paidAmount)):0;
-  return {...o,currency,net,paid,due:Math.max(0,Math.round((net-paid)*100)/100)};
+  return {...o,currency,gross,discount,bonus,subtotal,net,paid,due:Math.max(0,Math.round((net-paid)*100)/100)};
  }
  const labelOf=o=>{const own=clients[o.client],s=own?.rawName||o.rawGuestName||o.guestName||'Клієнт';return String(s)};
  function resetLayout(){frame.classList.remove('tbp-receipt-dual');const main=frame.querySelector('.tbp-receipt-dual-body');if(main){frame.append(viewport);main.remove()}frame.querySelector('.tbp-pick-list')?.remove()}
@@ -3911,11 +3940,31 @@ input::placeholder,textarea::placeholder{opacity:1!important;color:#b2cab9!impor
   const visible=current.filter(o=>selected.has(String(o.id)));
   const byCurrency=new Map();visible.forEach(o=>{if(!byCurrency.has(o.currency))byCurrency.set(o.currency,[]);byCurrency.get(o.currency).push(o)});
   const name=labelOf(current[0]||window.tbpReceiptClientOrder||{});
-  const groups=[...byCurrency].map(([c,arr])=>{const total=arr.reduce((sum,o)=>sum+o.due,0);
-   return `<section class="tbp-rc-summary-group"><h3>${esc(c)} · ${arr.length} роб.</h3><div class="tbp-rc-lines">${arr.map(o=>`<div class="tbp-rc-group-row"><div><b>№ ${esc(o.number)} · ${esc(o.rawType||o.type||'Робота')}</b><small>${esc((o.rawTopic||o.topic||'').slice(0,115))}</small>${!['ready','completed'].includes(o.status)?'<span class="tbp-rc-advance">Попередній розрахунок</span>':''}</div><strong>${esc(money(o.due,c))}</strong></div>`).join('')}</div><div class="tbp-rc-group-totals"><div><span>Робіт у чеку</span><b>${arr.length}</b></div><div><span>До оплати</span><b>${esc(money(total,c))}</b></div></div></section>`;
+  // One compact list, regardless of currencies; keep separate exact-currency totals only at the bottom.
+  const round=x=>Math.round((Number(x)||0)*100)/100;
+  const rows=visible.map(o=>{
+    const reductions=[];
+    if(o.discount>.005)reductions.push('Знижка −'+money(o.discount,o.currency));
+    if(o.bonus>.005)reductions.push('Бонуси −'+money(o.bonus,o.currency));
+    if(o.paid>.005)reductions.push('Сплачено −'+money(o.paid,o.currency));
+    const reduced=reductions.length?'<span class="tbp-rc-compact-reductions">'+esc(reductions.join(' · '))+'</span>':'';
+    return `<div class="tbp-rc-compact-order"><div class="tbp-rc-compact-info"><strong>№ ${esc(o.number)} · ${esc(o.rawType||o.type||'Робота')}</strong><span class="tbp-rc-compact-topic">${esc((o.rawTopic||o.topic||'').slice(0,135))}</span><span class="tbp-rc-compact-original">Ціна ${esc(money(o.gross,o.currency))}${!['ready','completed'].includes(o.status)?' · Попередній розрахунок':''}</span>${reduced}</div><strong class="tbp-rc-compact-cost">${esc(money(o.due,o.currency))}</strong></div>`;
   }).join('');
-  paper.innerHTML=`<div class="tbp-rc-head"><div class="tbp-rc-brand">TEXT <span>· BY PETRO</span></div><div class="tbp-rc-kicker">Розрахунок до оплати</div><div class="tbp-rc-number">${esc(name)}</div><div class="tbp-rc-chip">${visible.length} ${visible.length===1?'робота':'робіт у чеку'}</div></div>${groups||'<div class="tbp-rc-lines tbp-rc-empty">Зараз немає замовлень із сумою до оплати. За потреби додай незавершені роботи справа.</div>'}<div class="tbp-rc-foot">Інформаційний розрахунок · не фіскальний чек</div>`;
-  const side=frame.querySelector('.tbp-pick-list');if(side){side.innerHTML=`<h3>Додати до чека</h3><p>Незавершені роботи. Познач галочкою, щоб додати їхню несплачену суму до розрахунку ліворуч. Жодних змін у базі.</p>${optional.length?optional.map(o=>`<label class="tbp-pick-order"><input type="checkbox" data-extra-order="${esc(o.id)}" ${selected.has(String(o.id))?'checked':''}><span class="tbp-pick-order-body"><b>№ ${esc(o.number)} · ${esc(o.rawType||o.type||'Робота')}</b><small>${esc((o.rawTopic||o.topic||'').slice(0,140))}</small><small>${esc(({'accepted':'Очікує початку','working':'У процесі','paused':'Призупинено','submitted':'Нова заявка'}[o.status])||o.status)}</small><em>${esc(money(o.due,o.currency))}</em></span></label>`).join(''):'<div class="tbp-pick-empty">Інших незавершених робіт із неоплаченою сумою немає.</div>'}`;
+  const currencyNames={UAH:'Гривні',USD:'Долари',EUR:'Євро',PLN:'Злоті'};
+  const totals=[...byCurrency].map(([currency,arr])=>{
+    const gross=round(arr.reduce((sum,o)=>sum+o.gross,0));
+    const discount=round(arr.reduce((sum,o)=>sum+o.discount,0));
+    const bonus=round(arr.reduce((sum,o)=>sum+o.bonus,0));
+    const paid=round(arr.reduce((sum,o)=>sum+o.paid,0));
+    const due=round(arr.reduce((sum,o)=>sum+o.due,0));
+    const adjustments=[];
+    if(discount>.005)adjustments.push('Знижка −'+money(discount,currency));
+    if(bonus>.005)adjustments.push('Бонуси −'+money(bonus,currency));
+    if(paid>.005)adjustments.push('Вже сплачено −'+money(paid,currency));
+    return `<div class="tbp-rc-compact-currency"><div class="tbp-rc-compact-currency-top"><span>${esc(currencyNames[currency]||currency)} · ${arr.length} роб.</span><small>Базова сума ${esc(money(gross,currency))}</small>${adjustments.length?`<small>${esc(adjustments.join(' · '))}</small>`:''}</div><div class="tbp-rc-compact-due"><span>До оплати</span><strong>${esc(money(due,currency))}</strong></div></div>`;
+  }).join('');
+  paper.innerHTML=`<div class="tbp-rc-head"><div class="tbp-rc-brand">TEXT <span>· BY PETRO</span></div><div class="tbp-rc-kicker">Розрахунок до оплати</div><div class="tbp-rc-number">${esc(name)}</div><div class="tbp-rc-chip">${visible.length} ${visible.length===1?'робота':'робіт у чеку'}</div></div>${visible.length?`<section class="tbp-rc-compact-list"><div class="tbp-rc-compact-rows">${rows}</div><div class="tbp-rc-compact-summary"><div class="tbp-rc-compact-summary-title">Підсумок</div>${totals}</div></section>`:'<div class="tbp-rc-lines tbp-rc-empty">Зараз немає замовлень із сумою до оплати.</div>'}<div class="tbp-rc-foot">Інформаційний розрахунок · не фіскальний чек</div>`;
+  const side=frame.querySelector('.tbp-pick-list');if(side){side.innerHTML=`<h3>Додати до чека</h3><p>Активні роботи</p>${optional.length?optional.map(o=>`<label class="tbp-pick-order"><input type="checkbox" data-extra-order="${esc(o.id)}" ${selected.has(String(o.id))?'checked':''}><span class="tbp-pick-order-body"><b>№ ${esc(o.number)} · ${esc(o.rawType||o.type||'Робота')}</b><small>${esc((o.rawTopic||o.topic||'').slice(0,140))}</small><small>${esc(({'accepted':'Очікує початку','working':'У процесі','paused':'Призупинено','submitted':'Нова заявка'}[o.status])||o.status)}</small><em>${esc(money(o.due,o.currency))}</em></span></label>`).join(''):'<div class="tbp-pick-empty">Інших незавершених робіт із неоплаченою сумою немає.</div>'}`;
    side.querySelectorAll('[data-extra-order]').forEach(b=>b.addEventListener('change',()=>{if(b.checked)selected.add(b.dataset.extraOrder);else selected.delete(b.dataset.extraOrder);paint()}));
   }
  }
@@ -4244,5 +4293,86 @@ input::placeholder,textarea::placeholder{opacity:1!important;color:#b2cab9!impor
  window.tbpPurgeTrashUI={open:show,collect:collectVisible};
 })();
 </script>
+
+<style id="tbp-native-list-20261123">
+/* Keep the original native select UI. Only unobtrusive typography improvements. */
+#tbpUnlinkedPseudo, #manualClient{font-weight:750;line-height:1.45;cursor:pointer;max-width:100%}
+#tbpUnlinkedPseudo option, #manualClient option{background:#082a21;color:#f6f7ec;font-weight:500;font-size:15px;padding:9px 12px}
+@media(max-width:600px){#tbpUnlinkedPseudo,#manualClient{font-size:16px!important;min-height:48px}}
+</style>
+<script id="tbp-native-list-preserve-progress-20261123">
+(()=>{'use strict';
+ const $=id=>document.getElementById(id);
+ function stopTopicAutocomplete(){['manualTopic','tbpUnlinkedTopic','tbpUnlinkedType','manualType','oTopic'].forEach(id=>{const el=$(id);if(!el)return;el.setAttribute('autocomplete','off');el.setAttribute('autocorrect','off');el.setAttribute('autocapitalize','off');el.setAttribute('spellcheck','false')})}
+ function completeProgress(){
+   const status=$('wStatus'),progress=$('wProgress');if(!status||!progress)return;
+   if(status.value==='ready'||status.value==='completed'){
+     progress.value='100';progress.dispatchEvent(new Event('input',{bubbles:true}));
+     if($('wProgressValue'))$('wProgressValue').textContent='100%';
+   }
+ }
+ function init(){
+   stopTopicAutocomplete();
+   const status=$('wStatus');
+   if(status&&!status.dataset.tbpComplete100){
+     status.dataset.tbpComplete100='1';
+     status.addEventListener('change',completeProgress);
+     document.addEventListener('click',e=>{const b=e.target.closest('[data-tbp-work]');if(b&&['ready','completed'].includes(b.dataset.tbpWork||''))setTimeout(completeProgress,0)},true);
+   }
+   const previous=window.updateClientViewLocal;
+   if(typeof previous==='function'&&!previous._tbpComplete100){
+     const wrapped=function(){completeProgress();return previous.apply(this,arguments)};
+     wrapped._tbpComplete100=true;
+     window.updateClientViewLocal=wrapped;
+   }
+ }
+ document.addEventListener('DOMContentLoaded',init);
+ if(document.readyState!=='loading')init();
+})();
+</script>
+
+
+<style id="tbp-safe-double-outside-close-style">
+/* Only the backdrop gets double-tap protection; modal contents remain unchanged. */
+.drawer-overlay,.modal-overlay,#tbpPseudoOverlay,#tbpIncomeOverlay,
+#tbpUnlinkedOverlay,#tbpReceiptOverlay,#tbpNewPseudoDialog,#tbpPurgeDialog {
+  touch-action:manipulation;
+}
+</style>
+<script id="tbp-safe-double-outside-close">
+(()=>{'use strict';
+ // Existing X, Cancel, Save and Escape actions retain their original behavior.
+ // Intercept only a direct tap/click on the background of an overlay.
+ const backdrops = '.drawer-overlay, .modal-overlay, #tbpPseudoOverlay, #tbpIncomeOverlay, #tbpUnlinkedOverlay, #tbpReceiptOverlay, #tbpNewPseudoDialog, #tbpPurgeDialog';
+ const repeatWindowMs=1600;
+ let previous=null;
+ document.addEventListener('click',function(event){
+   const target=event.target;
+   if(!(target instanceof Element)||!target.matches(backdrops)){
+     // An interaction inside a dialog must break the outside-tap sequence.
+     previous=null;
+     return;
+   }
+   // Never count a tap on a backdrop that is hidden or behind another dialog.
+   const style=getComputedStyle(target);
+   if(target.hidden||style.display==='none'||style.visibility==='hidden'){
+     previous=null;
+     return;
+   }
+   const now=performance.now();
+   if(previous&&previous.element===target&&now-previous.time<=repeatWindowMs){
+     // Second outside tap: let the existing close handler run normally.
+     previous=null;
+     return;
+   }
+   // First outside tap: protect form state, inputs and open windows.
+   previous={element:target,time:now};
+   event.preventDefault();
+   event.stopImmediatePropagation();
+ },true);
+ document.addEventListener('keydown',()=>{previous=null;},true);
+})();
+</script>
+
 </body>
 </html>
